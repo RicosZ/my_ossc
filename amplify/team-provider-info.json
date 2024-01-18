@@ -1,0 +1,36 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-myossc-dev-95837-authRole",
+      "UnauthRoleArn": "arn:aws:iam::962477235583:role/amplify-myossc-dev-95837-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::962477235583:role/amplify-myossc-dev-95837-authRole",
+      "Region": "ap-southeast-1",
+      "DeploymentBucketName": "amplify-myossc-dev-95837-deployment",
+      "UnauthRoleName": "amplify-myossc-dev-95837-unauthRole",
+      "StackName": "amplify-myossc-dev-95837",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:962477235583:stack/amplify-myossc-dev-95837/c5e7eec0-5373-11ee-8cc9-021979596322",
+      "AmplifyAppId": "d2b1c0sd2c21v1"
+    }
+  },
+  "osscdev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-myossc-osscdev-100620-authRole",
+      "UnauthRoleArn": "arn:aws:iam::962477235583:role/amplify-myossc-osscdev-100620-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::962477235583:role/amplify-myossc-osscdev-100620-authRole",
+      "Region": "ap-southeast-1",
+      "DeploymentBucketName": "amplify-myossc-osscdev-100620-deployment",
+      "UnauthRoleName": "amplify-myossc-osscdev-100620-unauthRole",
+      "StackName": "amplify-myossc-osscdev-100620",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:962477235583:stack/amplify-myossc-osscdev-100620/d9654af0-5374-11ee-a14d-062305c20852",
+      "AmplifyAppId": "d2b1c0sd2c21v1"
+    },
+    "categories": {
+      "auth": {
+        "myossc719d492e": {}
+      },
+      "storage": {
+        "s3118cd0c2": {}
+      }
+    }
+  }
+}
