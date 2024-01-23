@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:my_ossc/models/data_model2.dart';
+import 'package:my_ossc/models/ossc_user_model.dart';
+import '../models/district_model.dart';
 import '../models/ossc_data_model.dart';
 // import '../models/data_model.dart';
 
@@ -22,6 +23,7 @@ class Api {
       success: false,
     );
   }
+
   Future<OsscUser> fetchAllUser() async {
     try {
       final response = await dio.get(
@@ -34,7 +36,23 @@ class Api {
       }
     } catch (e) {}
     return OsscUser(
-      success: false, data: [],
+      success: false,
+      data: [],
     );
+  }
+
+  Future<List<District>> getDistrict() async {
+    try {
+      final response = await dio
+          .get('https://epofhospital.github.io/vetcaare-data/api_amphure.json');
+      final statuCode = response.statusCode;
+      final body = response.data;
+      if (statuCode == 200) {
+        return districtFromJson(body);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return [];
   }
 }

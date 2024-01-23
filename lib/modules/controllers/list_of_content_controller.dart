@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 // Amplify Flutter Packages
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:get_storage/get_storage.dart';
 // import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 // import 'package:googleapis/storage/v1.dart';
 // import 'package:googleapis_auth/auth_io.dart';
@@ -29,6 +30,7 @@ import 'package:gsheets/gsheets.dart';
 import '../../api/api.dart';
 import '../../api/services/time_format.dart';
 import '../../constants/credentials.dart';
+import '../../models/district_model.dart';
 import '../../models/ossc_data_model.dart';
 
 // const _clientId = "1005734918784-qj24e6gjq99omrv7kf33um3k3plid0om.apps.googleusercontent.com";
@@ -36,8 +38,8 @@ import '../../models/ossc_data_model.dart';
 
 class ListOfContentController extends GetxController {
   var name = 'กิตติชัย'.obs;
-  var osscData = <Data>[].obs;
-  var osscFilterData = <Data>[].obs;
+  var osscData = <OsscData>[].obs;
+  var osscFilterData = <OsscData>[].obs;
   var isLoading = true.obs;
   var pdfFileUrl = Uint8List(0).obs;
   var open = false.obs;
@@ -159,9 +161,11 @@ class ListOfContentController extends GetxController {
   @override
   Future<void> onInit() async {
     // _configureAmplify();
+    name(GetStorage().read('name'));
     sheet = await gsheets.spreadsheet(Credential.ossc);
     worksheet = sheet!.worksheetByTitle('sheet1');
     pdfViewerController = PdfViewerController();
+    await getDistrict();
     getInformation();
     super.onInit();
   }
@@ -247,7 +251,7 @@ class ListOfContentController extends GetxController {
       key.currentState?.fields['recivedNumber']?.value,
       key.currentState?.fields['name']?.value,
       key.currentState?.fields['company']?.value,
-      key.currentState?.fields['district']?.value,
+      selectDistrict.value,
       key.currentState?.fields['phone']?.value.toString(),
       act.value,
       key.currentState?.fields['loaclType']?.value,
@@ -704,5 +708,28 @@ class ListOfContentController extends GetxController {
       File('assets/doc/$file').delete().ignore();
       print('remove : $file');
     }
+  }
+
+  List<District>? district;
+  var isLongDistrict = false.obs;
+  List<String> districtList = [];
+  var districteSelected = ''.obs;
+
+  Future<void> getDistrict() async {
+    // isLongDistrict.value = true;
+    await Api().getDistrict().then((value) {
+      district = value;
+    });
+    var dis = district?.where((element) => element.provinceId == 28);
+    // setValueDistrict();
+    // isLongDistrict.value = false;
+    dis?.forEach((element) {
+      districtList.add(element.nameTh ?? '');
+    });
+  }
+
+  var selectDistrict = ''.obs;
+  setDistrict({required String dropdownDetail}) {
+    selectDistrict.value = dropdownDetail;
   }
 }

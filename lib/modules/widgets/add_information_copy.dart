@@ -16,7 +16,7 @@ class AddListOfContentPopup {
               () => Container(
                   height: 640,
                   width: 1200,
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(32),
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(15)),
                   child: FormBuilder(
@@ -68,11 +68,54 @@ class AddListOfContentPopup {
                           ],
                         ),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             customField(
                                 label: 'ชื่อสถานประกอบการ', key: 'company'),
                             const SizedBox(width: 32),
-                            customField(label: 'อำเภอ', key: 'district'),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text('อำเภอ: ',
+                                      style: NotoSansThai.h3
+                                          .copyWith(color: Palette.black)),
+                                ),
+                                Container(
+                                  width: 280,
+                                  child: FormBuilderDropdown(
+                                      borderRadius: BorderRadius.circular(16),
+                                      onChanged: (value) {
+                                        controller.setDistrict(
+                                            dropdownDetail: value!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return '';
+                                        }
+                                        return null;
+                                      },
+                                      name: 'district',
+                                      decoration: customInputDecoration(
+                                          hintText: 'เลือกรายการ'),
+                                      isExpanded: true,
+                                      items: controller.districtList
+                                          .map(
+                                            (option) => DropdownMenuItem(
+                                              value: option,
+                                              child: Text(
+                                                option,
+                                                style: NotoSansThai.normal
+                                                    .copyWith(
+                                                        color: Palette.black),
+                                              ),
+                                            ),
+                                          )
+                                          .toList()),
+                                ),
+                              ],
+                            ),
                             const SizedBox(width: 32),
                             customField(label: 'เบอร์โทร', key: 'phone'),
                           ],
@@ -275,7 +318,8 @@ class AddListOfContentPopup {
                                 const SizedBox(width: 8),
                                 InkWell(
                                     onTap: () async {
-                                      await controller.pickFile(context: context);
+                                      await controller.pickFile(
+                                          context: context);
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(8),

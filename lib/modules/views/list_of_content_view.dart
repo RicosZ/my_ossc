@@ -608,7 +608,7 @@ class ListOfContent extends GetView<ListOfContentController> {
         ),
       );
 //SECTION - cell
-  Widget cell2({required Data data}) => Container(
+  Widget cell2({required OsscData data}) => Container(
         color: data.no! % 2 == 0 ? Palette.storke : Palette.white,
         child: Row(
           children: [

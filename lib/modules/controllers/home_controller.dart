@@ -1,9 +1,10 @@
+import 'package:crypt/crypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gsheets/gsheets.dart';
-import 'package:my_ossc/models/data_model2.dart';
+import 'package:my_ossc/models/ossc_user_model.dart';
 
 import '../../api/api.dart';
 import '../../constants/credentials.dart';
@@ -36,6 +37,11 @@ class HomeController extends GetxController {
   var auth = true.obs;
 
   login() async {
+    // final cryptPassword = Crypt.sha256(
+    //     key.currentState!.fields['password']?.value,
+    //     rounds: 512,
+    //     salt: 'ossckk');
+    // // print(cryptPassword.toString());
     isLoading(true);
     try {
       final listUser = await Api().fetchAllUser();
@@ -43,7 +49,7 @@ class HomeController extends GetxController {
       osscUser.firstWhere((element) {
         if (element.username == key.currentState!.fields['username']?.value &&
             element.password == key.currentState!.fields['password']?.value) {
-          GetStorage().write('user', element.username);
+          GetStorage().write('name', element.username);
           auth(true);
           return true;
         }

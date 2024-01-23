@@ -10,7 +10,7 @@ String osscToJson(Ossc data) => json.encode(data.toJson());
 
 class Ossc {
   bool? success;
-  List<Data>? data;
+  List<OsscData>? data;
 
   Ossc({
     this.success,
@@ -21,7 +21,8 @@ class Ossc {
         success: json["success"],
         data: json["data"] == null
             ? []
-            : List<Data>.from(json["data"]!.map((x) => Data.fromJson(x))),
+            : List<OsscData>.from(
+                json["data"]!.map((x) => OsscData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -32,7 +33,7 @@ class Ossc {
       };
 }
 
-class Data {
+class OsscData {
   int? no;
   DateTime? date;
   dynamic receiveNumber;
@@ -69,7 +70,7 @@ class Data {
   dynamic parcelNumber;
   dynamic status;
 
-  Data({
+  OsscData({
     this.no,
     this.date,
     this.receiveNumber,
@@ -107,7 +108,7 @@ class Data {
     this.status,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory OsscData.fromJson(Map<String, dynamic> json) => OsscData(
         no: json["ลำดับ"],
         date: json["วัน/เดือน/ปี"] == null
             ? null

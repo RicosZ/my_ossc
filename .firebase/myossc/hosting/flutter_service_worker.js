@@ -8,7 +8,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "bbc0c491e901e37edbe5f8ee0eba2d7c
 "assets/AssetManifest.json": "d81e05134bd56a1dd7759ca1aff6339d",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "assets/fonts/MaterialIcons-Regular.otf": "07df6cdd0d964fdc10391ec48d4419ed",
-"assets/NOTICES": "6c8bada479a229d4c8aca18f2dca764a",
+"assets/NOTICES": "f23489e2721fdecdd6afff499aeb08e2",
 "assets/packages/amplify_auth_cognito_dart/lib/src/workers/workers.min.js": "96a4f300372b4af473dfc064ed8c2bbb",
 "assets/packages/amplify_auth_cognito_dart/lib/src/workers/workers.min.js.map": "78431b9ab6f0bdf0ea53fb030d2f4dc7",
 "assets/packages/amplify_secure_storage_dart/lib/src/worker/workers.min.js": "79da0578419862d4aec86b686e06f90c",
@@ -34,9 +34,9 @@ const RESOURCES = {"assets/AssetManifest.bin": "bbc0c491e901e37edbe5f8ee0eba2d7c
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "38d61936f7544e150c8869198385dc0b",
-"/": "38d61936f7544e150c8869198385dc0b",
-"main.dart.js": "4ecbc2ca6a8447247d889d822b050416",
+"index.html": "b0443d2f384d687c72c43b705e96a8bc",
+"/": "b0443d2f384d687c72c43b705e96a8bc",
+"main.dart.js": "37f84942a3ea55bad546019a3688d873",
 "manifest.json": "a6e24582290e1df704015f900b8e82be",
 "version.json": "2c3b8fa08ca4ae94a8871783b71c39a5"};
 // The application shell files that are downloaded before a service worker can
