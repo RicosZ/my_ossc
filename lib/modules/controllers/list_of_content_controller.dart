@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:developer';
 import 'dart:typed_data';
 
 // Amplify Flutter Packages
@@ -21,11 +21,13 @@ import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 
 // import 'package:flutter_onedrive/flutter_onedrive.dart';
 import 'package:aws_common/vm.dart';
+import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:gsheets/gsheets.dart';
+import 'package:universal_io/io.dart';
 
 import '../../api/api.dart';
 import '../../api/services/time_format.dart';
@@ -160,8 +162,13 @@ class ListOfContentController extends GetxController {
   Worksheet? worksheet;
   @override
   Future<void> onInit() async {
+    // await testOnedrive();
     // _configureAmplify();
     name(GetStorage().read('name'));
+    await GetStorage().write('accessToken',
+        'eyJ0eXAiOiJKV1QiLCJub25jZSI6IlB6czZUMkQwOXIyUHRwamlvSjVPd0lkNEZ1VUsyNlE0a3k2WFk2dWdrb2siLCJhbGciOiJSUzI1NiIsIng1dCI6IlhSdmtvOFA3QTNVYVdTblU3Yk05blQwTWpoQSIsImtpZCI6IlhSdmtvOFA3QTNVYVdTblU3Yk05blQwTWpoQSJ9.eyJhdWQiOiJodHRwczovL2dyYXBoLm1pY3Jvc29mdC5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC84MjE3YWJjMi1kODA0LTQ3NzUtODZjNC01MjA4NTZiZDU3NWUvIiwiaWF0IjoxNzEwMjk3NDA2LCJuYmYiOjE3MTAyOTc0MDYsImV4cCI6MTcxMDMwMjg0NiwiYWNjdCI6MCwiYWNyIjoiMSIsImFpbyI6IkFUUUF5LzhXQUFBQU92SkVOZzh6a3JncVd5a3gxek1nUGZvOGVVWEI4aVBSNTkwbkhNeEpFT3hZMW9hYmlTVWEzSmNKRXJub2NleEQiLCJhbXIiOlsicHdkIl0sImFwcF9kaXNwbGF5bmFtZSI6Ik9uZURyaXZlLVN0b3JhZ2UiLCJhcHBpZCI6ImUxODk1ZjgxLWQyMTEtNGQ4MC1iNGEyLWZkZjBjOTgxNGZmYyIsImFwcGlkYWNyIjoiMSIsImZhbWlseV9uYW1lIjoia2twaG8wMDA0IiwiZ2l2ZW5fbmFtZSI6ImtrcGhvMDAwNCIsImlkdHlwIjoidXNlciIsImlwYWRkciI6IjExMC43OC4xNTEuMTY2IiwibmFtZSI6ImtrcGhvMDAwNCBra3BobzAwMDQiLCJvaWQiOiIwODk1OGJlNi1iNzUwLTQwOWYtOTY1YS1hYmJlOTA0NzIxNDEiLCJwbGF0ZiI6IjMiLCJwdWlkIjoiMTAwMzIwMDMxQ0UyRUU5OCIsInJoIjoiMC5BVDBBd3FzWGdnVFlkVWVHeEZJSVZyMVhYZ01BQUFBQUFBQUF3QUFBQUFBQUFBQ2hBRncuIiwic2NwIjoiRmlsZXMuUmVhZFdyaXRlLkFsbCBvcGVuaWQgcHJvZmlsZSBlbWFpbCIsInNpZ25pbl9zdGF0ZSI6WyJrbXNpIl0sInN1YiI6IlBwVDJncjQ0cjBWZ19SR2ZqeVZCX21KOTNLeWhVRWd6cmR4aTVjSjFwZzQiLCJ0ZW5hbnRfcmVnaW9uX3Njb3BlIjoiQVMiLCJ0aWQiOiI4MjE3YWJjMi1kODA0LTQ3NzUtODZjNC01MjA4NTZiZDU3NWUiLCJ1bmlxdWVfbmFtZSI6ImtrcGhvMDAwNEBra3BobzQwMTIub25taWNyb3NvZnQuY29tIiwidXBuIjoia2twaG8wMDA0QGtrcGhvNDAxMi5vbm1pY3Jvc29mdC5jb20iLCJ1dGkiOiJnWjhWSk14NW0wZTgzNTV1cEw5V0FBIiwidmVyIjoiMS4wIiwid2lkcyI6WyJiNzlmYmY0ZC0zZWY5LTQ2ODktODE0My03NmIxOTRlODU1MDkiXSwieG1zX3N0Ijp7InN1YiI6IlpzYURad0hOdlNtNEdIdzVOc1UtNmpicXRQQmhvYlhVUTdOSVNfNFhUVW8ifSwieG1zX3RjZHQiOjE3MDEwMDgyNzR9.JMqBlswM3VVjUqpgRUTb3WZ8juOucNoB8Oml-MJ0569pJSE2KyK5t4d1eEi3NEXhvST3fFpHIRdrowPpZpwy04wal5VixN1cjEBW5IwmfvcJvdCt4lQqhkrjFuB9dKwW42VUZdw37Ql_7Ram6FNEOtrwtLu5evD87XsXUJzT60MTE0Jm1-Z8zhvbNmIdqTe-JhciWyWn_tHuFd80xio6imCZBNmZKLmuKhQtaMj03YvhNYGOWbAwMfb8q1cz8aJb9IMdfVb9xzqfjjtuIaTJAPJqdX65MEeVXZj0lj3SlNk-_q106jC4CjoR_iBLnCU4_WdzzHkT6F9aDITI8-lTmw');
+    await GetStorage().write('refreshToken',
+        '0.AT0AwqsXggTYdUeGxFIIVr1XXoFfieER0oBNtKL98MmBT_yhAFw.AgABAAEAAADnfolhJpSnRYB1SVj-Hgd8AgDs_wUA9P_RPh5Stm_8V_DL3yWG1mQZCYtQPRYuuFYMWEk9S0oxMAbeU4TiFxyev9fYkeDWP8-ICqUimVa_Ds1SKGtogbC0UXkxxd3gLspZMhcdYPYIoMzXq6gNYENeVMJMbwwdfuEAVkTZ8MLlWNVYLCl_FHgfFGyJ4nstGAYTQR5tTqJ1ej1qf4JSFwPRXXgash9CQBF7cXquGnArAk6bVqxUc8ZObx05KnTyL_1JNh49Zcy7fMEi5mSUFqwki1RyoD1AYr58HSYve2mfHRAb1s-ZfvSrJxlctHENbRNB1uLlYLdUSXWTqkR4VYR8Jmdq0mPcClr_ptQl9f_FrkVUrIyIqWffutNqWTRplkbtyQUExLgHQGBBzc-3-riY_YY54H1Y-sIN7PpWcWb232wvyZr60WcT2-JixpHub7FnwH7IxTY2cIxO8_ff40O0OCQrhaAZJtPhkpngmQjPcjpBjjLjmy2QRmYk_MSPu6jkvRmziEXjgpEW5beVVI9zN0dGID2npsMiWH3Mjrgdua8ZQVunZyW7ENzsvrSm9u14xxREsnbqgxII-DWqIxtyh_GgCkQ6ISdRAuyVpqbkxk328RLoBTqZrqA96u2k4JX1KL_FPS7NE81eq9QRKGt72evLbTHr2J04etmBMTuxzMFXtscK-yzAEqKHvQ0mFrSEH9uq9qIJc1N2_i5z4m02AXyy9VdT5EZyqrumXLFoMByw1Ask9oKegi89-q-mx1y4OkUGRDo1pQ');
     sheet = await gsheets.spreadsheet(Credential.ossc);
     worksheet = sheet!.worksheetByTitle('sheet1');
     pdfViewerController = PdfViewerController();
@@ -225,20 +232,30 @@ class ListOfContentController extends GetxController {
   }
 
   addInformation() async {
-    String nameReplace = '';
-    String imageReplace = '';
+    // String nameReplace = '';
+    // String imageReplace = '';
     if (imgName.value != '') {
-      imageReplace = imgName.value.replaceAll(' ', '-');
-      await upload2Ftp(pathFile: image!.path, folderName: 'image');
+      // imageReplace = imgName.value.replaceAll(' ', '-');
+      // for (var i = 0; i < listFileName.length; i++) {
+      await upload2Onedrive(
+          rawPath: listPickedImage!.files.first.bytes!,
+          fileName: listPickedImage!.files.first.name);
+      // }
+      // await upload2Ftp(pathFile: image!.path, folderName: 'image');
       // imgUrl.value = await uploadfile(
       //     folder: 'image', file: image!, fileName: imgName.value);
     }
     if (fileNames.value != '') {
-      nameReplace = fileNames.value.replaceAll(' ', '-');
-      listFile
-          .map((file) async =>
-              await upload2Ftp(pathFile: file.path, folderName: 'document'))
-          .toList();
+      // nameReplace = fileNames.value.replaceAll(' ', '-');
+      // listFile
+      //     .map((file) async => await upload2Onedrive(
+      //         rawPath: file.bytes!, fileName: result.files.first.name))
+      //     .toList();
+      for (var i = 0; i < listFileName.length; i++) {
+        await upload2Onedrive(
+            rawPath: listPickedFile!.files[i].bytes!,
+            fileName: listPickedFile!.files[i].name);
+      }
       // listFile
       //     .map((file) async => await uploadfile(
       //         folder: 'document', file: File(file.path!), fileName: file.name))
@@ -258,10 +275,11 @@ class ListOfContentController extends GetxController {
       desc.value,
       key.currentState?.fields['cost']?.value,
       // imgName.value,
-      '=IMAGE("${imgUrl.value}")',
+      // '=IMAGE("${imgUrl.value}")',
+      '',
       // imgUrl.value,
-      imgName.value == '' ? '-' : imageReplace,
-      fileNames.value == '' ? '-' : nameReplace,
+      imgName.value == '' ? '-' : imgName.value,
+      fileNames.value == '' ? '-' : fileNames.value,
       name.value
     ]).then((value) async => {
           await worksheet!.values.insertRow(
@@ -277,7 +295,7 @@ class ListOfContentController extends GetxController {
               ],
               fromColumn: 16),
           await worksheet!.values
-              .insertRow(osscData.length + 1, ['รับเข้า'], fromColumn: 36),
+              .insertRow(osscData.length + 2, ['รับเข้า'], fromColumn: 36),
           loadInformation()
         });
     imgUrl('');
@@ -288,15 +306,17 @@ class ListOfContentController extends GetxController {
   File? image;
   var imgUrl = ''.obs;
   // var isPickedImage = false.obs;
+  FilePickerResult? listPickedImage;
   pickImage() async {
     // isPickedImage(false);
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
     );
     if (result != null) {
-      File file = File(result.files.single.path!);
+      listPickedImage = result;
+      // File file = File(result.files.single.path!);
       imgName(result.files.single.name);
-      image = File(file.path);
+      // image = File(file.path);
 
       update();
       // isPickedImage(true);
@@ -305,6 +325,7 @@ class ListOfContentController extends GetxController {
     }
   }
 
+  FilePickerResult? listPickedFile;
   var listFileName = [].obs;
   var listFile = [].obs;
   var listFileUrl = [].obs;
@@ -312,51 +333,63 @@ class ListOfContentController extends GetxController {
 
   pickFile({BuildContext? context}) async {
     FilePickerResult? result =
-        await FilePicker.platform.pickFiles(allowMultiple: true);
+        await FilePickerWeb.platform.pickFiles(allowMultiple: true);
     if (result != null) {
-      listFile.value = result.files.map((file) => file).toList();
+      listPickedFile = result;
+      // listFile.value = result.files.map((file) => file).toList();
+      // listFile.value = result.files.map((file) => file).toList();
       listFileName.value = result.names.map((name) => name).toList();
       fileNames.value = listFileName.join(', ');
       // uploadFileToGoogleDrive(File(result.files.first.path!));
       // upload2Onedrive(context: context);
+      // await upload2Onedrive(
+      //     rawPath: result.files.first.bytes!,
+      //     fileName: result.files.first.name);
     } else {
       // User canceled the picker
     }
   }
 
-  uploadfile(
-      {required String folder,
-      required File file,
-      required String fileName}) async {
-    // print('$folder/$fileName');
-    try {
-      final awsFile = AWSFilePlatform.fromFile(file);
-      final uploadResult = await Amplify.Storage.uploadFile(
-        options: const StorageUploadFileOptions(
-            accessLevel: StorageAccessLevel.guest),
-        localFile: awsFile,
-        key: '$folder/$fileName',
-      ).result;
-      print('Uploaded file: ${uploadResult.uploadedItem.key}');
-      final result = await Amplify.Storage.getUrl(
-        key: '$folder/$fileName',
-        options: const StorageGetUrlOptions(
-          accessLevel: StorageAccessLevel.guest,
-          pluginOptions: S3GetUrlPluginOptions(
-            validateObjectExistence: true,
-            // expiresIn: Duration(seconds: 15),
-          ),
-        ),
-      ).result;
-      return result.url.toString();
-    } catch (e) {
-      print(e);
-    }
-  }
+  // uploadfile(
+  //     {required String folder,
+  //     required File file,
+  //     required String fileName}) async {
+  //   // print('$folder/$fileName');
+  //   try {
+  //     final awsFile = AWSFilePlatform.fromFile(file);
+  //     final uploadResult = await Amplify.Storage.uploadFile(
+  //       options: const StorageUploadFileOptions(
+  //           accessLevel: StorageAccessLevel.guest),
+  //       localFile: awsFile,
+  //       key: '$folder/$fileName',
+  //     ).result;
+  //     print('Uploaded file: ${uploadResult.uploadedItem.key}');
+  //     final result = await Amplify.Storage.getUrl(
+  //       key: '$folder/$fileName',
+  //       options: const StorageGetUrlOptions(
+  //         accessLevel: StorageAccessLevel.guest,
+  //         pluginOptions: S3GetUrlPluginOptions(
+  //           validateObjectExistence: true,
+  //           // expiresIn: Duration(seconds: 15),
+  //         ),
+  //       ),
+  //     ).result;
+  //     return result.url.toString();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+  RxString token = ''.obs;
+  RxString filePath = ''.obs;
 
   getFileUrl({required String folder, required String fileName}) async {
-    await downloadFromFtp(fileName: fileName, folderName: folder);
+    // await downloadFromFtp(fileName: fileName, folderName: folder);
+    // print('$folder/$fileName');
+    // print(GetStorage().read('accessToken'));
+    // token(GetStorage().read('accessToken'));
     //ANCHOR - s3
+    pdfloading(true);
+    filePath('$folder/$fileName');
     // final result = await Amplify.Storage.getUrl(
     //   key: '$folder/$fileName',
     //   options: const StorageGetUrlOptions(
@@ -369,9 +402,27 @@ class ListOfContentController extends GetxController {
     // ).result;
     // print(result.url);
     // return result.url;
-    pdfFileUrl.value = File('assets/doc/$fileName').readAsBytesSync();
-    pdfloading(false);
-    return fileName;
+    // pdfFileUrl.value = File('assets/doc/$fileName').readAsBytesSync();
+    try {
+      // final expiredToken = await Api().checkExpiredToken(
+      //     accessToken: await GetStorage().read('accessToken'));
+      // if (expiredToken) {
+      //   print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa   $expiredToken');
+      await Api()
+          .reNewAccrssToken(refreshToken: GetStorage().read('refreshToken'))
+          .then((value) {
+        // GetStorage().write('accessToken', value);
+        token(value);
+        update();
+        log(token.value);
+      });
+      pdfloading(false);
+      // }
+      // print(GetStorage().read('accessToken'));
+      // return fileName;
+    } catch (e) {
+      // print(e);
+    }
   }
 
   // String getFileUrl({required String folder, required String fileName}) {
@@ -399,9 +450,9 @@ class ListOfContentController extends GetxController {
     osscData.assignAll(osscFilterData.where((data) {
       if ((desc.value == 'ทั้งหมด' || desc.value == '') &&
           (act.value == 'ทั้งหมด' || act.value == '')) {
-        return data.receiveNumber!.contains(searchController.value.text) ||
-            data.customer!.contains(searchController.value.text) ||
-            data.company!.contains(searchController.value.text);
+        return data.receiveNumber.contains(searchController.value.text) ||
+            data.customer.contains(searchController.value.text) ||
+            data.company.contains(searchController.value.text);
       }
       if (desc.value != 'ทั้งหมด' &&
           (act.value == 'ทั้งหมด' || act.value == '')) {
@@ -517,16 +568,21 @@ class ListOfContentController extends GetxController {
 
   sendResult(int index) async {
     if (fileNames.value != '') {
-      String nameReplace = fileNames.value.replaceAll(' ', '-');
-      listFile
-          .map((file) async =>
-              await upload2Ftp(pathFile: file.path, folderName: 'document'))
-          .toList();
+      // String nameReplace = fileNames.value.replaceAll(' ', '-');
+      // listFile
+      //     .map((file) async =>
+      //         await upload2Ftp(pathFile: file.path, folderName: 'document'))
+      //     .toList();
+      for (var i = 0; i < listFileName.length; i++) {
+        await upload2Onedrive(
+            rawPath: listPickedFile!.files[i].bytes!,
+            fileName: listPickedFile!.files[i].name);
+      }
       await worksheet!.values
           .insertRow(
               index + 1,
               [
-                nameReplace == '' ? '-' : nameReplace,
+                fileNames.value == '' ? '-' : fileNames.value,
                 resultStatus.value,
                 TimeFormat().getDatetime(date: DateTime.now().toString()),
                 name.value,
@@ -539,16 +595,21 @@ class ListOfContentController extends GetxController {
 
   sendConsider(int index) async {
     if (fileNames.value != '') {
-      String nameReplace = fileNames.value.replaceAll(' ', '-');
-      listFile
-          .map((file) async =>
-              await upload2Ftp(pathFile: file.path, folderName: 'document'))
-          .toList();
+      // String nameReplace = fileNames.value.replaceAll(' ', '-');
+      // listFile
+      //     .map((file) async =>
+      //         await upload2Ftp(pathFile: file.path, folderName: 'document'))
+      //     .toList();
+      for (var i = 0; i < listFileName.length; i++) {
+        await upload2Onedrive(
+            rawPath: listPickedFile!.files[i].bytes!,
+            fileName: listPickedFile!.files[i].name);
+      }
       await worksheet!.values
           .insertRow(
               index + 1,
               [
-                nameReplace == '' ? '-' : nameReplace,
+                fileNames.value == '' ? '-' : fileNames.value,
                 name.value,
               ],
               fromColumn: 23)
@@ -559,16 +620,21 @@ class ListOfContentController extends GetxController {
 
   acceptConsider(int index) async {
     if (fileNames.value != '') {
-      String nameReplace = fileNames.value.replaceAll(' ', '-');
-      listFile
-          .map((file) async =>
-              await upload2Ftp(pathFile: file.path, folderName: 'document'))
-          .toList();
+      // String nameReplace = fileNames.value.replaceAll(' ', '-');
+      // listFile
+      //     .map((file) async =>
+      //         await upload2Ftp(pathFile: file.path, folderName: 'document'))
+      //     .toList();
+      for (var i = 0; i < listFileName.length; i++) {
+        await upload2Onedrive(
+            rawPath: listPickedFile!.files[i].bytes!,
+            fileName: listPickedFile!.files[i].name);
+      }
       await worksheet!.values
           .insertRow(
               index + 1,
               [
-                nameReplace == '' ? '-' : nameReplace,
+                fileNames.value == '' ? '-' : fileNames.value,
                 name.value,
               ],
               fromColumn: 25)
@@ -624,22 +690,22 @@ class ListOfContentController extends GetxController {
     Get.back();
   }
 
-  renamePath({required String fileName, required String folderName}) async {
-    String nameReplace = fileName.replaceAll(' ', '-');
-    print(fileName);
-    print(nameReplace);
-    FTPConnect ftpConnect =
-        FTPConnect('172.28.3.223', user: 'abc', pass: '123456');
-    try {
-      await ftpConnect.connect();
-      await ftpConnect.changeDirectory(folderName);
-      await ftpConnect.rename(fileName, nameReplace).then(
-          (value) => print('renamed: $fileName => $nameReplace [$value]'));
-      await ftpConnect.disconnect();
-    } catch (e) {
-      print(e);
-    }
-  }
+  // renamePath({required String fileName, required String folderName}) async {
+  //   String nameReplace = fileName.replaceAll(' ', '-');
+  //   print(fileName);
+  //   print(nameReplace);
+  //   FTPConnect ftpConnect =
+  //       FTPConnect('172.28.3.223', user: 'abc', pass: '123456');
+  //   try {
+  //     await ftpConnect.connect();
+  //     await ftpConnect.changeDirectory(folderName);
+  //     await ftpConnect.rename(fileName, nameReplace).then(
+  //         (value) => print('renamed: $fileName => $nameReplace [$value]'));
+  //     await ftpConnect.disconnect();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   // final onedrive = OneDrive(
   //     redirectURL: "http://localhost:55477/OnAuthComplate",
@@ -660,55 +726,83 @@ class ListOfContentController extends GetxController {
   //   }
   // }
 
-  upload2Ftp({required String pathFile, required String folderName}) async {
-    String fileName = pathFile.split('\\').last;
-    //NOTE - Change ftp server
-    FTPConnect ftpConnect =
-        FTPConnect('172.28.3.223', user: 'abc', pass: '123456');
-    try {
-      await ftpConnect.connect();
-      await ftpConnect.createFolderIfNotExist(folderName);
-      await ftpConnect.changeDirectory(folderName);
-      bool res = await ftpConnect.uploadFile(File(pathFile));
-      await renamePath(fileName: fileName, folderName: folderName);
-      await ftpConnect.disconnect();
+  // upload2Ftp({required String pathFile, required String folderName}) async {
+  //   String fileName = pathFile.split('\\').last;
+  //   //NOTE - Change ftp server
+  //   FTPConnect ftpConnect =
+  //       FTPConnect('172.28.3.223', user: 'abc', pass: '123456');
+  //   try {
+  //     await ftpConnect.connect();
+  //     await ftpConnect.createFolderIfNotExist(folderName);
+  //     await ftpConnect.changeDirectory(folderName);
+  //     bool res = await ftpConnect.uploadFile(File(pathFile));
+  //     await renamePath(fileName: fileName, folderName: folderName);
+  //     await ftpConnect.disconnect();
+  //     print(res);
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
+  // downloadFromFtp(
+  //     {required String fileName, required String folderName}) async {
+  //   // filemock(fileName);
+  //   //NOTE - Change ftp server
+  //   FTPConnect ftpConnect =
+  //       FTPConnect('172.28.3.223', user: 'abc', pass: '123456');
+  //   try {
+  //     await ftpConnect.connect();
+  //     // await ftpConnect.changeDirectory(folderName);
+  //     print(await ftpConnect.currentDirectory());
+  //     bool res = await ftpConnect.downloadFile('$folderName/$fileName', file!);
+  //     await ftpConnect.disconnect();
+  //     print(res);
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
+  // File? file;
+  // Rx<bool> mocked = false.obs;
+  // filemock(String strfilename, List<int> byte) async {
+  //   print(strfilename);
+  //   print(byte);
+  //   try {
+  //     file = File('assets/doc/$strfilename').writeAsBytes(byte) as File?;
+  //     // file!.writeAsBytesSync(byte);
+  //     // await upload2Onedrive(file: file!);
+  //     print('create mock file : $file');
+  //     mocked(true);
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
+  upload2Onedrive(
+      {required Uint8List rawPath, required String fileName}) async {
+    await Api()
+        .reNewAccrssToken(refreshToken: GetStorage().read('refreshToken'))
+        .then((value) async {
+      // GetStorage().write('accessToken', value);
+      token(value);
+      update();
+      log(token.value);
+      final res = await Api()
+          .uploadFile(file: rawPath, fileName: fileName, token: value);
       print(res);
-    } catch (e) {
-      print(e);
-    }
+    });
   }
 
-  downloadFromFtp(
-      {required String fileName, required String folderName}) async {
-    filemock(fileName);
-    //NOTE - Change ftp server
-    FTPConnect ftpConnect =
-        FTPConnect('172.28.3.223', user: 'abc', pass: '123456');
-    try {
-      await ftpConnect.connect();
-      // await ftpConnect.changeDirectory(folderName);
-      print(await ftpConnect.currentDirectory());
-      bool res = await ftpConnect.downloadFile('$folderName/$fileName', file!);
-      await ftpConnect.disconnect();
-      print(res);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  File? file;
-  filemock(String strfilename) async {
-    file = File('assets/doc/$strfilename');
-    print('create mock file : $file');
-  }
-
-  removeMockFile(String strfilename) {
-    print(strfilename);
-    for (var file in strfilename.split(',-')) {
-      File('assets/doc/$file').delete().ignore();
-      print('remove : $file');
-    }
-  }
+  // removeMockFile(String strfilename) {
+  //   // print(strfilename);
+  //   if (mocked.value) {
+  //     for (var file in strfilename.split(',-')) {
+  //       File('assets/doc/$file').delete().ignore();
+  //       print('remove : $file');
+  //     }
+  //   }
+  //   mocked(false);
+  // }
 
   List<District>? district;
   var isLongDistrict = false.obs;

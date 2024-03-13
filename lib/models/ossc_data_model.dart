@@ -36,7 +36,7 @@ class Ossc {
 class OsscData {
   int? no;
   DateTime? date;
-  dynamic receiveNumber;
+  String receiveNumber;
   dynamic customer;
   dynamic company;
   dynamic district;
@@ -73,7 +73,7 @@ class OsscData {
   OsscData({
     this.no,
     this.date,
-    this.receiveNumber,
+    required this.receiveNumber,
     this.customer,
     this.company,
     this.district,

@@ -57,13 +57,16 @@ class ListOfContent extends GetView<ListOfContentController> {
                                   header: cell(data: controller.listHeader),
                                   content: Column(
                                     children: [
-                                      for (var doc in controller.osscData)
+                                      // for (var doc in controller.osscData)
+                                      for (var i = 0;
+                                          i < controller.osscData.length;
+                                          i++)
                                         InkWell(
                                             onTap: () {
-                                              Menu().list(doc.no!, doc.company);
-                                              print(doc.no);
+                                              Menu().list(controller.osscData[i].no!, controller.osscData[i].company);
+                                              print(controller.osscData[i].no);
                                             },
-                                            child: cell2(data: doc))
+                                            child: cell2(data: controller.osscData[i],index: i))
                                     ],
                                   )),
                             )),
@@ -608,8 +611,8 @@ class ListOfContent extends GetView<ListOfContentController> {
         ),
       );
 //SECTION - cell
-  Widget cell2({required OsscData data}) => Container(
-        color: data.no! % 2 == 0 ? Palette.storke : Palette.white,
+  Widget cell2({required OsscData data, required int index}) => Container(
+        color: index % 2 == 0 ? Palette.storke : Palette.white,
         child: Row(
           children: [
             //ANCHOR - ลำดับ
@@ -738,11 +741,14 @@ class ListOfContent extends GetView<ListOfContentController> {
                   ? Text(data.slipUrl.toString())
                   : InkWell(
                       onTap: () async {
+                        await controller.getFileUrl(
+                            folder: '/Documents/doc',
+                            fileName: data.slipUrl.toString());
                         // controller.getFileUrl(
                         //     folder: 'image', fileName: data.slipUrl.toString());
                         FilePopUp().image(
-                            imgUrl:
-                                '${await controller.getFileUrl(folder: 'image', fileName: data.slipUrl.toString())}');
+                            filePath: controller.filePath.value,
+                            token: controller.token.value);
                         // print(
                         //     'ดูรูป ${await controller.getFileUrl(folder: 'image', fileName: data.slipUrl.toString())}');
                       },

@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Phone',
+      title: 'ศูนย์ราชการสะดวก',
       debugShowCheckedModeBanner: false,
       //showPerformanceOverlay: true, //กดเปิดเพื่อดูประสิทธิภาพ ms per frame
       theme: Palette.themeData,

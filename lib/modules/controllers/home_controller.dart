@@ -49,7 +49,7 @@ class HomeController extends GetxController {
       osscUser.firstWhere((element) {
         if (element.username == key.currentState!.fields['username']?.value &&
             element.password == key.currentState!.fields['password']?.value) {
-          GetStorage().write('name', element.username);
+          GetStorage().write('name', element.name);
           auth(true);
           return true;
         }

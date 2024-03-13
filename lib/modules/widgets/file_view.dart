@@ -1,4 +1,5 @@
 import 'dart:developer';
+// import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import '../controllers/list_of_content_controller.dart';
 
 class FilePopUp {
   ListOfContentController controller = Get.find();
-  image({required String imgUrl}) => Get.dialog(Dialog(
+  image({required String filePath, required String token}) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Container(
           height: 600,
@@ -28,15 +29,20 @@ class FilePopUp {
               Expanded(
                 child: SingleChildScrollView(
                   child: Container(
-                      height: 480,
-                      width: 520,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Image.memory(
-                        controller.pdfFileUrl.value,
-                        height: 480,
-                      )),
+                    height: 480,
+                    width: 520,
+                    padding: const EdgeInsets.all(8),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    // child: Image.memory(
+                    //   controller.pdfFileUrl.value,
+                    //   height: 480,
+                    // ),
+                    child: Image.network(
+                      'https://graph.microsoft.com/v1.0/me/drive/root:$filePath:/content',
+                      headers: {'Authorization': 'Bearer $token'},
+                    ),
+                  ),
                 ),
               ),
               ElevatedButton(
@@ -51,7 +57,7 @@ class FilePopUp {
           ),
         ),
       )).then((value) {
-        controller.removeMockFile(imgUrl);
+        // controller.removeMockFile(imgUrl);
         controller.pdfFileUrl.value = Uint8List(0);
       });
 
@@ -72,34 +78,38 @@ class FilePopUp {
                 // width: 768,
                 child: Row(
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        for (var file in fileName.split(',-'))
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: InkWell(
-                                onTap: () async {
-                                  controller.open(true);
-                                  controller.pdfloading(true);
-                                  // controller.pdfFileUrl.value =
-                                  await controller.getFileUrl(
-                                      folder: 'document', fileName: file);
-                                },
-                                child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                            width: 1, color: Palette.storke)),
-                                    width: 200,
-                                    child: Text(
-                                      file,
-                                      // overflow: TextOverflow.clip,
-                                      // maxLines: 2,
-                                    ))),
-                          ),
-                      ],
+                    SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          for (var file in fileName.split(', '))
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: InkWell(
+                                  onTap: () async {
+                                    controller.open(true);
+                                    controller.pdfloading(true);
+                                    // controller.pdfFileUrl.value =
+                                    await controller.getFileUrl(
+                                        folder: '/Documents/doc',
+                                        fileName: file);
+                                  },
+                                  child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          border: Border.all(
+                                              width: 1, color: Palette.storke)),
+                                      width: 200,
+                                      child: Text(
+                                        file,
+                                        // overflow: TextOverflow.clip,
+                                        // maxLines: 2,
+                                      ))),
+                            ),
+                        ],
+                      ),
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,12 +125,12 @@ class FilePopUp {
                               child: Obx(
                                 () => controller.open.value
                                     ? controller.pdfloading.value
-                                        ? Center(
+                                        ? const Center(
                                             child: CircularProgressIndicator(),
                                           )
                                         : pdfView(
-                                            fileUrl:
-                                                controller.pdfFileUrl.value)
+                                            filePath: controller.filePath.value,
+                                            token: controller.token.value)
                                     : Container(),
                               )),
                         ),
@@ -141,7 +151,7 @@ class FilePopUp {
           ),
         ),
       )).then((value) {
-        controller.removeMockFile(fileName);
+        // controller.removeMockFile(fileName);
         controller.pdfFileUrl.value = Uint8List(0);
         controller.open(false);
         controller.pdfloading(true);
@@ -150,20 +160,24 @@ class FilePopUp {
   //       fileUrl, key: controller.pdfViewerKey,
   //       // height: 480,
   //     );
-  // pdfView({required String fileUrl}) => SfPdfViewer.asset(
-  //       onDocumentLoadFailed: (details) {
-  //         inspect(details);
-  //       },
-  //       fileUrl, key: controller.pdfViewerKey,
-  //       // height: 480,
-  //     );
-  pdfView({required Uint8List fileUrl}) => SfPdfViewer.memory(
-          // enableTextMarkupAnnotation: true,
-          controller: controller.pdfViewerController,
-          onDocumentLoadFailed: (details) {
-        inspect(details);
-      }, fileUrl,
-          key: controller.pdfViewerKey,
-          // height: 480,
-          );
+  pdfView({required String filePath, required String token}) =>
+      SfPdfViewer.network(
+        controller: controller.pdfViewerController,
+        onDocumentLoadFailed: (details) {
+          inspect(details);
+        },
+        'https://graph.microsoft.com/v1.0/me/drive/root:$filePath:/content',
+        headers: {'Authorization': 'Bearer $token'},
+        key: controller.pdfViewerKey,
+        // height: 480,
+      );
+  // pdfView({required Uint8List fileUrl}) => SfPdfViewer.memory(
+  //         // enableTextMarkupAnnotation: true,
+  //         controller: controller.pdfViewerController,
+  //         onDocumentLoadFailed: (details) {
+  //       inspect(details);
+  //     }, fileUrl,
+  //         key: controller.pdfViewerKey,
+  //         // height: 480,
+  //         );
 }

@@ -187,7 +187,7 @@ class Menu {
   appointResult(int index) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Obx(() => Container(
-            height: 600,
+            height: 610,
             width: 520,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
