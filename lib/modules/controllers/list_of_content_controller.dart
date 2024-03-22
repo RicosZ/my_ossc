@@ -202,6 +202,7 @@ class ListOfContentController extends GetxController {
     final da = await Api().fetchDataAll();
     osscData.assignAll(da.data ?? []);
     osscFilterData.assignAll(da.data ?? []);
+    osscData.sort((a, b) => b.no!.compareTo(a.no!));
     // final result = await Amplify.Storage.getUrl(
     //   key: 'image/013178100351BTF01999(1).jpeg',
     //   options: const StorageGetUrlOptions(
@@ -220,6 +221,7 @@ class ListOfContentController extends GetxController {
     final da = await Api().fetchDataAll();
     osscData.assignAll(da.data ?? []);
     osscFilterData.assignAll(da.data ?? []);
+    osscData.sort((a, b) => b.no!.compareTo(a.no!));
     if (!(desc.value == 'ทั้งหมด' || desc.value == '') ||
         !(act.value == 'ทั้งหมด' || act.value == '') ||
         !(searchController.value.text == '')) {
@@ -249,7 +251,6 @@ class ListOfContentController extends GetxController {
   }
 
   addInformation() async {
-    
     await loadInformation();
     // String nameReplace = '';
     // String imageReplace = '';
@@ -589,6 +590,7 @@ class ListOfContentController extends GetxController {
               data.customer.contains(searchController.value.text) ||
               data.company.contains(searchController.value.text));
     }));
+    osscData.sort((a, b) => b.no!.compareTo(a.no!));
   }
 
   // test(ga.DriveApi driveApi) async {
