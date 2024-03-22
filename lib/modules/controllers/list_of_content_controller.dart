@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -51,6 +52,7 @@ class ListOfContentController extends GetxController {
   late PdfViewerController pdfViewerController;
   // final PdfViewerController pdfController = PdfViewerController();
   final searchController = TextEditingController();
+  late Timer timer;
 
   final key = GlobalKey<FormBuilderState>();
   final List<String> listAnnotation = [
@@ -178,6 +180,10 @@ class ListOfContentController extends GetxController {
     pdfViewerController = PdfViewerController();
     await getDistrict();
     getInformation();
+    timer = Timer.periodic(const Duration(minutes: 2), (t) {
+      loadInformation();
+      // searchInformation();
+    });
     super.onInit();
   }
 
@@ -187,7 +193,9 @@ class ListOfContentController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    timer.cancel();
+  }
 
   getInformation() async {
     isLoading(true);
@@ -212,6 +220,11 @@ class ListOfContentController extends GetxController {
     final da = await Api().fetchDataAll();
     osscData.assignAll(da.data ?? []);
     osscFilterData.assignAll(da.data ?? []);
+    if (!(desc.value == 'ทั้งหมด' || desc.value == '') ||
+        !(act.value == 'ทั้งหมด' || act.value == '') ||
+        !(searchController.value.text == '')) {
+      searchInformation();
+    }
   }
 
   var act = ''.obs;
@@ -376,6 +389,26 @@ class ListOfContentController extends GetxController {
     imgUrl('');
     Get.back();
   }
+
+  // placeTeamRecive(int index) async {
+  //   await worksheet!.values
+  //       .insertRow(
+  //           index + 1,
+  //           [
+  //             name.value,
+  //             TimeFormat().getDatetime(
+  //                 date: DateTime.now().toString()),
+  //           ],
+  //           fromColumn: 33)
+  //       .then((value) async {
+  //     if (sign.value != 'จัดส่งไปรษณีย์' ||
+  //         key.currentState?.fields['parcelNumber']?.value != '') {
+  //       await updateSuccessStatus(index);
+  //     }
+  //     loadInformation();
+  //   });
+  //   Get.back();
+  // }
 
   var imgName = ''.obs;
   File? image;
