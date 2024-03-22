@@ -249,6 +249,7 @@ class ListOfContentController extends GetxController {
   }
 
   addInformation() async {
+    
     await loadInformation();
     // String nameReplace = '';
     // String imageReplace = '';
@@ -279,8 +280,8 @@ class ListOfContentController extends GetxController {
       //         folder: 'document', file: File(file.path!), fileName: file.name))
       //     .toList();
     }
-    await worksheet!.values.insertRow(osscData.length + 2, [
-      osscData.length + 1,
+    await worksheet!.values.insertRow(osscFilterData.length + 2, [
+      osscFilterData.length + 1,
       TimeFormat()
           .getDatetime(date: '${key.currentState?.fields['date']?.value}'),
       key.currentState?.fields['recivedNumber']?.value,

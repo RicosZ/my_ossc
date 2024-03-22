@@ -88,7 +88,7 @@ class AddListOfContentPopup {
                                           name: "recivedNumber",
                                           textInputAction: TextInputAction.next,
                                           initialValue:
-                                              'E${controller.osscData.length + 1}/${DateTime.now().year + 543}',
+                                              'E${controller.osscFilterData.length + 1}/${DateTime.now().year + 543}',
                                           // focusNode: focus,
                                           // obscureText: obscureText,
                                           // keyboardType: keyboardType,
