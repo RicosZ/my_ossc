@@ -202,7 +202,7 @@ class ListOfContentController extends GetxController {
     final da = await Api().fetchDataAll();
     osscData.assignAll(da.data ?? []);
     osscFilterData.assignAll(da.data ?? []);
-    osscData.sort((a, b) => b.no!.compareTo(a.no!));
+    // osscData.sort((a, b) => b.no!.compareTo(a.no!));
     // final result = await Amplify.Storage.getUrl(
     //   key: 'image/013178100351BTF01999(1).jpeg',
     //   options: const StorageGetUrlOptions(
@@ -221,7 +221,7 @@ class ListOfContentController extends GetxController {
     final da = await Api().fetchDataAll();
     osscData.assignAll(da.data ?? []);
     osscFilterData.assignAll(da.data ?? []);
-    osscData.sort((a, b) => b.no!.compareTo(a.no!));
+    // osscData.sort((a, b) => b.no!.compareTo(a.no!));
     if (!(desc.value == 'ทั้งหมด' || desc.value == '') ||
         !(act.value == 'ทั้งหมด' || act.value == '') ||
         !(searchController.value.text == '')) {
@@ -318,7 +318,7 @@ class ListOfContentController extends GetxController {
           //     ],
           //     fromColumn: 16),
           await worksheet!.values
-              .insertRow(osscData.length + 2, ['รับเข้า'], fromColumn: 36),
+              .insertRow(osscFilterData.length + 2, ['รับเข้า'], fromColumn: 36),
           loadInformation()
         });
     imgUrl('');
@@ -367,13 +367,13 @@ class ListOfContentController extends GetxController {
               key.currentState?.fields['name']?.value,
               key.currentState?.fields['company']?.value,
               selectDistrict.value == ''
-                  ? osscData[index - 1].district
+                  ? osscFilterData[index - 1].district
                   : selectDistrict.value,
               key.currentState?.fields['phone']?.value.toString(),
-              act.value == '' ? osscData[index - 1].act : act.value,
+              act.value == '' ? osscFilterData[index - 1].act : act.value,
               key.currentState?.fields['loaclType']?.value,
               desc.value == ''
-                  ? osscData[index - 1].desc
+                  ? osscFilterData[index - 1].desc
                   : desc.value == 'อืนๆ'
                       ? key.currentState?.fields['customDesc']?.value
                       : desc.value,
@@ -382,8 +382,8 @@ class ListOfContentController extends GetxController {
               // '=IMAGE("${imgUrl.value}")',
               '',
               // imgUrl.value,
-              imgName.value == '' ? osscData[index - 1].slipUrl : imgName.value,
-              fileNames.value == '' ? osscData[index - 1].doc : fileNames.value,
+              imgName.value == '' ? osscFilterData[index - 1].slipUrl : imgName.value,
+              fileNames.value == '' ? osscFilterData[index - 1].doc : fileNames.value,
               name.value
             ],
             fromColumn: 3)
@@ -590,7 +590,7 @@ class ListOfContentController extends GetxController {
               data.customer.contains(searchController.value.text) ||
               data.company.contains(searchController.value.text));
     }));
-    osscData.sort((a, b) => b.no!.compareTo(a.no!));
+    // osscData.sort((a, b) => b.no!.compareTo(a.no!));
   }
 
   // test(ga.DriveApi driveApi) async {

@@ -92,7 +92,7 @@ class ListOfContentPopup {
                                           name: "recivedNumber",
                                           textInputAction: TextInputAction.next,
                                           initialValue: controller
-                                              .osscData[index - 1]
+                                              .osscFilterData[index - 1]
                                               .receiveNumber,
                                           // focusNode: focus,
                                           // obscureText: obscureText,
