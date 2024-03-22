@@ -78,9 +78,8 @@ class Api {
       //       'fileName': 'test.pdf'
       //     };
       var fd = FormData.fromMap({
-        "token":
-            token,
-        'directory': 'Documents/doc',
+        "token": token,
+        'directory': '04_Premarketing/file_upload',
         "file": MultipartFile.fromBytes(file, filename: fileName),
         'fileName': fileName
       });
@@ -142,8 +141,9 @@ class Api {
       if (statusCode == 200) {
         print('aaaaaaaccccccccccccccccccccccccc');
         GetStorage().write('refreshToken', body['refresh_token']);
-        print(GetStorage().read('refreshToken'));
-        print('token: ${body['access_token']}');
+        // print(GetStorage().read('refreshToken'));
+        // print('token: ${body['access_token']}');
+        log(GetStorage().read('refreshToken'));
         return body['access_token'];
       }
     } catch (e) {

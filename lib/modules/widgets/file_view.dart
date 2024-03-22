@@ -90,8 +90,8 @@ class FilePopUp {
                                     controller.open(true);
                                     controller.pdfloading(true);
                                     // controller.pdfFileUrl.value =
-                                    await controller.getFileUrl(
-                                        folder: '/Documents/doc',
+                                    await controller.getRequireInformation(
+                                        folder: '/04_Premarketing/file_upload',
                                         fileName: file);
                                   },
                                   child: Container(

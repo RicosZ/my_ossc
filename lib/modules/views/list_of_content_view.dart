@@ -63,10 +63,16 @@ class ListOfContent extends GetView<ListOfContentController> {
                                           i++)
                                         InkWell(
                                             onTap: () {
-                                              Menu().list(controller.osscData[i].no!, controller.osscData[i].company);
+                                              Menu().list(
+                                                  controller.osscData[i].no!,
+                                                  controller
+                                                      .osscData[i].company,
+                                                  context);
                                               print(controller.osscData[i].no);
                                             },
-                                            child: cell2(data: controller.osscData[i],index: i))
+                                            child: cell2(
+                                                data: controller.osscData[i],
+                                                index: i))
                                     ],
                                   )),
                             )),
@@ -99,7 +105,9 @@ class ListOfContent extends GetView<ListOfContentController> {
                       borderRadius: BorderRadius.circular(10),
                       color: Palette.mainGreen),
                   child: InkWell(
-                    onTap: () {
+                    onTap: () async {
+                      // await controller.loadInformation();
+                      // ignore: use_build_context_synchronously
                       AddListOfContentPopup().add(context);
                     },
                     child: Center(
@@ -121,7 +129,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                   ),
                 ),
                 Text(
-                  '-',
+                  'ศูนย์ราชการสะดวก',
                   style: NotoSansThai.h1.copyWith(color: Palette.black),
                   overflow: TextOverflow.clip,
                 ),
@@ -481,33 +489,33 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data[20]),
             ),
-            //ANCHOR  เสนอพิจารณา
-            Container(
-              alignment: Alignment.center,
-              width: 160,
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[21]),
-            ),
-            //ANCHOR  เจ้าหน้าที่เสนอพิจารณา
-            Container(
-              alignment: Alignment.center,
-              width: 200,
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[22]),
-            ),
-            //ANCHOR  อนุมัติ
-            Container(
-              alignment: Alignment.center,
-              width: 140,
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[23]),
-            ),
+            // //ANCHOR  เสนอพิจารณา
+            // Container(
+            //   alignment: Alignment.center,
+            //   width: 160,
+            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            //   decoration: BoxDecoration(
+            //       border: Border.all(width: 1, color: Palette.black)),
+            //   child: Text(data[21]),
+            // ),
+            // //ANCHOR  เจ้าหน้าที่เสนอพิจารณา
+            // Container(
+            //   alignment: Alignment.center,
+            //   width: 200,
+            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            //   decoration: BoxDecoration(
+            //       border: Border.all(width: 1, color: Palette.black)),
+            //   child: Text(data[22]),
+            // ),
+            // //ANCHOR  อนุมัติ
+            // Container(
+            //   alignment: Alignment.center,
+            //   width: 140,
+            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            //   decoration: BoxDecoration(
+            //       border: Border.all(width: 1, color: Palette.black)),
+            //   child: Text(data[23]),
+            // ),
             //ANCHOR  ใบอนุญาต
             Container(
               alignment: Alignment.center,
@@ -741,8 +749,8 @@ class ListOfContent extends GetView<ListOfContentController> {
                   ? Text(data.slipUrl.toString())
                   : InkWell(
                       onTap: () async {
-                        await controller.getFileUrl(
-                            folder: '/Documents/doc',
+                        await controller.getRequireInformation(
+                            folder: '/04_Premarketing/file_upload',
                             fileName: data.slipUrl.toString());
                         // controller.getFileUrl(
                         //     folder: 'image', fileName: data.slipUrl.toString());
@@ -938,72 +946,72 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data.officer2.toString()),
             ),
-            //ANCHOR  เสนอพิจารณา
-            Container(
-              alignment: Alignment.center,
-              width: 160,
-              height: 50,
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Palette.black)),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Palette.mainGreen,
-                    borderRadius: BorderRadius.circular(8)),
-                child: InkWell(
-                  onTap: () {
-                    FilePopUp().document(fileName: '${data.consider}');
-                    // print('ดูเอกสารแนบ ${data.consider?.split(',-')[0]}');
-                    print('ดูเอกสารแยบ ${data.consider}');
-                  },
-                  child: Stack(children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Palette.mainGreen,
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                    Align(
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.search_outlined,
-                              size: 16,
-                              color: Palette.white,
-                            ),
-                            Text(
-                              'เอกสารแนบ',
-                              style: NotoSansThai.smallLabel
-                                  .copyWith(color: Palette.white),
-                            ),
-                          ],
-                        ))
-                  ]),
-                ),
-              ),
-            ),
-            //ANCHOR  เจ้าหน้าที่เสนอพิจารณา
-            Container(
-              alignment: Alignment.center,
-              width: 200,
-              height: 50,
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.officer3.toString()),
-            ),
-            //ANCHOR  อนุมัติ
-            Container(
-              alignment: Alignment.center,
-              width: 140,
-              height: 50,
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Palette.black)),
-              child: Text(
-                  TimeFormat().getDate(date: data.approvalDate.toString())),
-            ),
+            // ANCHOR  เสนอพิจารณา
+            // Container(
+            //   alignment: Alignment.center,
+            //   width: 160,
+            //   height: 50,
+            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            //   decoration: BoxDecoration(
+            //       border: Border.all(width: 1, color: Palette.black)),
+            //   child: Container(
+            //     decoration: BoxDecoration(
+            //         color: Palette.mainGreen,
+            //         borderRadius: BorderRadius.circular(8)),
+            //     child: InkWell(
+            //       onTap: () {
+            //         FilePopUp().document(fileName: '${data.consider}');
+            //         // print('ดูเอกสารแนบ ${data.consider?.split(',-')[0]}');
+            //         print('ดูเอกสารแยบ ${data.consider}');
+            //       },
+            //       child: Stack(children: [
+            //         Container(
+            //           decoration: BoxDecoration(
+            //               color: Palette.mainGreen,
+            //               borderRadius: BorderRadius.circular(8)),
+            //         ),
+            //         Align(
+            //             alignment: Alignment.center,
+            //             child: Row(
+            //               mainAxisAlignment: MainAxisAlignment.center,
+            //               children: [
+            //                 const Icon(
+            //                   Icons.search_outlined,
+            //                   size: 16,
+            //                   color: Palette.white,
+            //                 ),
+            //                 Text(
+            //                   'เอกสารแนบ',
+            //                   style: NotoSansThai.smallLabel
+            //                       .copyWith(color: Palette.white),
+            //                 ),
+            //               ],
+            //             ))
+            //       ]),
+            //     ),
+            //   ),
+            // ),
+            // //ANCHOR  เจ้าหน้าที่เสนอพิจารณา
+            // Container(
+            //   alignment: Alignment.center,
+            //   width: 200,
+            //   height: 50,
+            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            //   decoration: BoxDecoration(
+            //       border: Border.all(width: 1, color: Palette.black)),
+            //   child: Text(data.officer3.toString()),
+            // ),
+            // //ANCHOR  อนุมัติ
+            // Container(
+            //   alignment: Alignment.center,
+            //   width: 140,
+            //   height: 50,
+            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            //   decoration: BoxDecoration(
+            //       border: Border.all(width: 1, color: Palette.black)),
+            //   child: Text(
+            //       TimeFormat().getDate(date: data.approvalDate.toString())),
+            // ),
             //ANCHOR  ใบอนุญาต
             Container(
               alignment: Alignment.center,

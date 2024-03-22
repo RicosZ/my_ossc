@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:my_ossc/modules/widgets/edit_information.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/notosansthai.dart';
@@ -8,7 +11,7 @@ import '../controllers/list_of_content_controller.dart';
 
 class Menu {
   ListOfContentController controller = Get.find();
-  list(int index, String company) => Get.dialog(Dialog(
+  list(int index, String company, BuildContext context) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Container(
             height: 480,
@@ -28,6 +31,13 @@ class Menu {
                 const Spacer(),
                 InkWell(
                   onTap: () {
+                    ListOfContentPopup().edit(context, index);
+                  },
+                  child: customContainer('แก้ไขข้อมูล'),
+                ),
+                const SizedBox(height: 16),
+                InkWell(
+                  onTap: () {
                     appointment(index);
                   },
                   child: customContainer('นัดตรวจสถานที่'),
@@ -44,16 +54,16 @@ class Menu {
                   onTap: () {
                     consider(index);
                   },
-                  child: customContainer('เสนอพิจารณา'),
+                  child: customContainer('อัพโหลดใบอนุญาต'),
                 ),
                 const SizedBox(height: 16),
-                InkWell(
-                  onTap: () {
-                    accept(index);
-                  },
-                  child: customContainer('อนุมัติ'),
-                ),
-                const SizedBox(height: 16),
+                // InkWell(
+                //   onTap: () {
+                //     accept(index);
+                //   },
+                //   child: customContainer('อนุมัติ'),
+                // ),
+                // const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
                     addLicense(index);
@@ -86,7 +96,7 @@ class Menu {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('นัดตรวจสถานที่$index',
+                  Text('นัดตรวจสถานที่ ${controller.osscData[index-1].company}',
                       style: NotoSansThai.h1.copyWith(color: Palette.black)),
                   const SizedBox(height: 16),
                   Row(
@@ -194,7 +204,7 @@ class Menu {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('ผลการตรวจตรวจสถานที่$index',
+                Text('ผลการตรวจตรวจสถานที่ ${controller.osscData[index-1].company}',
                     style: NotoSansThai.h1.copyWith(color: Palette.black)),
                 const SizedBox(height: 16),
                 Container(
@@ -319,7 +329,7 @@ class Menu {
             controller.listFileName.value = [],
             controller.fileNames.value = ''
           });
-  //ANCHOR -  เสนอพิจารณา
+  //ANCHOR -  อัพโหลดใบอนุญาต
   consider(int index) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Obx(() => Container(
@@ -330,7 +340,7 @@ class Menu {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('เสนอพิจารณา$index',
+                Text('อัพโหลดใบอนุญาต ${controller.osscData[index-1].company}',
                     style: NotoSansThai.h1.copyWith(color: Palette.black)),
                 const SizedBox(height: 16),
                 Container(
@@ -418,40 +428,40 @@ class Menu {
             controller.listFileName.value = [],
             controller.fileNames.value = ''
           });
-  //ANCHOR -  อนุมัติ
-  accept(int index) => Get.dialog(
-        Dialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-          child: Container(
-            height: 420,
-            width: 520,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text('อนุมัติ$index',
-                    style: NotoSansThai.h1.copyWith(color: Palette.black)),
-                const SizedBox(height: 16),
-                //
-                const SizedBox(height: 16),
-                const Spacer(),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text(
-                        'บันทึก',
-                        style:
-                            NotoSansThai.normal.copyWith(color: Palette.black),
-                      )),
-                )
-              ],
-            ),
-          ),
-        ),
-      );
+  // //ANCHOR -  อนุมัติ
+  // accept(int index) => Get.dialog(
+  //       Dialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+  //         child: Container(
+  //           height: 420,
+  //           width: 520,
+  //           padding: const EdgeInsets.all(16),
+  //           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //             children: [
+  //               Text('อนุมัติ$index',
+  //                   style: NotoSansThai.h1.copyWith(color: Palette.black)),
+  //               const SizedBox(height: 16),
+  //               //
+  //               const SizedBox(height: 16),
+  //               const Spacer(),
+  //               Align(
+  //                 alignment: Alignment.bottomRight,
+  //                 child: ElevatedButton(
+  //                     onPressed: () {},
+  //                     child: Text(
+  //                       'บันทึก',
+  //                       style:
+  //                           NotoSansThai.normal.copyWith(color: Palette.black),
+  //                     )),
+  //               )
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     );
   //ANCHOR -  เพิ่มเลขใบอนุญาต
   addLicense(int index) => Get.dialog(
         Dialog(
@@ -467,7 +477,7 @@ class Menu {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('เพิ่มข้อมูลการอนุญาต $index',
+                  Text('เพิ่มข้อมูลการอนุญาต ${controller.osscData[index-1].company}',
                       style: NotoSansThai.h1.copyWith(color: Palette.black)),
                   const SizedBox(height: 16),
                   //
@@ -641,11 +651,16 @@ class Menu {
                                 ),
                               )
                               .toList()),
-                      controller.sign.value == 'จัดส่งไปรษณีย์'
+                      controller.sign.value == 'จัดส่งไปรษณีย์' ||
+                              controller.sign.value == 'มารับเอง'
                           ? customFormTextField(
                               key: 'parcelNumber',
-                              decoration: customAppInputDecoration(
-                                  hintText: 'เลขพัสดุ'))
+                              decoration:
+                                  controller.sign.value == 'จัดส่งไปรษณีย์'
+                                      ? customAppInputDecoration(
+                                          hintText: 'เลขพัสดุ')
+                                      : customAppInputDecoration(
+                                          hintText: 'ชื่อผู้รับ'))
                           : Container(),
                       const Spacer(),
                       Align(

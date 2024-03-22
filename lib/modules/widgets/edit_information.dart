@@ -7,9 +7,9 @@ import '../../constants/notosansthai.dart';
 // import '../controllers/home_controller.dart';
 import '../controllers/list_of_content_controller.dart';
 
-class AddListOfContentPopup {
+class ListOfContentPopup {
   ListOfContentController controller = Get.find();
-  add(BuildContext context) => Get.dialog(Dialog(
+  edit(BuildContext context, int index) => Get.dialog(Dialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
           child: SingleChildScrollView(
             child: Obx(
@@ -42,6 +42,10 @@ class AddListOfContentPopup {
                               width: 200,
                               child: FormBuilderDateTimePicker(
                                 inputType: InputType.date,
+                                enabled: false,
+                                initialValue: controller
+                                    .osscData[index - 1].date!
+                                    .add(const Duration(days: 1)),
                                 name: 'date',
                                 onChanged: (value) {
                                   controller.key.currentState?.fields['date']!
@@ -87,8 +91,9 @@ class AddListOfContentPopup {
                                         FormBuilderTextField(
                                           name: "recivedNumber",
                                           textInputAction: TextInputAction.next,
-                                          initialValue:
-                                              'E${controller.osscData.length + 1}/${DateTime.now().year + 543}',
+                                          initialValue: controller
+                                              .osscData[index - 1]
+                                              .receiveNumber,
                                           // focusNode: focus,
                                           // obscureText: obscureText,
                                           // keyboardType: keyboardType,
@@ -105,14 +110,19 @@ class AddListOfContentPopup {
                               ],
                             ),
                             const SizedBox(width: 32),
-                            customField(label: 'ชื่อผู้รับอนุญาต', key: 'name'),
+                            customField(
+                                label: 'ชื่อผู้รับอนุญาต',
+                                key: 'name',
+                                init: controller.osscData[index - 1].customer),
                           ],
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             customField(
-                                label: 'ชื่อสถานประกอบการ', key: 'company'),
+                                label: 'ชื่อสถานประกอบการ',
+                                key: 'company',
+                                init: controller.osscData[index - 1].company),
                             const SizedBox(width: 32),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,6 +147,9 @@ class AddListOfContentPopup {
                                         }
                                         return null;
                                       },
+                                      initialValue: controller
+                                          .osscData[index - 1].district
+                                          .toString(),
                                       name: 'district',
                                       decoration: customInputDecoration(
                                           hintText: 'เลือกรายการ'),
@@ -158,7 +171,10 @@ class AddListOfContentPopup {
                               ],
                             ),
                             const SizedBox(width: 32),
-                            customField(label: 'เบอร์โทร', key: 'phone'),
+                            customField(
+                                label: 'เบอร์โทร',
+                                key: 'phone',
+                                init: controller.osscData[index - 1].tel),
                           ],
                         ),
                         Row(
@@ -188,6 +204,9 @@ class AddListOfContentPopup {
                                         return null;
                                       },
                                       name: 'act',
+                                      initialValue: controller
+                                          .osscData[index - 1].act
+                                          .toString(),
                                       decoration: customInputDecoration(
                                           hintText: 'เลือกรายการ'),
                                       isExpanded: true,
@@ -209,7 +228,9 @@ class AddListOfContentPopup {
                             ),
                             const SizedBox(width: 32),
                             customField(
-                                label: 'ประเภทสถานที่', key: 'loaclType'),
+                                label: 'ประเภทสถานที่',
+                                key: 'loaclType',
+                                init: controller.osscData[index - 1].type),
                             const SizedBox(width: 32),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,6 +260,9 @@ class AddListOfContentPopup {
                                             return null;
                                           },
                                           name: 'desc',
+                                          initialValue: controller
+                                              .osscData[index - 1].desc
+                                              .toString(),
                                           decoration: customInputDecoration(
                                               hintText: 'เลือกรายการ'),
                                           isExpanded: true,
@@ -297,10 +321,11 @@ class AddListOfContentPopup {
                                 SizedBox(
                                   width: 75,
                                   child: customFormTextField(
-                                    key: 'cost',
-                                    decoration:
-                                        customInputDecoration(hintText: ''),
-                                  ),
+                                      key: 'cost',
+                                      decoration:
+                                          customInputDecoration(hintText: ''),
+                                      init: controller.osscData[index - 1].cost
+                                          .toString()),
                                 ),
                                 Text(' บาท',
                                     style: NotoSansThai.h3
@@ -433,7 +458,7 @@ class AddListOfContentPopup {
                               onPressed: () {
                                 if (controller.key.currentState!
                                     .saveAndValidate()) {
-                                  controller.addInformation();
+                                  controller.editInformation(index);
                                 }
                               },
                               child: Text(
@@ -494,6 +519,7 @@ Widget customField(
         {required String label,
         required String key,
         String? hint,
+        String? init,
         double width = 200}) =>
     Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -507,6 +533,7 @@ Widget customField(
           width: width,
           child: customFormTextField(
             key: key,
+            init: init,
             decoration: customInputDecoration(hintText: ''),
             validator: (value) {
               if (value == null) {
@@ -527,6 +554,7 @@ Widget customFormTextField(
     {String? label,
     String? key,
     bool obscureText = false,
+    String? init,
     TextInputType? keyboardType,
     FocusNode? focus,
     InputDecoration? decoration,
@@ -545,6 +573,7 @@ Widget customFormTextField(
         FormBuilderTextField(
           name: "$key",
           textInputAction: TextInputAction.next,
+          initialValue: init,
           focusNode: focus,
           obscureText: obscureText,
           keyboardType: keyboardType,

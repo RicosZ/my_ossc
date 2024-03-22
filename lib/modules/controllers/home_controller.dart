@@ -19,6 +19,7 @@ class HomeController extends GetxController {
   final gsheets = GSheets(Credential.sheet);
   Spreadsheet? sheet;
   Worksheet? worksheet;
+  RxBool obscure = true.obs;
   @override
   Future<void> onInit() async {
     sheet = await gsheets.spreadsheet(Credential.user);
@@ -49,7 +50,9 @@ class HomeController extends GetxController {
       osscUser.firstWhere((element) {
         if (element.username == key.currentState!.fields['username']?.value &&
             element.password == key.currentState!.fields['password']?.value) {
+          GetStorage().write('no', element.no);
           GetStorage().write('name', element.name);
+          GetStorage().write('refreshToken', element.token);
           auth(true);
           return true;
         }

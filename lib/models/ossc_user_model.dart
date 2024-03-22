@@ -35,6 +35,7 @@ class OsscUserData {
   String password;
   String name;
   String permission;
+  String token;
 
   OsscUserData({
     required this.no,
@@ -42,6 +43,7 @@ class OsscUserData {
     required this.password,
     required this.name,
     required this.permission,
+    required this.token,
   });
 
   factory OsscUserData.fromJson(Map<String, dynamic> json) => OsscUserData(
@@ -50,6 +52,7 @@ class OsscUserData {
         password: json["password"],
         name: json["name"],
         permission: json["permission"],
+        token: json["token"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -58,5 +61,6 @@ class OsscUserData {
         "password": password,
         "name": name,
         "permission": permission,
+        "token": token,
       };
 }

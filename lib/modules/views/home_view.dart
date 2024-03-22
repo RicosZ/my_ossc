@@ -51,15 +51,30 @@ class HomeView extends GetView<HomeController> {
                   'password:',
                   style: NotoSansThai.h3,
                 ),
-                customFormTextField(
+                Obx(() => customFormTextField(
                     key: 'password',
+                    obscureText: controller.obscure.value,
                     validator: (value) {
                       if (value == null) {
                         return '';
                       }
                       return null;
                     },
-                    decoration: customInputDecoration(hintText: 'รหัสผ่าน')),
+                    decoration: customInputDecoration(
+                      hintText: 'รหัสผ่าน',
+                      suffixIcon: Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: InkWell(
+                            onTap: () {
+                              controller.obscure(!controller.obscure.value);
+                            },
+                            child: controller.obscure.value
+                                ? const Icon(Icons.visibility_off_outlined,
+                                    color: Palette.greyIcon)
+                                : const Icon(Icons.remove_red_eye_outlined,
+                                    color: Palette.greyIcon),
+                          )),
+                    ))),
                 const SizedBox(height: 20),
                 ElevatedButton(
                     onPressed: () async {

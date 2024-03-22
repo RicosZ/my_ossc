@@ -95,6 +95,7 @@ class ListOfContentController extends GetxController {
     'ระบบ E-submission',
     'ชำระค่าปรับ',
     'ติดต่อ สอบถาม',
+    'อื่นๆ'
   ];
   final List<String> listFilterDesc = [
     'ทั้งหมด',
@@ -107,6 +108,7 @@ class ListOfContentController extends GetxController {
     'ระบบ E-submission',
     'ชำระค่าปรับ',
     'ติดต่อ สอบถาม',
+    'อื่นๆ'
   ];
   final List<String> listresultStatus = [
     'ผ่าน',
@@ -133,7 +135,7 @@ class ListOfContentController extends GetxController {
     "การชำระค่าธรรมเนียม",
     "เอกสารคำขอ",
     "เจ้าหน้าที่รับคำขอ",
-    "รอตรวจสถานที่/ อยู่ระหว่างดำเนินการ",
+    "สถานะการตรวจสถานที่",
     "เจ้าหน้าที่ตรวจสถานที่",
     "ตรวจสถานที่",
     "ผลตรวจ",
@@ -152,25 +154,27 @@ class ListOfContentController extends GetxController {
     "เลขใบอนุญาตผู้ดำเนินการสปา",
     "รับใบอนุญาต/รับเอกสาร",
     "วันที่รับ/วันที่จัดส่ง",
-    "เลขพัสดุ",
+    "ชื่อผู้รับ/เลขพัสดุ",
     "สถานนะ"
   ];
 
   final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
   final gsheets = GSheets(Credential.sheet);
   Spreadsheet? sheet;
+  Spreadsheet? sheetUser;
   Worksheet? worksheet;
+  Worksheet? worksheetUser;
   @override
   Future<void> onInit() async {
     // await testOnedrive();
     // _configureAmplify();
     name(GetStorage().read('name'));
-    await GetStorage().write('accessToken',
-        'eyJ0eXAiOiJKV1QiLCJub25jZSI6IlB6czZUMkQwOXIyUHRwamlvSjVPd0lkNEZ1VUsyNlE0a3k2WFk2dWdrb2siLCJhbGciOiJSUzI1NiIsIng1dCI6IlhSdmtvOFA3QTNVYVdTblU3Yk05blQwTWpoQSIsImtpZCI6IlhSdmtvOFA3QTNVYVdTblU3Yk05blQwTWpoQSJ9.eyJhdWQiOiJodHRwczovL2dyYXBoLm1pY3Jvc29mdC5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC84MjE3YWJjMi1kODA0LTQ3NzUtODZjNC01MjA4NTZiZDU3NWUvIiwiaWF0IjoxNzEwMjk3NDA2LCJuYmYiOjE3MTAyOTc0MDYsImV4cCI6MTcxMDMwMjg0NiwiYWNjdCI6MCwiYWNyIjoiMSIsImFpbyI6IkFUUUF5LzhXQUFBQU92SkVOZzh6a3JncVd5a3gxek1nUGZvOGVVWEI4aVBSNTkwbkhNeEpFT3hZMW9hYmlTVWEzSmNKRXJub2NleEQiLCJhbXIiOlsicHdkIl0sImFwcF9kaXNwbGF5bmFtZSI6Ik9uZURyaXZlLVN0b3JhZ2UiLCJhcHBpZCI6ImUxODk1ZjgxLWQyMTEtNGQ4MC1iNGEyLWZkZjBjOTgxNGZmYyIsImFwcGlkYWNyIjoiMSIsImZhbWlseV9uYW1lIjoia2twaG8wMDA0IiwiZ2l2ZW5fbmFtZSI6ImtrcGhvMDAwNCIsImlkdHlwIjoidXNlciIsImlwYWRkciI6IjExMC43OC4xNTEuMTY2IiwibmFtZSI6ImtrcGhvMDAwNCBra3BobzAwMDQiLCJvaWQiOiIwODk1OGJlNi1iNzUwLTQwOWYtOTY1YS1hYmJlOTA0NzIxNDEiLCJwbGF0ZiI6IjMiLCJwdWlkIjoiMTAwMzIwMDMxQ0UyRUU5OCIsInJoIjoiMC5BVDBBd3FzWGdnVFlkVWVHeEZJSVZyMVhYZ01BQUFBQUFBQUF3QUFBQUFBQUFBQ2hBRncuIiwic2NwIjoiRmlsZXMuUmVhZFdyaXRlLkFsbCBvcGVuaWQgcHJvZmlsZSBlbWFpbCIsInNpZ25pbl9zdGF0ZSI6WyJrbXNpIl0sInN1YiI6IlBwVDJncjQ0cjBWZ19SR2ZqeVZCX21KOTNLeWhVRWd6cmR4aTVjSjFwZzQiLCJ0ZW5hbnRfcmVnaW9uX3Njb3BlIjoiQVMiLCJ0aWQiOiI4MjE3YWJjMi1kODA0LTQ3NzUtODZjNC01MjA4NTZiZDU3NWUiLCJ1bmlxdWVfbmFtZSI6ImtrcGhvMDAwNEBra3BobzQwMTIub25taWNyb3NvZnQuY29tIiwidXBuIjoia2twaG8wMDA0QGtrcGhvNDAxMi5vbm1pY3Jvc29mdC5jb20iLCJ1dGkiOiJnWjhWSk14NW0wZTgzNTV1cEw5V0FBIiwidmVyIjoiMS4wIiwid2lkcyI6WyJiNzlmYmY0ZC0zZWY5LTQ2ODktODE0My03NmIxOTRlODU1MDkiXSwieG1zX3N0Ijp7InN1YiI6IlpzYURad0hOdlNtNEdIdzVOc1UtNmpicXRQQmhvYlhVUTdOSVNfNFhUVW8ifSwieG1zX3RjZHQiOjE3MDEwMDgyNzR9.JMqBlswM3VVjUqpgRUTb3WZ8juOucNoB8Oml-MJ0569pJSE2KyK5t4d1eEi3NEXhvST3fFpHIRdrowPpZpwy04wal5VixN1cjEBW5IwmfvcJvdCt4lQqhkrjFuB9dKwW42VUZdw37Ql_7Ram6FNEOtrwtLu5evD87XsXUJzT60MTE0Jm1-Z8zhvbNmIdqTe-JhciWyWn_tHuFd80xio6imCZBNmZKLmuKhQtaMj03YvhNYGOWbAwMfb8q1cz8aJb9IMdfVb9xzqfjjtuIaTJAPJqdX65MEeVXZj0lj3SlNk-_q106jC4CjoR_iBLnCU4_WdzzHkT6F9aDITI8-lTmw');
-    await GetStorage().write('refreshToken',
-        '0.AT0AwqsXggTYdUeGxFIIVr1XXoFfieER0oBNtKL98MmBT_yhAFw.AgABAAEAAADnfolhJpSnRYB1SVj-Hgd8AgDs_wUA9P_RPh5Stm_8V_DL3yWG1mQZCYtQPRYuuFYMWEk9S0oxMAbeU4TiFxyev9fYkeDWP8-ICqUimVa_Ds1SKGtogbC0UXkxxd3gLspZMhcdYPYIoMzXq6gNYENeVMJMbwwdfuEAVkTZ8MLlWNVYLCl_FHgfFGyJ4nstGAYTQR5tTqJ1ej1qf4JSFwPRXXgash9CQBF7cXquGnArAk6bVqxUc8ZObx05KnTyL_1JNh49Zcy7fMEi5mSUFqwki1RyoD1AYr58HSYve2mfHRAb1s-ZfvSrJxlctHENbRNB1uLlYLdUSXWTqkR4VYR8Jmdq0mPcClr_ptQl9f_FrkVUrIyIqWffutNqWTRplkbtyQUExLgHQGBBzc-3-riY_YY54H1Y-sIN7PpWcWb232wvyZr60WcT2-JixpHub7FnwH7IxTY2cIxO8_ff40O0OCQrhaAZJtPhkpngmQjPcjpBjjLjmy2QRmYk_MSPu6jkvRmziEXjgpEW5beVVI9zN0dGID2npsMiWH3Mjrgdua8ZQVunZyW7ENzsvrSm9u14xxREsnbqgxII-DWqIxtyh_GgCkQ6ISdRAuyVpqbkxk328RLoBTqZrqA96u2k4JX1KL_FPS7NE81eq9QRKGt72evLbTHr2J04etmBMTuxzMFXtscK-yzAEqKHvQ0mFrSEH9uq9qIJc1N2_i5z4m02AXyy9VdT5EZyqrumXLFoMByw1Ask9oKegi89-q-mx1y4OkUGRDo1pQ');
+    // data
     sheet = await gsheets.spreadsheet(Credential.ossc);
     worksheet = sheet!.worksheetByTitle('sheet1');
+    // user
+    sheetUser = await gsheets.spreadsheet(Credential.user);
+    worksheetUser = sheetUser!.worksheetByTitle('sheet1');
     pdfViewerController = PdfViewerController();
     await getDistrict();
     getInformation();
@@ -232,6 +236,7 @@ class ListOfContentController extends GetxController {
   }
 
   addInformation() async {
+    await loadInformation();
     // String nameReplace = '';
     // String imageReplace = '';
     if (imgName.value != '') {
@@ -266,13 +271,16 @@ class ListOfContentController extends GetxController {
       TimeFormat()
           .getDatetime(date: '${key.currentState?.fields['date']?.value}'),
       key.currentState?.fields['recivedNumber']?.value,
+      // 'E${osscData.length +1}/${DateTime.now().year+543}',
       key.currentState?.fields['name']?.value,
       key.currentState?.fields['company']?.value,
       selectDistrict.value,
       key.currentState?.fields['phone']?.value.toString(),
       act.value,
       key.currentState?.fields['loaclType']?.value,
-      desc.value,
+      desc.value == 'อืนๆ'
+          ? key.currentState?.fields['customDesc']?.value
+          : desc.value,
       key.currentState?.fields['cost']?.value,
       // imgName.value,
       // '=IMAGE("${imgUrl.value}")',
@@ -282,22 +290,89 @@ class ListOfContentController extends GetxController {
       fileNames.value == '' ? '-' : fileNames.value,
       name.value
     ]).then((value) async => {
-          await worksheet!.values.insertRow(
-              osscData.length + 1,
-              [
-                isAppointment.value == 'ไม่มีการตรวจ'
-                    ? 'ไม่มี'
-                    : 'รอตรวจสถานที่',
-                name.value,
-                isAppointment.value == 'นัดตรวจ'
-                    ? key.currentState?.fields['appDate']?.value.toString()
-                    : isAppointment.value,
-              ],
-              fromColumn: 16),
+          // await worksheet!.values.insertRow(
+          //     osscData.length + 2,
+          //     [
+          //       isAppointment.value == 'ไม่มีการตรวจ'
+          //           ? 'ไม่มี'
+          //           : 'รอตรวจสถานที่',
+          //       name.value,
+          //       isAppointment.value == 'นัดตรวจ'
+          //           ? key.currentState?.fields['appDate']?.value.toString()
+          //           : isAppointment.value,
+          //     ],
+          //     fromColumn: 16),
           await worksheet!.values
               .insertRow(osscData.length + 2, ['รับเข้า'], fromColumn: 36),
           loadInformation()
         });
+    imgUrl('');
+    Get.back();
+  }
+
+  editInformation(int index) async {
+    // String nameReplace = '';
+    // String imageReplace = '';
+    if (imgName.value != '') {
+      // imageReplace = imgName.value.replaceAll(' ', '-');
+      // for (var i = 0; i < listFileName.length; i++) {
+      await upload2Onedrive(
+          rawPath: listPickedImage!.files.first.bytes!,
+          fileName: listPickedImage!.files.first.name);
+      // }
+      // await upload2Ftp(pathFile: image!.path, folderName: 'image');
+      // imgUrl.value = await uploadfile(
+      //     folder: 'image', file: image!, fileName: imgName.value);
+    }
+    if (fileNames.value != '') {
+      // nameReplace = fileNames.value.replaceAll(' ', '-');
+      // listFile
+      //     .map((file) async => await upload2Onedrive(
+      //         rawPath: file.bytes!, fileName: result.files.first.name))
+      //     .toList();
+      for (var i = 0; i < listFileName.length; i++) {
+        await upload2Onedrive(
+            rawPath: listPickedFile!.files[i].bytes!,
+            fileName: listPickedFile!.files[i].name);
+      }
+      // listFile
+      //     .map((file) async => await uploadfile(
+      //         folder: 'document', file: File(file.path!), fileName: file.name))
+      //     .toList();
+    }
+    await worksheet!.values
+        .insertRow(
+            index + 1,
+            [
+              // osscData.length + 1,
+              // TimeFormat().getDatetime(
+              //     date: '${key.currentState?.fields['date']?.value}'),
+              key.currentState?.fields['recivedNumber']?.value,
+              // 'E${osscData.length +1}/${DateTime.now().year+543}',
+              key.currentState?.fields['name']?.value,
+              key.currentState?.fields['company']?.value,
+              selectDistrict.value == ''
+                  ? osscData[index - 1].district
+                  : selectDistrict.value,
+              key.currentState?.fields['phone']?.value.toString(),
+              act.value == '' ? osscData[index - 1].act : act.value,
+              key.currentState?.fields['loaclType']?.value,
+              desc.value == ''
+                  ? osscData[index - 1].desc
+                  : desc.value == 'อืนๆ'
+                      ? key.currentState?.fields['customDesc']?.value
+                      : desc.value,
+              key.currentState?.fields['cost']?.value,
+              // imgName.value,
+              // '=IMAGE("${imgUrl.value}")',
+              '',
+              // imgUrl.value,
+              imgName.value == '' ? osscData[index - 1].slipUrl : imgName.value,
+              fileNames.value == '' ? osscData[index - 1].doc : fileNames.value,
+              name.value
+            ],
+            fromColumn: 3)
+        .then((value) => loadInformation());
     imgUrl('');
     Get.back();
   }
@@ -382,7 +457,8 @@ class ListOfContentController extends GetxController {
   RxString token = ''.obs;
   RxString filePath = ''.obs;
 
-  getFileUrl({required String folder, required String fileName}) async {
+  getRequireInformation(
+      {required String folder, required String fileName}) async {
     // await downloadFromFtp(fileName: fileName, folderName: folder);
     // print('$folder/$fileName');
     // print(GetStorage().read('accessToken'));
@@ -410,11 +486,17 @@ class ListOfContentController extends GetxController {
       //   print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa   $expiredToken');
       await Api()
           .reNewAccrssToken(refreshToken: GetStorage().read('refreshToken'))
-          .then((value) {
+          .then((value) async {
         // GetStorage().write('accessToken', value);
+        //ANCHOR -  update refreshtoke in sheet
+        // log(GetStorage().read('no'));
+        await worksheetUser?.values.insertRow(
+            int.parse(GetStorage().read('no')) + 1,
+            [GetStorage().read('refreshToken')],
+            fromColumn: 6);
         token(value);
         update();
-        log(token.value);
+        // log(token.value);
       });
       pdfloading(false);
       // }
@@ -457,21 +539,21 @@ class ListOfContentController extends GetxController {
       if (desc.value != 'ทั้งหมด' &&
           (act.value == 'ทั้งหมด' || act.value == '')) {
         return data.desc == desc.value &&
-            (data.receiveNumber!.contains(searchController.value.text) ||
-                data.customer!.contains(searchController.value.text) ||
-                data.company!.contains(searchController.value.text));
+            (data.receiveNumber.contains(searchController.value.text) ||
+                data.customer.contains(searchController.value.text) ||
+                data.company.contains(searchController.value.text));
       }
       if (act.value != 'ทั้งหมด' &&
           (desc.value == 'ทั้งหมด' || desc.value == '')) {
         return data.act == act.value &&
-            (data.receiveNumber!.contains(searchController.value.text) ||
-                data.customer!.contains(searchController.value.text) ||
-                data.company!.contains(searchController.value.text));
+            (data.receiveNumber.contains(searchController.value.text) ||
+                data.customer.contains(searchController.value.text) ||
+                data.company.contains(searchController.value.text));
       }
       return (data.desc == desc.value && data.act == act.value) &&
-          (data.receiveNumber!.contains(searchController.value.text) ||
-              data.customer!.contains(searchController.value.text) ||
-              data.company!.contains(searchController.value.text));
+          (data.receiveNumber.contains(searchController.value.text) ||
+              data.customer.contains(searchController.value.text) ||
+              data.company.contains(searchController.value.text));
     }));
   }
 
@@ -784,6 +866,8 @@ class ListOfContentController extends GetxController {
         .reNewAccrssToken(refreshToken: GetStorage().read('refreshToken'))
         .then((value) async {
       // GetStorage().write('accessToken', value);
+      //ANCHOR -  update refreshtoke in sheet
+
       token(value);
       update();
       log(token.value);
