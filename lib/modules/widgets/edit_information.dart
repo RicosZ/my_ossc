@@ -44,7 +44,7 @@ class ListOfContentPopup {
                                 inputType: InputType.date,
                                 enabled: false,
                                 initialValue: controller
-                                    .osscData[index - 1].date!
+                                    .osscFilterData[index - 1].date!
                                     .add(const Duration(days: 1)),
                                 name: 'date',
                                 onChanged: (value) {
@@ -113,7 +113,7 @@ class ListOfContentPopup {
                             customField(
                                 label: 'ชื่อผู้รับอนุญาต',
                                 key: 'name',
-                                init: controller.osscData[index - 1].customer),
+                                init: controller.osscFilterData[index - 1].customer),
                           ],
                         ),
                         Row(
@@ -122,7 +122,7 @@ class ListOfContentPopup {
                             customField(
                                 label: 'ชื่อสถานประกอบการ',
                                 key: 'company',
-                                init: controller.osscData[index - 1].company),
+                                init: controller.osscFilterData[index - 1].company),
                             const SizedBox(width: 32),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +148,7 @@ class ListOfContentPopup {
                                         return null;
                                       },
                                       initialValue: controller
-                                          .osscData[index - 1].district
+                                          .osscFilterData[index - 1].district
                                           .toString(),
                                       name: 'district',
                                       decoration: customInputDecoration(
@@ -174,7 +174,7 @@ class ListOfContentPopup {
                             customField(
                                 label: 'เบอร์โทร',
                                 key: 'phone',
-                                init: controller.osscData[index - 1].tel),
+                                init: controller.osscFilterData[index - 1].tel),
                           ],
                         ),
                         Row(
@@ -205,7 +205,7 @@ class ListOfContentPopup {
                                       },
                                       name: 'act',
                                       initialValue: controller
-                                          .osscData[index - 1].act
+                                          .osscFilterData[index - 1].act
                                           .toString(),
                                       decoration: customInputDecoration(
                                           hintText: 'เลือกรายการ'),
@@ -230,7 +230,7 @@ class ListOfContentPopup {
                             customField(
                                 label: 'ประเภทสถานที่',
                                 key: 'loaclType',
-                                init: controller.osscData[index - 1].type),
+                                init: controller.osscFilterData[index - 1].type),
                             const SizedBox(width: 32),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,7 +261,7 @@ class ListOfContentPopup {
                                           },
                                           name: 'desc',
                                           initialValue: controller
-                                              .osscData[index - 1].desc
+                                              .osscFilterData[index - 1].desc
                                               .toString(),
                                           decoration: customInputDecoration(
                                               hintText: 'เลือกรายการ'),
@@ -324,7 +324,7 @@ class ListOfContentPopup {
                                       key: 'cost',
                                       decoration:
                                           customInputDecoration(hintText: ''),
-                                      init: controller.osscData[index - 1].cost
+                                      init: controller.osscFilterData[index - 1].cost
                                           .toString()),
                                 ),
                                 Text(' บาท',

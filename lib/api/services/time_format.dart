@@ -6,8 +6,9 @@ class TimeFormat {
     DateTime dateTime1;
     DateFormat formatter;
     try {
-      dmyString = DateFormat('y-M-d').format(DateTime.parse(date!).toLocal());
-      dateTime1 = DateFormat('y-M-d').parse(dmyString);
+      dmyString =
+          DateFormat('y-M-d H:m:s').format(DateTime.parse(date!).toLocal());
+      dateTime1 = DateFormat('y-M-d H:m:s').parse(dmyString);
       formatter = DateFormat('dd MMMM yyyy hh:mmน.', 'th');
       String formattedDate = formatter.format(dateTime1);
       final splitDate = formattedDate.split(' ');
