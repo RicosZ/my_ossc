@@ -113,7 +113,8 @@ class ListOfContentPopup {
                             customField(
                                 label: 'ชื่อผู้รับอนุญาต',
                                 key: 'name',
-                                init: controller.osscFilterData[index - 1].customer),
+                                init: controller
+                                    .osscFilterData[index - 1].customer),
                           ],
                         ),
                         Row(
@@ -122,7 +123,8 @@ class ListOfContentPopup {
                             customField(
                                 label: 'ชื่อสถานประกอบการ',
                                 key: 'company',
-                                init: controller.osscFilterData[index - 1].company),
+                                init: controller
+                                    .osscFilterData[index - 1].company),
                             const SizedBox(width: 32),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,7 +232,8 @@ class ListOfContentPopup {
                             customField(
                                 label: 'ประเภทสถานที่',
                                 key: 'loaclType',
-                                init: controller.osscFilterData[index - 1].type),
+                                init:
+                                    controller.osscFilterData[index - 1].type),
                             const SizedBox(width: 32),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,7 +327,8 @@ class ListOfContentPopup {
                                       key: 'cost',
                                       decoration:
                                           customInputDecoration(hintText: ''),
-                                      init: controller.osscFilterData[index - 1].cost
+                                      init: controller
+                                          .osscFilterData[index - 1].cost
                                           .toString()),
                                 ),
                                 Text(' บาท',
@@ -454,18 +458,30 @@ class ListOfContentPopup {
                         const Spacer(),
                         Align(
                           alignment: Alignment.bottomRight,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                if (controller.key.currentState!
-                                    .saveAndValidate()) {
-                                  controller.editInformation(index);
-                                }
-                              },
-                              child: Text(
-                                'บันทึก',
-                                style: NotoSansThai.normal
-                                    .copyWith(color: Palette.black),
-                              )),
+                          child: SizedBox(
+                            width: 120,
+                            child: ElevatedButton(
+                                onPressed: controller.loading.value
+                                    ? () {}
+                                    : () {
+                                        if (controller.key.currentState!
+                                            .saveAndValidate()) {
+                                          controller.editInformation(index);
+                                        }
+                                      },
+                                child: controller.loading.value
+                                    ? const Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      )
+                                    : Text(
+                                        'บันทึก',
+                                        style: NotoSansThai.normal
+                                            .copyWith(color: Palette.black),
+                                      )),
+                          ),
                         )
                       ],
                     ),

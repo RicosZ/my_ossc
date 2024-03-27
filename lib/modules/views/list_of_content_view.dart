@@ -606,6 +606,15 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data[33]),
             ),
+            //ANCHOR  ลายเซ็น
+            Container(
+              alignment: Alignment.center,
+              width: 150,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: const Text('ลายเซ็น'),
+            ),
             //ANCHOR  สถานนะ
             Container(
               alignment: Alignment.center,
@@ -755,6 +764,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                         // controller.getFileUrl(
                         //     folder: 'image', fileName: data.slipUrl.toString());
                         FilePopUp().image(
+                          label: 'การชำระค่าธรรมเนียม',
                             filePath: controller.filePath.value,
                             token: controller.token.value);
                         // print(
@@ -1145,6 +1155,56 @@ class ListOfContent extends GetView<ListOfContentController> {
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data.parcelNumber.toString()),
+            ),
+            //ANCHOR  การชำระค่าธรรมเนียม
+            Container(
+              alignment: Alignment.center,
+              width: 150,
+              height: 50,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: data.signature == ''
+                  ? Text(data.signature.toString())
+                  : InkWell(
+                      onTap: () async {
+                        await controller.getRequireInformation(
+                            folder: '/04_Premarketing/file_upload',
+                            fileName: data.signature.toString());
+                        // controller.getFileUrl(
+                        //     folder: 'image', fileName: data.slipUrl.toString());
+                        FilePopUp().image(
+                            label: 'ลายเซ็น',
+                            filePath: controller.filePath.value,
+                            token: controller.token.value);
+                        // print(
+                        //     'ดูรูป ${await controller.getFileUrl(folder: 'image', fileName: data.slipUrl.toString())}');
+                      },
+                      child: Stack(children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Palette.mainGreen,
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                        Align(
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.search_outlined,
+                                  size: 16,
+                                  color: Palette.white,
+                                ),
+                                Text(
+                                  'ลายเซ็น',
+                                  style: NotoSansThai.smallLabel
+                                      .copyWith(color: Palette.white),
+                                ),
+                              ],
+                            ))
+                      ]),
+                    ),
             ),
             //ANCHOR  สถานนะ
             Container(

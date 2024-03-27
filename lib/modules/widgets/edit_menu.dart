@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:my_ossc/modules/widgets/edit_information.dart';
+import 'package:signature/signature.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/notosansthai.dart';
@@ -73,8 +72,8 @@ class Menu {
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
-                    controller
-                        .sign(controller.osscData[index - 1].sign.toString());
+                    controller.sign(
+                        controller.osscFilterData[index - 1].sign.toString());
                     receiveDocuments(index);
                   },
                   child: customContainer('รับเอกสาร/เพิ่มเลขพัสดุ'),
@@ -96,7 +95,8 @@ class Menu {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('นัดตรวจสถานที่ ${controller.osscData[index-1].company}',
+                  Text(
+                      'นัดตรวจสถานที่ ${controller.osscFilterData[index - 1].company}',
                       style: NotoSansThai.h1.copyWith(color: Palette.black)),
                   const SizedBox(height: 16),
                   Row(
@@ -177,17 +177,30 @@ class Menu {
                   const Spacer(),
                   Align(
                     alignment: Alignment.bottomRight,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          controller.isAppointment.value != ''
-                              ? controller.addAppointment(index)
-                              : null;
-                        },
-                        child: Text(
-                          'บันทึก',
-                          style: NotoSansThai.normal
-                              .copyWith(color: Palette.black),
-                        )),
+                    child: SizedBox(
+                      width: 120,
+                      child: ElevatedButton(
+                          onPressed: controller.loading.value
+                              ? () {}
+                              : () {
+                                  controller.isAppointment.value != ''
+                                      ? controller.addAppointment(index)
+                                      : null;
+                                },
+                          child: controller.loading.value
+                              ? const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 8),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                )
+                              : Text(
+                                  'บันทึก',
+                                  style: NotoSansThai.normal
+                                      .copyWith(color: Palette.black),
+                                )),
+                    ),
                   )
                 ],
               ),
@@ -197,14 +210,15 @@ class Menu {
   appointResult(int index) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Obx(() => Container(
-            height: 610,
+            height: 640,
             width: 520,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('ผลการตรวจตรวจสถานที่ ${controller.osscData[index-1].company}',
+                Text(
+                    'ผลการตรวจตรวจสถานที่ ${controller.osscFilterData[index - 1].company}',
                     style: NotoSansThai.h1.copyWith(color: Palette.black)),
                 const SizedBox(height: 16),
                 Container(
@@ -311,17 +325,30 @@ class Menu {
                 const Spacer(),
                 Align(
                   alignment: Alignment.bottomRight,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        controller.listFileName.isNotEmpty
-                            ? controller.sendResult(index)
-                            : null;
-                      },
-                      child: Text(
-                        'บันทึก',
-                        style:
-                            NotoSansThai.normal.copyWith(color: Palette.black),
-                      )),
+                  child: SizedBox(
+                    width: 120,
+                    child: ElevatedButton(
+                        onPressed: controller.loading.value
+                            ? () {}
+                            : () {
+                                controller.listFileName.isNotEmpty
+                                    ? controller.sendResult(index)
+                                    : null;
+                              },
+                        child: controller.loading.value
+                            ? const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            : Text(
+                                'บันทึก',
+                                style: NotoSansThai.normal
+                                    .copyWith(color: Palette.black),
+                              )),
+                  ),
                 )
               ],
             ))),
@@ -333,14 +360,15 @@ class Menu {
   consider(int index) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Obx(() => Container(
-            height: 600,
+            height: 640,
             width: 520,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('อัพโหลดใบอนุญาต ${controller.osscData[index-1].company}',
+                Text(
+                    'อัพโหลดใบอนุญาต ${controller.osscFilterData[index - 1].company}',
                     style: NotoSansThai.h1.copyWith(color: Palette.black)),
                 const SizedBox(height: 16),
                 Container(
@@ -410,17 +438,30 @@ class Menu {
                 const Spacer(),
                 Align(
                   alignment: Alignment.bottomRight,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        controller.listFileName.isNotEmpty
-                            ? controller.sendConsider(index)
-                            : null;
-                      },
-                      child: Text(
-                        'บันทึก',
-                        style:
-                            NotoSansThai.normal.copyWith(color: Palette.black),
-                      )),
+                  child: SizedBox(
+                    width: 120,
+                    child: ElevatedButton(
+                        onPressed: controller.loading.value
+                            ? () {}
+                            : () {
+                                controller.listFileName.isNotEmpty
+                                    ? controller.sendConsider(index)
+                                    : null;
+                              },
+                        child: controller.loading.value
+                            ? const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            : Text(
+                                'บันทึก',
+                                style: NotoSansThai.normal
+                                    .copyWith(color: Palette.black),
+                              )),
+                  ),
                 )
               ],
             ))),
@@ -467,223 +508,333 @@ class Menu {
         Dialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-          child: Container(
-            height: 520,
-            width: 680,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
-            child: FormBuilder(
-              key: controller.key,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text('เพิ่มข้อมูลการอนุญาต ${controller.osscData[index-1].company}',
-                      style: NotoSansThai.h1.copyWith(color: Palette.black)),
-                  const SizedBox(height: 16),
-                  //
-                  Row(
+          child: Obx(() => Container(
+                height: 520,
+                width: 680,
+                padding: const EdgeInsets.all(16),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                child: FormBuilder(
+                  key: controller.key,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Flexible(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('เลขสถาที่', style: NotoSansThai.h2),
-                              customFormTextField(
-                                  key: 'placeNumber',
-                                  decoration: customAppInputDecoration(
-                                      hintText: 'เลขสถาที่'))
-                            ],
-                          )),
-                      const SizedBox(width: 24),
-                      Flexible(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('เลขใบอนุญาต', style: NotoSansThai.h2),
-                              customFormTextField(
-                                  key: 'licenseNumber',
-                                  decoration: customAppInputDecoration(
-                                      hintText: 'เลขใบอนุญาต'))
-                            ],
-                          ))
+                      Text(
+                          'เพิ่มข้อมูลการอนุญาต ${controller.osscFilterData[index - 1].company}',
+                          style:
+                              NotoSansThai.h1.copyWith(color: Palette.black)),
+                      const SizedBox(height: 16),
+                      //
+                      Row(
+                        children: [
+                          Flexible(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('เลขสถาที่',
+                                      style: NotoSansThai.h2),
+                                  customFormTextField(
+                                      key: 'placeNumber',
+                                      decoration: customAppInputDecoration(
+                                          hintText: 'เลขสถาที่'))
+                                ],
+                              )),
+                          const SizedBox(width: 24),
+                          Flexible(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('เลขใบอนุญาต',
+                                      style: NotoSansThai.h2),
+                                  customFormTextField(
+                                      key: 'licenseNumber',
+                                      decoration: customAppInputDecoration(
+                                          hintText: 'เลขใบอนุญาต'))
+                                ],
+                              ))
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Flexible(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('เลขใบอนุญาตประกอบกิจ',
+                                      style: NotoSansThai.h2),
+                                  customFormTextField(
+                                      key: 'businessNumber',
+                                      decoration: customAppInputDecoration(
+                                          hintText: 'เลขใบอนุญาตประกอบกิจ'))
+                                ],
+                              )),
+                          const SizedBox(width: 24),
+                          Flexible(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('เลขใบอนุญาตดำเนินการ',
+                                      style: NotoSansThai.h2),
+                                  customFormTextField(
+                                      key: 'operatingNumber',
+                                      decoration: customAppInputDecoration(
+                                          hintText: 'เลขใบอนุญาตดำเนินการ'))
+                                ],
+                              ))
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Flexible(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('เลขใบอนุญาตโฆษณา',
+                                      style: NotoSansThai.h2),
+                                  customFormTextField(
+                                      key: 'advertisingNumber',
+                                      decoration: customAppInputDecoration(
+                                          hintText: 'เลขใบอนุญาตโฆษณา'))
+                                ],
+                              )),
+                          const SizedBox(width: 24),
+                          Flexible(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('เลขใบอนุญาตผู้ดำเนินการสปา',
+                                      style: NotoSansThai.h2),
+                                  customFormTextField(
+                                      key: 'spaOperatorNumber',
+                                      decoration: customAppInputDecoration(
+                                          hintText:
+                                              'เลขใบอนุญาตผู้ดำเนินการสปา'))
+                                ],
+                              ))
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Spacer(),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: SizedBox(
+                          width: 120,
+                          child: ElevatedButton(
+                              onPressed: controller.loading.value
+                                  ? () {}
+                                  : () {
+                                      if (controller.key.currentState!
+                                          .saveAndValidate()) {
+                                        controller.addLicenseNumber(index);
+                                      }
+                                    },
+                              child: controller.loading.value
+                                  ? const Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 8),
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    )
+                                  : Text(
+                                      'บันทึก',
+                                      style: NotoSansThai.normal
+                                          .copyWith(color: Palette.black),
+                                    )),
+                        ),
+                      )
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Flexible(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('เลขใบอนุญาตประกอบกิจ',
-                                  style: NotoSansThai.h2),
-                              customFormTextField(
-                                  key: 'businessNumber',
-                                  decoration: customAppInputDecoration(
-                                      hintText: 'เลขใบอนุญาตประกอบกิจ'))
-                            ],
-                          )),
-                      const SizedBox(width: 24),
-                      Flexible(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('เลขใบอนุญาตดำเนินการ',
-                                  style: NotoSansThai.h2),
-                              customFormTextField(
-                                  key: 'operatingNumber',
-                                  decoration: customAppInputDecoration(
-                                      hintText: 'เลขใบอนุญาตดำเนินการ'))
-                            ],
-                          ))
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Flexible(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('เลขใบอนุญาตโฆษณา',
-                                  style: NotoSansThai.h2),
-                              customFormTextField(
-                                  key: 'advertisingNumber',
-                                  decoration: customAppInputDecoration(
-                                      hintText: 'เลขใบอนุญาตโฆษณา'))
-                            ],
-                          )),
-                      const SizedBox(width: 24),
-                      Flexible(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('เลขใบอนุญาตผู้ดำเนินการสปา',
-                                  style: NotoSansThai.h2),
-                              customFormTextField(
-                                  key: 'spaOperatorNumber',
-                                  decoration: customAppInputDecoration(
-                                      hintText: 'เลขใบอนุญาตผู้ดำเนินการสปา'))
-                            ],
-                          ))
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  const Spacer(),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          if (controller.key.currentState!.saveAndValidate()) {
-                            controller.addLicenseNumber(index);
-                          }
-                        },
-                        child: Text(
-                          'บันทึก',
-                          style: NotoSansThai.normal
-                              .copyWith(color: Palette.black),
-                        )),
-                  )
-                ],
-              ),
-            ),
-          ),
+                ),
+              )),
         ),
       );
   //ANCHOR -  รับเอกสาร
   receiveDocuments(int index) => Get.dialog(
         Dialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-          child: Container(
-            height: 420,
-            width: 460,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
-            child: Obx(() => FormBuilder(
-                  key: controller.key,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text('รับเอกสาร/เพิ่มเลขพัสดุ ',
-                          style:
-                              NotoSansThai.h1.copyWith(color: Palette.black)),
-                      const SizedBox(height: 16),
-                      //
-                      const Text(
-                        'วันที่รับ/วันที่จัดส่ง',
-                        style: NotoSansThai.h2,
-                      ),
-                      FormBuilderDateTimePicker(
-                          name: 'receiveDate',
-                          onChanged: (value) {
-                            controller.key.currentState?.fields['receiveDate']!
-                                .save();
-                          },
-                          inputType: InputType.date),
-                      const SizedBox(height: 8),
-                      const Text('การรับใบอนุญาต', style: NotoSansThai.h2),
-                      FormBuilderDropdown(
-                          name: 'sign',
-                          initialValue:
-                              controller.osscData[index - 1].sign.toString(),
-                          decoration: customAppInputDecoration(
-                              hintText: 'การรับใบอนุญาต'),
-                          onChanged: (value) async {
-                            await controller.setSign(dropdownDetail: value!);
-                          },
-                          items: controller.listReciveDoc
-                              .map(
-                                (option) => DropdownMenuItem(
-                                  value: option,
-                                  child: Text(
-                                    option,
-                                    style: NotoSansThai.normal
-                                        .copyWith(color: Palette.black),
-                                  ),
-                                ),
-                              )
-                              .toList()),
-                      controller.sign.value == 'จัดส่งไปรษณีย์' ||
-                              controller.sign.value == 'มารับเอง'
-                          ? customFormTextField(
-                              key: 'parcelNumber',
-                              decoration:
-                                  controller.sign.value == 'จัดส่งไปรษณีย์'
-                                      ? customAppInputDecoration(
-                                          hintText: 'เลขพัสดุ')
-                                      : customAppInputDecoration(
-                                          hintText: 'ชื่อผู้รับ'))
-                          : Container(),
-                      const Spacer(),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: ElevatedButton(
-                            onPressed: () {
-                              if (controller.key.currentState!
-                                  .saveAndValidate()) {
-                                controller.receiveDocuments(index);
-                              }
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            child: Obx(
+              () => Container(
+                  height: 420,
+                  width: 460,
+                  padding: const EdgeInsets.all(16),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                  child: FormBuilder(
+                    key: controller.key,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('รับเอกสาร/เพิ่มเลขพัสดุ ',
+                            style:
+                                NotoSansThai.h1.copyWith(color: Palette.black)),
+                        const SizedBox(height: 16),
+                        //
+                        const Text(
+                          'วันที่รับ/วันที่จัดส่ง',
+                          style: NotoSansThai.h2,
+                        ),
+                        FormBuilderDateTimePicker(
+                            name: 'receiveDate',
+                            onChanged: (value) {
+                              controller
+                                  .key.currentState?.fields['receiveDate']!
+                                  .save();
                             },
-                            child: Text(
-                              'บันทึก',
-                              style: NotoSansThai.normal
-                                  .copyWith(color: Palette.black),
-                            )),
-                      )
-                    ],
-                  ),
-                )),
-          ),
-        ),
-      ).then((value) => controller.sign(''));
+                            inputType: InputType.date),
+                        const SizedBox(height: 8),
+                        const Text('การรับใบอนุญาต', style: NotoSansThai.h2),
+                        FormBuilderDropdown(
+                            name: 'sign',
+                            initialValue: controller
+                                .osscFilterData[index - 1].sign
+                                .toString(),
+                            decoration: customAppInputDecoration(
+                                hintText: 'การรับใบอนุญาต'),
+                            onChanged: (value) async {
+                              await controller.setSign(dropdownDetail: value!);
+                            },
+                            items: controller.listReciveDoc
+                                .map(
+                                  (option) => DropdownMenuItem(
+                                    value: option,
+                                    child: Text(
+                                      option,
+                                      style: NotoSansThai.normal
+                                          .copyWith(color: Palette.black),
+                                    ),
+                                  ),
+                                )
+                                .toList()),
+                        controller.sign.value == 'จัดส่งไปรษณีย์' ||
+                                controller.sign.value == 'มารับเอง'
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.only(top: 16),
+                                    width: 300,
+                                    child: customFormTextField(
+                                        key: 'parcelNumber',
+                                        decoration: controller.sign.value ==
+                                                'จัดส่งไปรษณีย์'
+                                            ? customAppInputDecoration(
+                                                hintText: 'เลขพัสดุ')
+                                            : customAppInputDecoration(
+                                                hintText: 'ชื่อผู้รับ')),
+                                  ),
+                                  controller.sign.value == 'มารับเอง'
+                                      ? ElevatedButton(
+                                          onPressed: () {
+                                            sign(index);
+                                          },
+                                          child: const Text('เซ็นรับ'))
+                                      : Container()
+                                ],
+                              )
+                            : Container(),
+                        const Spacer(),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: SizedBox(
+                            width: 120,
+                            child: ElevatedButton(
+                                onPressed: controller.loading.value
+                                    ? () {}
+                                    : () {
+                                        if (controller.key.currentState!
+                                            .saveAndValidate()) {
+                                          controller.receiveDocuments(index);
+                                        }
+                                      },
+                                child: controller.loading.value
+                                    ? const Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 8),
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      )
+                                    : Text(
+                                        'บันทึก',
+                                        style: NotoSansThai.normal
+                                            .copyWith(color: Palette.black),
+                                      )),
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+            )),
+      ).then((value) {
+        controller.sign('');
+        controller.signature.clear();
+      });
+  sign(int index) => Get.dialog(
+        Dialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            child: Container(
+                height: 548,
+                width: 680,
+                padding: const EdgeInsets.all(16),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('เซ็นรับเอกสาร ',
+                        style: NotoSansThai.h1.copyWith(color: Palette.black)),
+                    const SizedBox(height: 16),
+                    Signature(
+                      backgroundColor: Colors.white,
+                      controller: controller.signature,
+                      width: 580,
+                      height: 400,
+                    ),
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              controller.signature.clear();
+                            },
+                            child: const Card(
+                                child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text('ลบ'),
+                            ))),
+                        InkWell(
+                            onTap: () async {
+                              controller.signatureImage(
+                                  await controller.signature.toPngBytes());
+                              Get.back();
+                              // await controller.upload2Onedrive(
+                              //     rawPath: controller.signatureImage.value,
+                              //     fileName: 'test-signature.png');
+                            },
+                            child: const Card(
+                                child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text('บันทึก'),
+                            )))
+                      ],
+                    ),
+                  ],
+                ))),
+      );
 }
 
 Widget customFormTextField(

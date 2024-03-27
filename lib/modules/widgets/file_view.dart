@@ -12,7 +12,7 @@ import '../controllers/list_of_content_controller.dart';
 
 class FilePopUp {
   ListOfContentController controller = Get.find();
-  image({required String filePath, required String token}) => Get.dialog(Dialog(
+  image({required String filePath, required String token,required String label}) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Container(
           height: 600,
@@ -23,7 +23,7 @@ class FilePopUp {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'การชำระค่าธรรมเนียม',
+                label,
                 style: NotoSansThai.h1.copyWith(color: Palette.black),
               ),
               Expanded(

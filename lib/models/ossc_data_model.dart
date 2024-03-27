@@ -68,6 +68,7 @@ class OsscData {
   dynamic sign;
   dynamic receiveDate;
   dynamic parcelNumber;
+  dynamic signature;
   dynamic status;
 
   OsscData({
@@ -105,6 +106,7 @@ class OsscData {
     this.sign,
     this.receiveDate,
     this.parcelNumber,
+    this.signature,
     this.status,
   });
 
@@ -145,6 +147,7 @@ class OsscData {
         sign: json["รับใบอนุญาต/รับเอกสาร"],
         receiveDate: json["วันที่รับ/วันที่จัดส่ง"],
         parcelNumber: json["เลขพัสดุ"],
+        signature: json["ลายเซ็น"],
         status: json["สถานนะ"],
       );
 
@@ -183,6 +186,7 @@ class OsscData {
         "รับใบอนุญาต/รับเอกสาร": sign,
         "วันที่รับ/วันที่จัดส่ง": receiveDate,
         "เลขพัสดุ": parcelNumber,
+        "ลายเซ็น": signature,
         "สถานนะ": status,
       };
 }

@@ -57,6 +57,7 @@ dependencies:
   get_storage: ^2.1.1
   crypt: ^4.3.1
   universal_io: ^2.2.2
+  signature: ^5.4.1
   # http_parser: ^4.0.2
   
 

@@ -429,18 +429,31 @@ class AddListOfContentPopup {
                         const Spacer(),
                         Align(
                           alignment: Alignment.bottomRight,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                if (controller.key.currentState!
-                                    .saveAndValidate()) {
-                                  controller.addInformation();
-                                }
-                              },
-                              child: Text(
-                                'บันทึก',
-                                style: NotoSansThai.normal
-                                    .copyWith(color: Palette.black),
-                              )),
+                          child: SizedBox(
+                            width: 120,
+                            child: ElevatedButton(
+                                onPressed: controller.loading.value
+                                    ? () {}
+                                    : () {
+                                        if (controller.key.currentState!
+                                            .saveAndValidate()) {
+                                          controller.addInformation();
+                                        }
+                                      },
+                                child: controller.loading.value
+                                    ? const Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 8),
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      )
+                                    : Text(
+                                        'บันทึก',
+                                        style: NotoSansThai.normal
+                                            .copyWith(color: Palette.black),
+                                      )),
+                          ),
                         )
                       ],
                     ),
