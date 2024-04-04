@@ -445,7 +445,7 @@ class Menu {
                             ? () {}
                             : () {
                                 controller.listFileName.isNotEmpty
-                                    ? controller.sendConsider(index)
+                                    ? controller.acceptConsider(index)
                                     : null;
                               },
                         child: controller.loading.value
@@ -532,12 +532,12 @@ class Menu {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('เลขสถาที่',
+                                  const Text('เลขสถาณที่',
                                       style: NotoSansThai.h2),
                                   customFormTextField(
                                       key: 'placeNumber',
                                       decoration: customAppInputDecoration(
-                                          hintText: 'เลขสถาที่'))
+                                          hintText: 'เลขสถาณที่'))
                                 ],
                               )),
                           const SizedBox(width: 24),

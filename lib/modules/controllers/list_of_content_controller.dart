@@ -276,7 +276,7 @@ class ListOfContentController extends GetxController {
       osscFilterData.length + 1,
       TimeFormat()
           .getDatetime(date: '${key.currentState?.fields['date']?.value}'),
-      key.currentState?.fields['recivedNumber']?.value,
+      'E${osscFilterData.length + 1}/${DateTime.now().year + 543}',
       // 'E${osscData.length +1}/${DateTime.now().year+543}',
       key.currentState?.fields['name']?.value,
       key.currentState?.fields['company']?.value,
@@ -574,32 +574,34 @@ class ListOfContentController extends GetxController {
     } // error alert
   }
 
-  sendConsider(int index) async {
-    loading(true);
-    if (fileNames.value != '') {
-      // String nameReplace = fileNames.value.replaceAll(' ', '-');
-      // listFile
-      //     .map((file) async =>
-      //         await upload2Ftp(pathFile: file.path, folderName: 'document'))
-      //     .toList();
-      for (var i = 0; i < listFileName.length; i++) {
-        await upload2Onedrive(
-            rawPath: listPickedFile!.files[i].bytes!,
-            fileName: listPickedFile!.files[i].name);
-      }
-      await worksheet!.values
-          .insertRow(
-              index + 1,
-              [
-                fileNames.value == '' ? '-' : fileNames.value,
-                name.value,
-              ],
-              fromColumn: 23)
-          .then((value) => loadInformation());
-      loading(false);
-      Get.back();
-    } // error alert
-  }
+  // sendConsider(int index) async {
+  //   loading(true);
+  //   if (fileNames.value != '') {
+  //     // String nameReplace = fileNames.value.replaceAll(' ', '-');
+  //     // listFile
+  //     //     .map((file) async =>
+  //     //         await upload2Ftp(pathFile: file.path, folderName: 'document'))
+  //     //     .toList();
+  //     for (var i = 0; i < listFileName.length; i++) {
+  //       await upload2Onedrive(
+  //           rawPath: listPickedFile!.files[i].bytes!,
+  //           fileName: listPickedFile!.files[i].name);
+  //     }
+  //     await worksheet!.values
+  //         .insertRow(
+  //             index + 1,
+  //             [
+  //               fileNames.value == '' ? '-' : fileNames.value,
+  //               // TimeFormat().getDatetime(date: DateTime.now().toString()),
+
+  //               // name.value,
+  //             ],
+  //             fromColumn: 23)
+  //         .then((value) => loadInformation());
+  //     loading(false);
+  //     Get.back();
+  //   } // error alert
+  // }
 
   acceptConsider(int index) async {
     loading(true);
@@ -619,9 +621,10 @@ class ListOfContentController extends GetxController {
               index + 1,
               [
                 fileNames.value == '' ? '-' : fileNames.value,
-                name.value,
+                // TimeFormat().getDatetime(date: DateTime.now().toString()),
+                // name.value,
               ],
-              fromColumn: 25)
+              fromColumn: 26)
           .then((value) => loadInformation());
       loading(false);
       Get.back();
@@ -733,6 +736,7 @@ class ListOfContentController extends GetxController {
     dis?.forEach((element) {
       districtList.add(element.nameTh ?? '');
     });
+      // districtList.add('อื่นๆ');
   }
 
   var selectDistrict = ''.obs;

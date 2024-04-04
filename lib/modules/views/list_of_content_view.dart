@@ -27,7 +27,6 @@ class ListOfContent extends GetView<ListOfContentController> {
           const Spacer(),
           Obx(
             () => controller.isLoading.value
-                //FIXME - fix loading
                 ? const Center(
                     // alignment: Alignment.center,
                     child: CircularProgressIndicator(),
@@ -42,10 +41,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                         padding: const EdgeInsets.all(8),
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height -
-                            64 -
-                            36 -
-                            32 -
-                            18,
+                            166,
                         child: SingleChildScrollView(
                             primary: false,
                             controller: controller.horizontal,
@@ -87,8 +83,8 @@ class ListOfContent extends GetView<ListOfContentController> {
   }
 
   Widget header(BuildContext context) => Container(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-        height: 150,
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
+        height: 158,
         decoration: const BoxDecoration(color: Palette.lightGrey),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,164 +129,172 @@ class ListOfContent extends GetView<ListOfContentController> {
                   style: NotoSansThai.h1.copyWith(color: Palette.black),
                   overflow: TextOverflow.clip,
                 ),
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  alignment: Alignment.topCenter,
-                  width: 86,
-                  height: 36,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Palette.mainGreen),
-                  child: InkWell(
-                    onTap: () {
-                      controller.getInformation();
-                    },
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'รีเฟชร',
-                            style:
-                                NotoSansThai.h3.copyWith(color: Palette.black),
-                          ),
-                          const Icon(
-                            Icons.refresh,
-                            size: 20,
-                          )
-                        ],
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 0, bottom: 16),
+                      child: Container(
+                        child: Text('ชื่อผู้ใช้งาน: ${controller.name.value}',style: NotoSansThai.h2,),
                       ),
                     ),
-                  ),
-                ),
-              ],
-            ),
-            //ANCHOR - Search
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'พ.ร.บ',
-                        style: NotoSansThai.h4.copyWith(color: Palette.black),
-                      ),
-                      SizedBox(
-                        height: 38,
-                        width: 280,
-                        child: FormBuilderDropdown(
-                            borderRadius: BorderRadius.circular(16),
-                            onChanged: (value) async {
-                              await controller.setAct(dropdownDetail: value!);
-                              controller.searchInformation();
-                            },
-                            name: 'act',
-                            decoration:
-                                customInputDecoration(hintText: 'พ.ร.บ'),
-                            isExpanded: true,
-                            items: controller.listFilterAct
-                                .map(
-                                  (option) => DropdownMenuItem(
-                                    value: option,
-                                    child: Text(
-                                      option,
-                                      style: NotoSansThai.normal
-                                          .copyWith(color: Palette.black),
-                                    ),
-                                  ),
-                                )
-                                .toList()),
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: 8),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'ธุรกรรม',
-                        style: NotoSansThai.h4.copyWith(color: Palette.black),
-                      ),
-                      SizedBox(
-                        height: 38,
-                        width: 240,
-                        child: FormBuilderDropdown(
-                            borderRadius: BorderRadius.circular(16),
-                            onChanged: (value) async {
-                              await controller.setDesc(dropdownDetail: value!);
-                              controller.searchInformation();
-                            },
-                            name: 'desc',
-                            decoration:
-                                customInputDecoration(hintText: 'ธุรกรรม'),
-                            isExpanded: true,
-                            items: controller.listFilterDesc
-                                .map(
-                                  (option) => DropdownMenuItem(
-                                    value: option,
-                                    child: Text(
-                                      option,
-                                      style: NotoSansThai.normal
-                                          .copyWith(color: Palette.black),
-                                    ),
-                                  ),
-                                )
-                                .toList()),
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: 8),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'ค้นหา',
-                        style: NotoSansThai.h4.copyWith(color: Palette.black),
-                      ),
-                      SizedBox(
-                          height: 38,
-                          width: 420,
-                          child: TextField(
-                            textInputAction: TextInputAction.go,
-                            controller: controller.searchController,
-                            onSubmitted: (value) {
-                              print(controller.searchController.value.text);
-                              controller.searchInformation();
-                            },
-                            onChanged: (value) {
-                              print(value);
-                              controller.searchInformation();
-                            },
-                          )),
-                    ],
-                  ),
-                  const SizedBox(width: 16),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Container(
-                      padding: const EdgeInsets.only(bottom: 8),
+                    Container(
+                      padding: const EdgeInsets.all(4),
                       alignment: Alignment.topCenter,
-                      width: 60,
-                      height: 32,
+                      width: 86,
+                      height: 36,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Palette.mainGreen),
                       child: InkWell(
                         onTap: () {
-                          print(controller.searchController.value.text);
-                          controller.searchInformation();
+                          controller.getInformation();
                         },
-                        child: Text(
-                          'ค้นหา',
-                          style: NotoSansThai.h3.copyWith(color: Palette.black),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'รีเฟชร',
+                                style: NotoSansThai.h3
+                                    .copyWith(color: Palette.black),
+                              ),
+                              const Icon(
+                                Icons.refresh,
+                                size: 20,
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
+                  ],
+                ),
+              ],
+            ),
+            //ANCHOR - Search
+            Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'พ.ร.บ',
+                      style: NotoSansThai.h4.copyWith(color: Palette.black),
+                    ),
+                    SizedBox(
+                      height: 38,
+                      width: 280,
+                      child: FormBuilderDropdown(
+                          borderRadius: BorderRadius.circular(16),
+                          onChanged: (value) async {
+                            await controller.setAct(dropdownDetail: value!);
+                            controller.searchInformation();
+                          },
+                          name: 'act',
+                          decoration:
+                              customInputDecoration(hintText: 'พ.ร.บ'),
+                          isExpanded: true,
+                          items: controller.listFilterAct
+                              .map(
+                                (option) => DropdownMenuItem(
+                                  value: option,
+                                  child: Text(
+                                    option,
+                                    style: NotoSansThai.normal
+                                        .copyWith(color: Palette.black),
+                                  ),
+                                ),
+                              )
+                              .toList()),
+                    ),
+                  ],
+                ),
+                SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'ธุรกรรม',
+                      style: NotoSansThai.h4.copyWith(color: Palette.black),
+                    ),
+                    SizedBox(
+                      height: 38,
+                      width: 240,
+                      child: FormBuilderDropdown(
+                          borderRadius: BorderRadius.circular(16),
+                          onChanged: (value) async {
+                            await controller.setDesc(dropdownDetail: value!);
+                            controller.searchInformation();
+                          },
+                          name: 'desc',
+                          decoration:
+                              customInputDecoration(hintText: 'ธุรกรรม'),
+                          isExpanded: true,
+                          items: controller.listFilterDesc
+                              .map(
+                                (option) => DropdownMenuItem(
+                                  value: option,
+                                  child: Text(
+                                    option,
+                                    style: NotoSansThai.normal
+                                        .copyWith(color: Palette.black),
+                                  ),
+                                ),
+                              )
+                              .toList()),
+                    ),
+                  ],
+                ),
+                SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'ค้นหา',
+                      style: NotoSansThai.h4.copyWith(color: Palette.black),
+                    ),
+                    SizedBox(
+                        height: 38,
+                        width: 420,
+                        child: TextField(
+                          textInputAction: TextInputAction.go,
+                          controller: controller.searchController,
+                          onSubmitted: (value) {
+                            print(controller.searchController.value.text);
+                            controller.searchInformation();
+                          },
+                          onChanged: (value) {
+                            print(value);
+                            controller.searchInformation();
+                          },
+                        )),
+                  ],
+                ),
+                const SizedBox(width: 16),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Container(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    alignment: Alignment.topCenter,
+                    width: 60,
+                    height: 32,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Palette.mainGreen),
+                    child: InkWell(
+                      onTap: () {
+                        print(controller.searchController.value.text);
+                        controller.searchInformation();
+                      },
+                      child: Text(
+                        'ค้นหา',
+                        style: NotoSansThai.h3.copyWith(color: Palette.black),
+                      ),
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             )
           ],
         ),
@@ -764,7 +768,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                         // controller.getFileUrl(
                         //     folder: 'image', fileName: data.slipUrl.toString());
                         FilePopUp().image(
-                          label: 'การชำระค่าธรรมเนียม',
+                            label: 'การชำระค่าธรรมเนียม',
                             filePath: controller.filePath.value,
                             token: controller.token.value);
                         // print(
@@ -1036,6 +1040,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                     borderRadius: BorderRadius.circular(8)),
                 child: InkWell(
                   onTap: () {
+                    FilePopUp().document(fileName: '${data.license}');
                     print('ดูเอกสารแยบ ${data.license}');
                   },
                   child: Stack(children: [
