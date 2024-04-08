@@ -40,8 +40,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height -
-                            166,
+                        height: MediaQuery.of(context).size.height - 166,
                         child: SingleChildScrollView(
                             primary: false,
                             controller: controller.horizontal,
@@ -135,7 +134,10 @@ class ListOfContent extends GetView<ListOfContentController> {
                     Padding(
                       padding: EdgeInsets.only(right: 0, bottom: 16),
                       child: Container(
-                        child: Text('ชื่อผู้ใช้งาน: ${controller.name.value}',style: NotoSansThai.h2,),
+                        child: Text(
+                          'ชื่อผู้ใช้งาน: ${controller.name.value}',
+                          style: NotoSansThai.h2,
+                        ),
                       ),
                     ),
                     Container(
@@ -192,8 +194,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                             controller.searchInformation();
                           },
                           name: 'act',
-                          decoration:
-                              customInputDecoration(hintText: 'พ.ร.บ'),
+                          decoration: customInputDecoration(hintText: 'พ.ร.บ'),
                           isExpanded: true,
                           items: controller.listFilterAct
                               .map(
@@ -430,6 +431,24 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data[13]),
             ),
+            //ANCHOR  ทีมตรวจรับเอกสาร
+            Container(
+              alignment: Alignment.center,
+              width: 200,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: const Text('ทีมตรวจรับเอกสาร'),
+            ),
+            //ANCHOR  วันที่รับ
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: const Text('วันที่รับ'),
+            ),
             //ANCHOR  รอตรวจสถานที่
             Container(
               alignment: Alignment.center,
@@ -528,6 +547,15 @@ class ListOfContent extends GetView<ListOfContentController> {
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data[24]),
+            ),
+            //ANCHOR  วันที่
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: const Text('วันที่'),
             ),
             //ANCHOR  เลขสถานที่
             Container(
@@ -854,6 +882,26 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data.requestStaff.toString()),
             ),
+            //ANCHOR  เจ้าหน้าที่รับคำขอ
+            Container(
+              alignment: Alignment.center,
+              width: 200,
+              height: 50,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: Text(data.inspectionTeam.toString()),
+            ),
+            //ANCHOR  เจ้าหน้าที่รับคำขอ
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              height: 50,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: Text(TimeFormat().getDate(date: data.recivedDate.toString())),
+            ),
             //ANCHOR  รอตรวจสถานที่
             Container(
               alignment: Alignment.center,
@@ -1069,6 +1117,17 @@ class ListOfContent extends GetView<ListOfContentController> {
                   ]),
                 ),
               ),
+            ),
+            // //ANCHOR  วันที่
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              height: 50,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child:
+                  Text(TimeFormat().getDate(date: data.licenseDate.toString())),
             ),
             //ANCHOR  เลขสถานที่
             Container(

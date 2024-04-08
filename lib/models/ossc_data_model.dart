@@ -48,6 +48,8 @@ class OsscData {
   dynamic slipUrl;
   dynamic doc;
   dynamic requestStaff;
+  dynamic inspectionTeam;
+  dynamic recivedDate;
   dynamic waitingToCheck;
   dynamic officer1;
   dynamic checkLocation;
@@ -59,6 +61,7 @@ class OsscData {
   dynamic officer3;
   dynamic approvalDate;
   dynamic license;
+  dynamic licenseDate;
   dynamic placeNumber;
   dynamic licenseNumber;
   dynamic businessLicenseNumber;
@@ -86,6 +89,8 @@ class OsscData {
     this.slipUrl,
     this.doc,
     this.requestStaff,
+    this.inspectionTeam,
+    this.recivedDate,
     this.waitingToCheck,
     this.officer1,
     this.checkLocation,
@@ -97,6 +102,7 @@ class OsscData {
     this.officer3,
     this.approvalDate,
     this.license,
+    this.licenseDate,
     this.placeNumber,
     this.licenseNumber,
     this.businessLicenseNumber,
@@ -127,6 +133,8 @@ class OsscData {
         slipUrl: json["slipUrl"],
         doc: json["เอกสารคำขอ"],
         requestStaff: json["เจ้าหน้าที่รับคำขอ"],
+        inspectionTeam: json["ทีมตรวจรับเอกสาร"],
+        recivedDate: json["วันที่รับ"],
         waitingToCheck: json["รอตรวจสถานที่/ อยู่ระหว่างดำเนินการ"],
         officer1: json["เจ้าหน้าที่ตรวจสถานที่"],
         checkLocation: json["ตรวจสถานที่"],
@@ -138,6 +146,7 @@ class OsscData {
         officer3: json["เจ้าหน้าที่เสนอพิจารณา"],
         approvalDate: json["อนุมัติ"],
         license: json["ใบอนุญาต/เอกสาร"],
+        licenseDate: json["วันที่"],
         placeNumber: json["เลขสถานที่"],
         licenseNumber: json["เลขใบอนุญาต"],
         businessLicenseNumber: json["เลขใบอนุญาตประกอบกิจ"],
@@ -166,6 +175,8 @@ class OsscData {
         "slipUrl": slipUrl,
         "เอกสารคำขอ": doc,
         "เจ้าหน้าที่รับคำขอ": requestStaff,
+        "ทีมตรวจรับเอกสาร": inspectionTeam,
+        "วันที่รับ": recivedDate,
         "รอตรวจสถานที่/ อยู่ระหว่างดำเนินการ": waitingToCheck,
         "เจ้าหน้าที่ตรวจสถานที่": officer1,
         "ตรวจสถานที่": checkLocation,
@@ -177,6 +188,7 @@ class OsscData {
         "เจ้าหน้าที่เสนอพิจารณา": officer3,
         "อนุมัติ": approvalDate,
         "ใบอนุญาต/เอกสาร": license,
+        "วันที่": licenseDate,
         "เลขสถานที่": placeNumber,
         "เลขใบอนุญาต": licenseNumber,
         "เลขใบอนุญาตประกอบกิจ": businessLicenseNumber,

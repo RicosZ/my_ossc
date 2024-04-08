@@ -13,7 +13,7 @@ class Menu {
   list(int index, String company, BuildContext context) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Container(
-            height: 480,
+            height: 500,
             width: 520,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
@@ -33,6 +33,13 @@ class Menu {
                     ListOfContentPopup().edit(context, index);
                   },
                   child: customContainer('แก้ไขข้อมูล'),
+                ),
+                const SizedBox(height: 16),
+                InkWell(
+                  onTap: () {
+                    receive(index);
+                  },
+                  child: customContainer('รับเอกสาร'),
                 ),
                 const SizedBox(height: 16),
                 InkWell(
@@ -80,6 +87,61 @@ class Menu {
                 ),
                 const Spacer()
               ],
+            )),
+      ));
+  //ANCHOR -  รับเอกสาร
+  receive(int index) => Get.dialog(Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+        child: Obx(() => Container(
+              padding: const EdgeInsets.all(16),
+              height: 300,
+              width: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text('รับเอกสาร',
+                      style: NotoSansThai.h1.copyWith(color: Palette.black)),
+                  // const SizedBox(height: 16),
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 120,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Get.back();
+                            },
+                            child: Text(
+                              'ยกเลิก',
+                              style: NotoSansThai.normal
+                                  .copyWith(color: Palette.black),
+                            )),
+                      ),
+                      SizedBox(
+                        width: 120,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              controller.receive(index);
+                            },
+                            child: controller.loading.value
+                                ? const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 8),
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  )
+                                : Text(
+                                    'ตกลง',
+                                    style: NotoSansThai.normal
+                                        .copyWith(color: Palette.black),
+                                  )),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             )),
       ));
   //ANCHOR -  นัดตรวจ
@@ -717,13 +779,16 @@ class Menu {
                                 )
                                 .toList()),
                         controller.sign.value == 'จัดส่งไปรษณีย์' ||
-                                controller.sign.value == 'มารับเอง'
+                                controller.sign.value == 'มารับเอง' ||
+                                controller.sign.value ==
+                                    'เจ้าหน้าที่รับเอกสาร' ||
+                                controller.sign.value == 'รับแทน'
                             ? Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.only(top: 16),
+                                    padding: const EdgeInsets.only(top: 16),
                                     width: 300,
                                     child: customFormTextField(
                                         key: 'parcelNumber',
@@ -734,7 +799,8 @@ class Menu {
                                             : customAppInputDecoration(
                                                 hintText: 'ชื่อผู้รับ')),
                                   ),
-                                  controller.sign.value == 'มารับเอง'
+                                  controller.sign.value == 'มารับเอง' ||
+                                          controller.sign.value == 'รับแทน'
                                       ? ElevatedButton(
                                           onPressed: () {
                                             sign(index);

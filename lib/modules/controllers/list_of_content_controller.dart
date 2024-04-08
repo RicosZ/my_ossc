@@ -107,6 +107,8 @@ class ListOfContentController extends GetxController {
   ];
   final List<String> listReciveDoc = [
     'มารับเอง',
+    'รับแทน',
+    'เจ้าหน้าที่รับเอกสาร',
     'จัดส่งไปรษณีย์',
     'เปิดสิทธิ์แล้ว'
   ];
@@ -525,6 +527,23 @@ class ListOfContentController extends GetxController {
     isAppointment.value = dropdownDetail;
   }
 
+  receive(int index) async {
+    // isAppointment.value == 'นัดตรวจ'?  : ;
+    loading(true);
+    await worksheet!.values
+        .insertRow(
+            index + 1,
+            [
+              name.value,
+              TimeFormat().getDatetime(date: DateTime.now().toString()),
+            ],
+            fromColumn: 16)
+        .then((value) => loadInformation());
+    loading(false);
+    Get.back();
+    // print(key.currentState?.fields['appDate']?.value);
+  }
+
   addAppointment(int index) async {
     // isAppointment.value == 'นัดตรวจ'?  : ;
     loading(true);
@@ -538,7 +557,7 @@ class ListOfContentController extends GetxController {
                   ? key.currentState?.fields['appDate']?.value.toString()
                   : isAppointment.value,
             ],
-            fromColumn: 16)
+            fromColumn: 18)
         .then((value) => loadInformation());
     loading(false);
     Get.back();
@@ -567,7 +586,7 @@ class ListOfContentController extends GetxController {
                 TimeFormat().getDatetime(date: DateTime.now().toString()),
                 name.value,
               ],
-              fromColumn: 19)
+              fromColumn: 21)
           .then((value) => loadInformation());
       loading(false);
       Get.back();
@@ -621,10 +640,10 @@ class ListOfContentController extends GetxController {
               index + 1,
               [
                 fileNames.value == '' ? '-' : fileNames.value,
-                // TimeFormat().getDatetime(date: DateTime.now().toString()),
+                TimeFormat().getDatetime(date: DateTime.now().toString()),
                 // name.value,
               ],
-              fromColumn: 26)
+              fromColumn: 28)
           .then((value) => loadInformation());
       loading(false);
       Get.back();
@@ -644,7 +663,7 @@ class ListOfContentController extends GetxController {
               key.currentState?.fields['advertisingNumber']?.value,
               key.currentState?.fields['spaOperatorNumber']?.value,
             ],
-            fromColumn: 27)
+            fromColumn: 30)
         .then((value) => loadInformation());
     loading(false);
     Get.back();
@@ -671,7 +690,7 @@ class ListOfContentController extends GetxController {
                   ? '${osscFilterData[index - 1].customer}-${osscFilterData[index - 1].company}-signature.png'
                   : ''
             ],
-            fromColumn: 33)
+            fromColumn: 36)
         .then((value) async {
       if (sign.value != 'จัดส่งไปรษณีย์' ||
           key.currentState?.fields['parcelNumber']?.value != '') {
@@ -687,7 +706,7 @@ class ListOfContentController extends GetxController {
 
   updateSuccessStatus(int index) async {
     await worksheet!.values
-        .insertRow(index + 1, ['เสร็จสิ้น'], fromColumn: 37)
+        .insertRow(index + 1, ['เสร็จสิ้น'], fromColumn: 40)
         .then((value) => loadInformation());
     Get.back();
   }
@@ -736,7 +755,7 @@ class ListOfContentController extends GetxController {
     dis?.forEach((element) {
       districtList.add(element.nameTh ?? '');
     });
-      // districtList.add('อื่นๆ');
+    // districtList.add('อื่นๆ');
   }
 
   var selectDistrict = ''.obs;
