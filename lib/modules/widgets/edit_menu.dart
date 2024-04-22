@@ -31,6 +31,11 @@ class Menu {
                 const Spacer(),
                 InkWell(
                   onTap: () {
+                    controller.desc(controller.listDesc.contains(controller
+                            .osscFilterData[index - 1].desc
+                            .toString())
+                        ? controller.osscFilterData[index - 1].desc.toString()
+                        : 'อื่นๆ');
                     ListOfContentPopup().edit(context, index);
                   },
                   child: customContainer('แก้ไขข้อมูล'),

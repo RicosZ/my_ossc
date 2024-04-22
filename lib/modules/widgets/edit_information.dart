@@ -233,7 +233,7 @@ class ListOfContentPopup {
                                 label: 'ประเภทสถานที่',
                                 key: 'loaclType',
                                 init:
-                                    controller.osscFilterData[index - 1].type),
+                                    controller.osscFilterData[index - 1].type.toString()),
                             const SizedBox(width: 32),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,9 +263,16 @@ class ListOfContentPopup {
                                             return null;
                                           },
                                           name: 'desc',
-                                          initialValue: controller
-                                              .osscFilterData[index - 1].desc
-                                              .toString(),
+                                          initialValue: controller.listDesc
+                                                  .contains(controller
+                                                      .osscFilterData[index - 1]
+                                                      .desc
+                                                      .toString())
+                                              ? controller
+                                                  .osscFilterData[index - 1]
+                                                  .desc
+                                                  .toString()
+                                              : 'อื่นๆ',
                                           decoration: customInputDecoration(
                                               hintText: 'เลือกรายการ'),
                                           isExpanded: true,
@@ -293,6 +300,10 @@ class ListOfContentPopup {
                                         child: SizedBox(
                                           width: 280,
                                           child: customFormTextField(
+                                            init: controller
+                                                  .osscFilterData[index - 1]
+                                                  .desc
+                                                  .toString(),
                                             key: 'customDesc',
                                             decoration: customInputDecoration(
                                                 hintText: ''),
@@ -472,7 +483,8 @@ class ListOfContentPopup {
                                 child: controller.loading.value
                                     ? const Center(
                                         child: Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 8),
                                           child: CircularProgressIndicator(),
                                         ),
                                       )

@@ -87,7 +87,7 @@ class ListOfContentController extends GetxController {
     'ยื่นแก้ไข/เปลี่ยนแปลง/ ใบแทน ใบอนุญาตฯ',
     'ยื่นขออนุญาตโฆษณาฯ',
     'รับเอกสาร/ใบอนุญาตฯ',
-    'ระบบ E-submission',
+    // 'ระบบ E-submission',
     'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ',
     'ติดต่อ สอบถาม',
     'อื่นๆ'
@@ -100,7 +100,7 @@ class ListOfContentController extends GetxController {
     'ยื่นแก้ไข/เปลี่ยนแปลง/ ใบแทน ใบอนุญาตฯ',
     'ยื่นขออนุญาตโฆษณาฯ',
     'รับเอกสาร/ใบอนุญาตฯ',
-    'ระบบ E-submission',
+    // 'ระบบ E-submission',
     'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ',
     'ติดต่อ สอบถาม',
     'อื่นๆ'
@@ -294,7 +294,7 @@ class ListOfContentController extends GetxController {
       key.currentState?.fields['phone']?.value.toString(),
       act.value,
       key.currentState?.fields['loaclType']?.value,
-      desc.value == 'อืนๆ'
+      desc.value == 'อื่นๆ'
           ? key.currentState?.fields['customDesc']?.value
           : desc.value,
       key.currentState?.fields['cost']?.value,
@@ -378,7 +378,7 @@ class ListOfContentController extends GetxController {
               key.currentState?.fields['loaclType']?.value,
               desc.value == ''
                   ? osscFilterData[index - 1].desc
-                  : desc.value == 'อืนๆ'
+                  : desc.value == 'อื่นๆ'
                       ? key.currentState?.fields['customDesc']?.value
                       : desc.value,
               key.currentState?.fields['cost']?.value,
