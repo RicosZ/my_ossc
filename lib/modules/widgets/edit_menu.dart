@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:my_ossc/modules/widgets/edit_information.dart';
@@ -13,7 +14,7 @@ class Menu {
   list(int index, String company, BuildContext context) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Container(
-            height: 500,
+            height: 680,
             width: 520,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
@@ -33,6 +34,13 @@ class Menu {
                     ListOfContentPopup().edit(context, index);
                   },
                   child: customContainer('แก้ไขข้อมูล'),
+                ),
+                const SizedBox(height: 16),
+                InkWell(
+                  onTap: () {
+                    updateDocStatus(index);
+                  },
+                  child: customContainer('อัพเดทสถานะเอกสาร'),
                 ),
                 const SizedBox(height: 16),
                 InkWell(
@@ -58,18 +66,27 @@ class Menu {
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
+                    controller.sign(
+                        controller.osscFilterData[index - 1].sign.toString());
+                    receiveResultDoc(index);
+                  },
+                  child: customContainer('เซ็นรับผลตรวจสถานที่'),
+                ),
+                const SizedBox(height: 16),
+                InkWell(
+                  onTap: () {
                     consider(index);
                   },
                   child: customContainer('อัพโหลดใบอนุญาต'),
                 ),
                 const SizedBox(height: 16),
-                // InkWell(
-                //   onTap: () {
-                //     accept(index);
-                //   },
-                //   child: customContainer('อนุมัติ'),
-                // ),
-                // const SizedBox(height: 16),
+                InkWell(
+                  onTap: () {
+                    licenseFee(index);
+                  },
+                  child: customContainer('ค่าธรรมเนียมใบอนุญาต'),
+                ),
+                const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
                     addLicense(index);
@@ -87,6 +104,74 @@ class Menu {
                 ),
                 const Spacer()
               ],
+            )),
+      ));
+  //ANCHOR -  อัพเดทสถานะเอกสาร
+  updateDocStatus(int index) => Get.dialog(Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+        child: Obx(() => Container(
+              padding: const EdgeInsets.all(16),
+              height: 300,
+              width: 300,
+              child: FormBuilder(
+                key: controller.key,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('อัพเดทสถานะเอกสาร',
+                        style: NotoSansThai.h1.copyWith(color: Palette.black)),
+                    // const SizedBox(height: 16),
+                    SizedBox(
+                      width: 240,
+                      child: FormBuilderDropdown(
+                          borderRadius: BorderRadius.circular(16),
+                          onChanged: (value) {
+                            controller.setDocStatus(dropdownDetail: value!);
+                          },
+                          name: 'docStatus',
+                          decoration:
+                              customAppInputDecoration(hintText: 'เลือกรายการ'),
+                          isExpanded: true,
+                          items: controller.listDocStatus
+                              .map(
+                                (option) => DropdownMenuItem(
+                                  value: option,
+                                  child: Text(
+                                    option,
+                                    style: NotoSansThai.normal
+                                        .copyWith(color: Palette.black),
+                                  ),
+                                ),
+                              )
+                              .toList()),
+                    ),
+                    const Spacer(),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: SizedBox(
+                        width: 120,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              controller.updateDoStatus(index);
+                            },
+                            child: controller.loading.value
+                                ? const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 8),
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  )
+                                : Text(
+                                    'ตกลง',
+                                    style: NotoSansThai.normal
+                                        .copyWith(color: Palette.black),
+                                  )),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             )),
       ));
   //ANCHOR -  รับเอกสาร
@@ -418,6 +503,123 @@ class Menu {
             controller.listFileName.value = [],
             controller.fileNames.value = ''
           });
+
+  //ANCHOR -  เซ็นรับผลตรวจสถานที่
+  receiveResultDoc(int index) => Get.dialog(
+        Dialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            child: Obx(
+              () => Container(
+                  height: 420,
+                  width: 460,
+                  padding: const EdgeInsets.all(16),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                  child: FormBuilder(
+                    key: controller.key,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('รับเอกสารผลตรวจสถานที่ ',
+                            style:
+                                NotoSansThai.h1.copyWith(color: Palette.black)),
+                        const SizedBox(height: 16),
+                        //
+                        const Text(
+                          'วันที่รับ',
+                          style: NotoSansThai.h2,
+                        ),
+                        FormBuilderDateTimePicker(
+                            name: 'receiveDate',
+                            onChanged: (value) {
+                              controller
+                                  .key.currentState?.fields['receiveDate']!
+                                  .save();
+                            },
+                            inputType: InputType.date),
+                        const SizedBox(height: 8),
+                        const Text('การรับเอกสารผลตรวจสถานที่',
+                            style: NotoSansThai.h2),
+                        FormBuilderDropdown(
+                            name: 'sign',
+                            initialValue: controller
+                                .osscFilterData[index - 1].sign
+                                .toString(),
+                            decoration: customAppInputDecoration(
+                                hintText: 'การรับเอกสารผลตรวจสถานที่'),
+                            onChanged: (value) async {
+                              await controller.setSign(dropdownDetail: value!);
+                            },
+                            items: controller.listReciveResultDoc
+                                .map(
+                                  (option) => DropdownMenuItem(
+                                    value: option,
+                                    child: Text(
+                                      option,
+                                      style: NotoSansThai.normal
+                                          .copyWith(color: Palette.black),
+                                    ),
+                                  ),
+                                )
+                                .toList()),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(top: 16),
+                              width: 300,
+                              child: customFormTextField(
+                                  key: 'recivedName',
+                                  decoration: customAppInputDecoration(
+                                      hintText: 'ชื่อผู้รับ')),
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  sign(index);
+                                },
+                                child: const Text('เซ็นรับ'))
+                          ],
+                        ),
+                        const Spacer(),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: SizedBox(
+                            width: 120,
+                            child: ElevatedButton(
+                                onPressed: controller.loading.value
+                                    ? () {}
+                                    : () {
+                                        if (controller.key.currentState!
+                                            .saveAndValidate()) {
+                                          controller.reciveResultDco(index);
+                                        }
+                                      },
+                                child: controller.loading.value
+                                    ? const Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 8),
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      )
+                                    : Text(
+                                        'บันทึก',
+                                        style: NotoSansThai.normal
+                                            .copyWith(color: Palette.black),
+                                      )),
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+            )),
+      ).then((value) {
+        controller.sign('');
+        controller.signature.clear();
+      });
+
   //ANCHOR -  อัพโหลดใบอนุญาต
   consider(int index) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
@@ -531,40 +733,125 @@ class Menu {
             controller.listFileName.value = [],
             controller.fileNames.value = ''
           });
-  // //ANCHOR -  อนุมัติ
-  // accept(int index) => Get.dialog(
-  //       Dialog(
-  //         shape:
-  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-  //         child: Container(
-  //           height: 420,
-  //           width: 520,
-  //           padding: const EdgeInsets.all(16),
-  //           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
-  //           child: Column(
-  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //             children: [
-  //               Text('อนุมัติ$index',
-  //                   style: NotoSansThai.h1.copyWith(color: Palette.black)),
-  //               const SizedBox(height: 16),
-  //               //
-  //               const SizedBox(height: 16),
-  //               const Spacer(),
-  //               Align(
-  //                 alignment: Alignment.bottomRight,
-  //                 child: ElevatedButton(
-  //                     onPressed: () {},
-  //                     child: Text(
-  //                       'บันทึก',
-  //                       style:
-  //                           NotoSansThai.normal.copyWith(color: Palette.black),
-  //                     )),
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     );
+  // //ANCHOR -  ค่าธรรมเนียมใบอนุญาต
+  licenseFee(int index) => Get.dialog(
+        Obx(() => Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32)),
+              child: Container(
+                height: 680,
+                width: 520,
+                padding: const EdgeInsets.all(16),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                        'ค่าธรรมเนียมใบอนุญาต ${controller.osscFilterData[index - 1].company}',
+                        style: NotoSansThai.h1.copyWith(color: Palette.black)),
+                    const SizedBox(height: 16),
+                    //
+                    Container(
+                        width: 320,
+                        height: 380,
+                        decoration: BoxDecoration(
+                            color: Palette.white,
+                            border: Border.all(color: Palette.grey1),
+                            borderRadius: BorderRadius.circular(16)),
+                        child: controller.isPickedImage.value
+                            ? Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: InkWell(
+                                    borderRadius: BorderRadius.circular(16),
+                                    onTap: () {
+                                      controller.pickImage();
+                                    },
+                                    child: Image.memory(
+                                      controller
+                                          .listPickedImage!.files.first.bytes!,
+                                    )),
+                              )
+                            : ElevatedButton(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.add,
+                                      size: 38,
+                                      color: Palette.white,
+                                    ),
+                                    Text(
+                                      'อัพโหลดหลักฐานการชำระเงิน',
+                                      style: NotoSansThai.h2
+                                          .copyWith(color: Palette.white),
+                                    )
+                                  ],
+                                ),
+                                onPressed: () {
+                                  controller.isPickedImage(false);
+                                  controller.pickImage();
+                                },
+                              )),
+                    const SizedBox(height: 16),
+                    FormBuilder(
+                      key: controller.key,
+                      child: SizedBox(
+                        width: 320,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'ค่าธรรมเนียม',
+                              style: NotoSansThai.h2,
+                              textAlign: TextAlign.left,
+                            ),
+                            customFormTextField(
+                                key: 'licenseFee',
+                                decoration: customAppInputDecoration(
+                                    hintText: 'ค่าธรรมเนียม')),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Spacer(),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: SizedBox(
+                        width: 120,
+                        child: ElevatedButton(
+                            onPressed: controller.loading.value
+                                ? () {}
+                                : () {
+                                    if (controller.key.currentState!
+                                        .saveAndValidate()) {
+                                      controller.addLicenseFee(index);
+                                    }
+                                  },
+                            child: controller.loading.value
+                                ? const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 8),
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  )
+                                : Text(
+                                    'บันทึก',
+                                    style: NotoSansThai.normal
+                                        .copyWith(color: Palette.black),
+                                  )),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )),
+      ).then((value) => {
+            controller.isPickedImage.value = false,
+            controller.imgName(''),
+          });
   //ANCHOR -  เพิ่มเลขใบอนุญาต
   addLicense(int index) => Get.dialog(
         Dialog(

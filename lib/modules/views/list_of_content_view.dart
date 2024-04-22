@@ -1,3 +1,4 @@
+import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
@@ -31,51 +32,57 @@ class ListOfContent extends GetView<ListOfContentController> {
                     // alignment: Alignment.center,
                     child: CircularProgressIndicator(),
                   )
-                : Scrollbar(
-                    controller: controller.horizontal,
-                    thumbVisibility: true,
-                    trackVisibility: true,
-                    child: Scrollbar(
+                : SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height - 166,
+                    child: AdaptiveScrollbar(
                       controller: controller.vertical,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height - 166,
-                        child: SingleChildScrollView(
-                            primary: false,
-                            controller: controller.horizontal,
-                            scrollDirection: Axis.horizontal,
-                            child: SingleChildScrollView(
-                              controller: controller.vertical,
+                      child: AdaptiveScrollbar(
+                        controller: controller.horizontal,
+                        position: ScrollbarPosition.bottom,
+                        width: 16,
+                        underSpacing: const EdgeInsets.only(bottom: 16),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height - 166,
+                          child: SingleChildScrollView(
                               primary: false,
-                              child: StickyHeader(
-                                  header: cell(data: controller.listHeader),
-                                  content: Column(
-                                    children: [
-                                      // for (var doc in controller.osscData)
-                                      for (var i = 0;
-                                          i < controller.osscData.length;
-                                          i++)
-                                        InkWell(
-                                            onTap: () {
-                                              Menu().list(
-                                                  controller.osscData[i].no!,
-                                                  controller
-                                                      .osscData[i].company,
-                                                  context);
-                                              print(controller.osscData[i].no);
-                                            },
-                                            child: cell2(
-                                                data: controller.osscData[i],
-                                                index: i))
-                                    ],
-                                  )),
-                            )),
+                              controller: controller.horizontal,
+                              scrollDirection: Axis.horizontal,
+                              child: SingleChildScrollView(
+                                controller: controller.vertical,
+                                primary: false,
+                                child: StickyHeader(
+                                    header: cell(data: controller.listHeader),
+                                    content: Column(
+                                      children: [
+                                        // for (var doc in controller.osscData)
+                                        for (var i = 0;
+                                            i < controller.osscData.length;
+                                            i++)
+                                          InkWell(
+                                              onTap: () {
+                                                Menu().list(
+                                                    controller.osscData[i].no!,
+                                                    controller
+                                                        .osscData[i].company,
+                                                    context);
+                                                print(
+                                                    controller.osscData[i].no);
+                                              },
+                                              child: cell2(
+                                                  data: controller.osscData[i],
+                                                  index: i))
+                                      ],
+                                    )),
+                              )),
+                        ),
                       ),
                     ),
                   ),
           ),
-          Spacer()
+          const Spacer()
         ],
       ),
     );
@@ -132,7 +139,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(right: 0, bottom: 16),
+                      padding: const EdgeInsets.only(right: 0, bottom: 16),
                       child: Container(
                         child: Text(
                           'ชื่อผู้ใช้งาน: ${controller.name.value}',
@@ -211,7 +218,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                     ),
                   ],
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -247,7 +254,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                     ),
                   ],
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -431,6 +438,15 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data[13]),
             ),
+            //ANCHOR  สถานะเอกสาร
+            Container(
+              alignment: Alignment.center,
+              width: 200,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: Text(data[15]),
+            ),
             //ANCHOR  ทีมตรวจรับเอกสาร
             Container(
               alignment: Alignment.center,
@@ -457,15 +473,6 @@ class ListOfContent extends GetView<ListOfContentController> {
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data[14]),
-            ),
-            //ANCHOR  เจ้าหน้าที่ตรวจสถานที่
-            Container(
-              alignment: Alignment.center,
-              width: 200,
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[15]),
             ),
             //ANCHOR  ตรวจสถานที่
             Container(
@@ -512,33 +519,42 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data[20]),
             ),
-            // //ANCHOR  เสนอพิจารณา
-            // Container(
-            //   alignment: Alignment.center,
-            //   width: 160,
-            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            //   decoration: BoxDecoration(
-            //       border: Border.all(width: 1, color: Palette.black)),
-            //   child: Text(data[21]),
-            // ),
-            // //ANCHOR  เจ้าหน้าที่เสนอพิจารณา
-            // Container(
-            //   alignment: Alignment.center,
-            //   width: 200,
-            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            //   decoration: BoxDecoration(
-            //       border: Border.all(width: 1, color: Palette.black)),
-            //   child: Text(data[22]),
-            // ),
-            // //ANCHOR  อนุมัติ
-            // Container(
-            //   alignment: Alignment.center,
-            //   width: 140,
-            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            //   decoration: BoxDecoration(
-            //       border: Border.all(width: 1, color: Palette.black)),
-            //   child: Text(data[23]),
-            // ),
+            //ANCHOR  การรับเอกสาร
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: Text('การรับเอกสาร'),
+            ),
+            //ANCHOR  วันที่รับผลตรวจ
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: Text('วันที่รับ'),
+            ),
+            //ANCHOR  ชื่อผู้รับ
+            Container(
+              alignment: Alignment.center,
+              width: 160,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: Text('ชื่อผู้รับ'),
+            ),
+            //ANCHOR  ลายเซ็นผู้รับ
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: Text('ลายเซ็นผู้รับ'),
+            ),
             //ANCHOR  ใบอนุญาต
             Container(
               alignment: Alignment.center,
@@ -556,6 +572,24 @@ class ListOfContent extends GetView<ListOfContentController> {
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
               child: const Text('วันที่'),
+            ),
+            //ANCHOR  ค่าธรรมเนียมใบอนุญาต
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: const Text('ค่าธรรมเนียม'),
+            ),
+            //ANCHOR  หลักฐานการชำระ
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: const Text('หลักฐานการชำระ'),
             ),
             //ANCHOR  เลขสถานที่
             Container(
@@ -882,7 +916,17 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data.requestStaff.toString()),
             ),
-            //ANCHOR  เจ้าหน้าที่รับคำขอ
+            //ANCHOR  สถานะเอกสาร
+            Container(
+              alignment: Alignment.center,
+              width: 200,
+              height: 50,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: Text(data.docStatus.toString()),
+            ),
+            //ANCHOR  ทีมตรวจรับเอกสาร
             Container(
               alignment: Alignment.center,
               width: 200,
@@ -892,7 +936,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data.inspectionTeam.toString()),
             ),
-            //ANCHOR  เจ้าหน้าที่รับคำขอ
+            //ANCHOR  วันที่รับ
             Container(
               alignment: Alignment.center,
               width: 140,
@@ -900,7 +944,8 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(TimeFormat().getDate(date: data.recivedDate.toString())),
+              child:
+                  Text(TimeFormat().getDate(date: data.recivedDate.toString())),
             ),
             //ANCHOR  รอตรวจสถานที่
             Container(
@@ -912,16 +957,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data.waitingToCheck.toString()),
             ),
-            //ANCHOR  เจ้าหน้าที่ตรวจสถานที่
-            Container(
-              alignment: Alignment.center,
-              width: 200,
-              height: 50,
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.officer1.toString()),
-            ),
+
             //ANCHOR  ตรวจสถานที่
             Container(
               alignment: Alignment.center,
@@ -1008,72 +1044,87 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data.officer2.toString()),
             ),
-            // ANCHOR  เสนอพิจารณา
-            // Container(
-            //   alignment: Alignment.center,
-            //   width: 160,
-            //   height: 50,
-            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            //   decoration: BoxDecoration(
-            //       border: Border.all(width: 1, color: Palette.black)),
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //         color: Palette.mainGreen,
-            //         borderRadius: BorderRadius.circular(8)),
-            //     child: InkWell(
-            //       onTap: () {
-            //         FilePopUp().document(fileName: '${data.consider}');
-            //         // print('ดูเอกสารแนบ ${data.consider?.split(',-')[0]}');
-            //         print('ดูเอกสารแยบ ${data.consider}');
-            //       },
-            //       child: Stack(children: [
-            //         Container(
-            //           decoration: BoxDecoration(
-            //               color: Palette.mainGreen,
-            //               borderRadius: BorderRadius.circular(8)),
-            //         ),
-            //         Align(
-            //             alignment: Alignment.center,
-            //             child: Row(
-            //               mainAxisAlignment: MainAxisAlignment.center,
-            //               children: [
-            //                 const Icon(
-            //                   Icons.search_outlined,
-            //                   size: 16,
-            //                   color: Palette.white,
-            //                 ),
-            //                 Text(
-            //                   'เอกสารแนบ',
-            //                   style: NotoSansThai.smallLabel
-            //                       .copyWith(color: Palette.white),
-            //                 ),
-            //               ],
-            //             ))
-            //       ]),
-            //     ),
-            //   ),
-            // ),
-            // //ANCHOR  เจ้าหน้าที่เสนอพิจารณา
-            // Container(
-            //   alignment: Alignment.center,
-            //   width: 200,
-            //   height: 50,
-            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            //   decoration: BoxDecoration(
-            //       border: Border.all(width: 1, color: Palette.black)),
-            //   child: Text(data.officer3.toString()),
-            // ),
-            // //ANCHOR  อนุมัติ
-            // Container(
-            //   alignment: Alignment.center,
-            //   width: 140,
-            //   height: 50,
-            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            //   decoration: BoxDecoration(
-            //       border: Border.all(width: 1, color: Palette.black)),
-            //   child: Text(
-            //       TimeFormat().getDate(date: data.approvalDate.toString())),
-            // ),
+            //ANCHOR  การรับเอกสาร
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              height: 50,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: Text(data.recived.toString()),
+            ),
+            //ANCHOR  วันที่รับผลตรวจ
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              height: 50,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: Text(TimeFormat()
+                  .getDate(date: data.recivedResultDate.toString())),
+            ),
+            //ANCHOR  ชื่อผู้รับ
+            Container(
+              alignment: Alignment.center,
+              width: 160,
+              height: 50,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: Text(data.recivedName.toString()),
+            ),
+            //ANCHOR  ลายเซ็นผู้รับ
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              height: 50,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: data.recivedSign == ''
+                  ? Text(data.recivedSign.toString())
+                  : InkWell(
+                      onTap: () async {
+                        await controller.getRequireInformation(
+                            folder: '/04_Premarketing/file_upload',
+                            fileName: data.recivedSign.toString());
+                        // controller.getFileUrl(
+                        //     folder: 'image', fileName: data.slipUrl.toString());
+                        FilePopUp().image(
+                            label: 'ลายเซ็น',
+                            filePath: controller.filePath.value,
+                            token: controller.token.value);
+                        // print(
+                        //     'ดูรูป ${await controller.getFileUrl(folder: 'image', fileName: data.slipUrl.toString())}');
+                      },
+                      child: Stack(children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Palette.mainGreen,
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                        Align(
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.search_outlined,
+                                  size: 16,
+                                  color: Palette.white,
+                                ),
+                                Text(
+                                  'ลายเซ็น',
+                                  style: NotoSansThai.smallLabel
+                                      .copyWith(color: Palette.white),
+                                ),
+                              ],
+                            ))
+                      ]),
+                    ),
+            ),
             //ANCHOR  ใบอนุญาต
             Container(
               alignment: Alignment.center,
@@ -1128,6 +1179,66 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child:
                   Text(TimeFormat().getDate(date: data.licenseDate.toString())),
+            ),
+            // //ANCHOR  ค่าธรรมเนียมใบอนุญาต
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              height: 50,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: Text(data.licenseFee.toString()),
+            ),
+            //ANCHOR  หลักฐานการชำระ
+            Container(
+              alignment: Alignment.center,
+              width: 140,
+              height: 50,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Palette.black)),
+              child: data.licenseFeeSlip == '-' || data.licenseFeeSlip == ''
+                  ? Text(data.licenseFeeSlip.toString())
+                  : InkWell(
+                      onTap: () async {
+                        await controller.getRequireInformation(
+                            folder: '/04_Premarketing/file_upload',
+                            fileName: data.licenseFeeSlip.toString());
+                        // controller.getFileUrl(
+                        //     folder: 'image', fileName: data.slipUrl.toString());
+                        FilePopUp().image(
+                            label: 'หลักฐานการชำระ',
+                            filePath: controller.filePath.value,
+                            token: controller.token.value);
+                        // print(
+                        //     'ดูรูป ${await controller.getFileUrl(folder: 'image', fileName: data.slipUrl.toString())}');
+                      },
+                      child: Stack(children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Palette.mainGreen,
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                        Align(
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.search_outlined,
+                                  size: 16,
+                                  color: Palette.white,
+                                ),
+                                Text(
+                                  'การชำระค่าธรรมเนียม',
+                                  style: NotoSansThai.smallLabel
+                                      .copyWith(color: Palette.white),
+                                ),
+                              ],
+                            ))
+                      ]),
+                    ),
             ),
             //ANCHOR  เลขสถานที่
             Container(
@@ -1220,7 +1331,7 @@ class ListOfContent extends GetView<ListOfContentController> {
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(data.parcelNumber.toString()),
             ),
-            //ANCHOR  การชำระค่าธรรมเนียม
+            //ANCHOR  ลายเซ็น
             Container(
               alignment: Alignment.center,
               width: 150,

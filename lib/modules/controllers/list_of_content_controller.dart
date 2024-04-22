@@ -62,6 +62,10 @@ class ListOfContentController extends GetxController {
     'ไม่มีการตรวจ',
     'อำเภอตรวจ',
   ];
+  final List<String> listDocStatus = [
+    'อยู่ระหว่างการตรวจสอบ',
+    'ตรวจสอบเอกสารเสร็จสิ้น',
+  ];
   final List<String> listFilterAct = [
     'ทั้งหมด',
     'ยา',
@@ -77,14 +81,14 @@ class ListOfContentController extends GetxController {
     'สถานประกอบการเพื่อสุขภาพ',
   ];
   final List<String> listDesc = [
-    'ยื่นขอใบอนุญาตฯ',
+    // 'ยื่นขอใบอนุญาตฯ',
     'ยื่นต่ออายุใบอนุญาตฯ',
     'ยื่นยกเลิกใบอนุญาตฯ',
     'ยื่นแก้ไข/เปลี่ยนแปลง/ ใบแทน ใบอนุญาตฯ',
     'ยื่นขออนุญาตโฆษณาฯ',
     'รับเอกสาร/ใบอนุญาตฯ',
     'ระบบ E-submission',
-    'ชำระค่าปรับ',
+    'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ',
     'ติดต่อ สอบถาม',
     'อื่นๆ'
   ];
@@ -97,7 +101,7 @@ class ListOfContentController extends GetxController {
     'ยื่นขออนุญาตโฆษณาฯ',
     'รับเอกสาร/ใบอนุญาตฯ',
     'ระบบ E-submission',
-    'ชำระค่าปรับ',
+    'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ',
     'ติดต่อ สอบถาม',
     'อื่นๆ'
   ];
@@ -111,6 +115,10 @@ class ListOfContentController extends GetxController {
     'เจ้าหน้าที่รับเอกสาร',
     'จัดส่งไปรษณีย์',
     'เปิดสิทธิ์แล้ว'
+  ];
+  final List<String> listReciveResultDoc = [
+    'มารับเอง',
+    'รับแทน',
   ];
 
   final List<String> listHeader = [
@@ -129,7 +137,7 @@ class ListOfContentController extends GetxController {
     "เอกสารคำขอ",
     "เจ้าหน้าที่รับคำขอ",
     "สถานะการตรวจสถานที่",
-    "เจ้าหน้าที่ตรวจสถานที่",
+    "สถานะเอกสาร",
     "ตรวจสถานที่",
     "ผลตรวจ",
     "สถานะการตรวจ",
@@ -312,7 +320,7 @@ class ListOfContentController extends GetxController {
           //     fromColumn: 16),
           await worksheet!.values.insertRow(
               osscFilterData.length + 2, ['รับเข้า'],
-              fromColumn: 37),
+              fromColumn: 46),
           loadInformation()
         });
     imgUrl('');
@@ -416,7 +424,7 @@ class ListOfContentController extends GetxController {
   var imgName = ''.obs;
   File? image;
   var imgUrl = ''.obs;
-  // var isPickedImage = false.obs;
+  var isPickedImage = false.obs;
   FilePickerResult? listPickedImage;
   pickImage() async {
     // isPickedImage(false);
@@ -430,7 +438,8 @@ class ListOfContentController extends GetxController {
       // image = File(file.path);
 
       update();
-      // isPickedImage(true);
+      isPickedImage(true);
+      isPickedImage.refresh();
     } else {
       // User canceled the picker
     }
@@ -522,6 +531,20 @@ class ListOfContentController extends GetxController {
     // osscData.sort((a, b) => b.no!.compareTo(a.no!));
   }
 
+  var docStatus = ''.obs;
+  setDocStatus({required String dropdownDetail}) {
+    docStatus.value = dropdownDetail;
+  }
+
+  updateDoStatus(int index) async {
+    loading(true);
+    await worksheet!.values
+        .insertRow(index + 1, [docStatus.value], fromColumn: 16)
+        .then((value) => loadInformation());
+    loading(false);
+    Get.back();
+  }
+
   var isAppointment = ''.obs;
   setAppointment({required String dropdownDetail}) {
     isAppointment.value = dropdownDetail;
@@ -537,7 +560,7 @@ class ListOfContentController extends GetxController {
               name.value,
               TimeFormat().getDatetime(date: DateTime.now().toString()),
             ],
-            fromColumn: 16)
+            fromColumn: 17)
         .then((value) => loadInformation());
     loading(false);
     Get.back();
@@ -552,12 +575,11 @@ class ListOfContentController extends GetxController {
             index + 1,
             [
               isAppointment.value == 'ไม่มีการตรวจ' ? 'ไม่มี' : 'รอตรวจสถานที่',
-              name.value,
               isAppointment.value == 'นัดตรวจ'
                   ? key.currentState?.fields['appDate']?.value.toString()
                   : isAppointment.value,
             ],
-            fromColumn: 18)
+            fromColumn: 19)
         .then((value) => loadInformation());
     loading(false);
     Get.back();
@@ -622,6 +644,36 @@ class ListOfContentController extends GetxController {
   //   } // error alert
   // }
 
+  reciveResultDco(int index) async {
+    loading(true);
+    if (signature.isNotEmpty) {
+      await upload2Onedrive(
+          rawPath: signatureImage.value,
+          fileName:
+              '${key.currentState?.fields['recivedName']?.value}-${osscFilterData[index - 1].company}-result-signature.png');
+    }
+    await worksheet!.values
+        .insertRow(
+            index + 1,
+            [
+              sign.value,
+              TimeFormat().getDatetime(
+                  date: '${key.currentState?.fields['receiveDate']?.value}'),
+              key.currentState?.fields['recivedName']?.value ?? '',
+              signature.isNotEmpty
+                  ? '${key.currentState?.fields['recivedName']?.value}-${osscFilterData[index - 1].company}-result-signature.png'
+                  : ''
+            ],
+            fromColumn: 28)
+        .then((value) async {
+      loadInformation();
+    });
+    // signatureImage.value.clear();
+    loading(false);
+    Get.back();
+    // error alert
+  }
+
   acceptConsider(int index) async {
     loading(true);
     if (fileNames.value != '') {
@@ -643,11 +695,31 @@ class ListOfContentController extends GetxController {
                 TimeFormat().getDatetime(date: DateTime.now().toString()),
                 // name.value,
               ],
-              fromColumn: 28)
+              fromColumn: 32)
           .then((value) => loadInformation());
       loading(false);
       Get.back();
     } // error alert
+  }
+
+  addLicenseFee(int index) async {
+    loading(true);
+    if (imgName.value != '') {
+      await upload2Onedrive(
+          rawPath: listPickedImage!.files.first.bytes!,
+          fileName: listPickedImage!.files.first.name);
+    }
+    await worksheet!.values
+        .insertRow(
+            index + 1,
+            [
+              key.currentState?.fields['licenseFee']?.value,
+              imgName.value == '' ? '-' : imgName.value,
+            ],
+            fromColumn: 34)
+        .then((value) => loadInformation());
+    loading(false);
+    Get.back();
   }
 
   addLicenseNumber(int index) async {
@@ -663,7 +735,7 @@ class ListOfContentController extends GetxController {
               key.currentState?.fields['advertisingNumber']?.value,
               key.currentState?.fields['spaOperatorNumber']?.value,
             ],
-            fromColumn: 30)
+            fromColumn: 36)
         .then((value) => loadInformation());
     loading(false);
     Get.back();
@@ -676,7 +748,7 @@ class ListOfContentController extends GetxController {
       await upload2Onedrive(
           rawPath: signatureImage.value,
           fileName:
-              '${osscFilterData[index - 1].customer}-${osscFilterData[index - 1].company}-signature.png');
+              '${key.currentState?.fields['parcelNumber']?.value}-${osscFilterData[index - 1].company}-signature.png');
     }
     await worksheet!.values
         .insertRow(
@@ -687,10 +759,10 @@ class ListOfContentController extends GetxController {
                   date: '${key.currentState?.fields['receiveDate']?.value}'),
               key.currentState?.fields['parcelNumber']?.value ?? '',
               signature.isNotEmpty
-                  ? '${osscFilterData[index - 1].customer}-${osscFilterData[index - 1].company}-signature.png'
+                  ? '${key.currentState?.fields['parcelNumber']?.value}-${osscFilterData[index - 1].company}-signature.png'
                   : ''
             ],
-            fromColumn: 36)
+            fromColumn: 42)
         .then((value) async {
       if (sign.value != 'จัดส่งไปรษณีย์' ||
           key.currentState?.fields['parcelNumber']?.value != '') {
@@ -706,7 +778,7 @@ class ListOfContentController extends GetxController {
 
   updateSuccessStatus(int index) async {
     await worksheet!.values
-        .insertRow(index + 1, ['เสร็จสิ้น'], fromColumn: 40)
+        .insertRow(index + 1, ['เสร็จสิ้น'], fromColumn: 46)
         .then((value) => loadInformation());
     Get.back();
   }

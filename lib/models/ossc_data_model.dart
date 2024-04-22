@@ -51,7 +51,7 @@ class OsscData {
   dynamic inspectionTeam;
   dynamic recivedDate;
   dynamic waitingToCheck;
-  dynamic officer1;
+  dynamic docStatus;
   dynamic checkLocation;
   dynamic results;
   dynamic sendResults;
@@ -60,8 +60,14 @@ class OsscData {
   dynamic consider;
   dynamic officer3;
   dynamic approvalDate;
+  dynamic recived;
+  dynamic recivedResultDate;
+  dynamic recivedName;
+  dynamic recivedSign;
   dynamic license;
   dynamic licenseDate;
+  dynamic licenseFee;
+  dynamic licenseFeeSlip;
   dynamic placeNumber;
   dynamic licenseNumber;
   dynamic businessLicenseNumber;
@@ -92,7 +98,7 @@ class OsscData {
     this.inspectionTeam,
     this.recivedDate,
     this.waitingToCheck,
-    this.officer1,
+    this.docStatus,
     this.checkLocation,
     this.results,
     this.sendResults,
@@ -101,8 +107,14 @@ class OsscData {
     this.consider,
     this.officer3,
     this.approvalDate,
+    this.recived,
+    this.recivedResultDate,
+    this.recivedName,
+    this.recivedSign,
     this.license,
     this.licenseDate,
+    this.licenseFee,
+    this.licenseFeeSlip,
     this.placeNumber,
     this.licenseNumber,
     this.businessLicenseNumber,
@@ -136,7 +148,7 @@ class OsscData {
         inspectionTeam: json["ทีมตรวจรับเอกสาร"],
         recivedDate: json["วันที่รับ"],
         waitingToCheck: json["รอตรวจสถานที่/ อยู่ระหว่างดำเนินการ"],
-        officer1: json["เจ้าหน้าที่ตรวจสถานที่"],
+        docStatus: json["สถานะเอกสาร"],
         checkLocation: json["ตรวจสถานที่"],
         results: json["ผลตรวจ"],
         resultsStatus: json["สถานะการตรวจ"],
@@ -145,8 +157,14 @@ class OsscData {
         consider: json["เสนอพิจารณา"],
         officer3: json["เจ้าหน้าที่เสนอพิจารณา"],
         approvalDate: json["อนุมัติ"],
+        recived: json["การรับเอกสาร"],
+        recivedResultDate: json["วันที่รับผลตรวจ"],
+        recivedName: json["ชื่อผู้รับ"],
+        recivedSign: json["ลายเซ็นผู้รับ"],
         license: json["ใบอนุญาต/เอกสาร"],
         licenseDate: json["วันที่"],
+        licenseFee: json["ค่าธรรมเนียมใบอนุญาต"],
+        licenseFeeSlip: json["หลักฐานการชำระ"],
         placeNumber: json["เลขสถานที่"],
         licenseNumber: json["เลขใบอนุญาต"],
         businessLicenseNumber: json["เลขใบอนุญาตประกอบกิจ"],
@@ -178,7 +196,7 @@ class OsscData {
         "ทีมตรวจรับเอกสาร": inspectionTeam,
         "วันที่รับ": recivedDate,
         "รอตรวจสถานที่/ อยู่ระหว่างดำเนินการ": waitingToCheck,
-        "เจ้าหน้าที่ตรวจสถานที่": officer1,
+        "สถานะเอกสาร": docStatus,
         "ตรวจสถานที่": checkLocation,
         "ผลตรวจ": results,
         "สถานะการตรวจ": resultsStatus,
@@ -187,8 +205,14 @@ class OsscData {
         "เสนอพิจารณา": consider,
         "เจ้าหน้าที่เสนอพิจารณา": officer3,
         "อนุมัติ": approvalDate,
-        "ใบอนุญาต/เอกสาร": license,
+        "การรับเอกสาร": recived,
+        "วันที่รับผลตรวจ": recivedResultDate,
+        "ใบอนุญาต/เอกสาร": recivedName,
+        "ชื่อผู้รับ": recivedSign,
+        "ลายเซ็นผู้รับ": license,
         "วันที่": licenseDate,
+        "ค่าธรรมเนียมใบอนุญาต": licenseFee,
+        "หลักฐานการชำระ": licenseFeeSlip,
         "เลขสถานที่": placeNumber,
         "เลขใบอนุญาต": licenseNumber,
         "เลขใบอนุญาตประกอบกิจ": businessLicenseNumber,
