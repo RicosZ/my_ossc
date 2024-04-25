@@ -695,7 +695,11 @@ class ListOfContent extends GetView<ListOfContentController> {
       );
 //SECTION - cell
   Widget cell2({required OsscData data, required int index}) => Container(
-        color: index % 2 == 0 ? Palette.storke : Palette.white,
+        color: data.status.toString() == 'เสร็จสิ้น'
+            ? Color.fromARGB(255, 152, 242, 198)
+            : index % 2 == 0
+                ? const Color.fromARGB(255, 232, 231, 234)
+                : Palette.white,
         child: Row(
           children: [
             //ANCHOR - ลำดับ
