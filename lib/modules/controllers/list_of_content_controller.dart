@@ -65,6 +65,7 @@ class ListOfContentController extends GetxController {
   final List<String> listDocStatus = [
     'อยู่ระหว่างการตรวจสอบ',
     'ตรวจสอบเอกสารเสร็จสิ้น',
+    'คืนคำขอ'
   ];
   final List<String> listFilterAct = [
     'ทั้งหมด',
@@ -778,7 +779,9 @@ class ListOfContentController extends GetxController {
 
   updateSuccessStatus(int index) async {
     await worksheet!.values
-        .insertRow(index + 1, ['เสร็จสิ้น'], fromColumn: 46)
+        .insertRow(index + 1,
+            [osscFilterData[index-1].docStatus == 'คืนคำขอ' ? 'คืนคำขอ' : 'เสร็จสิ้น'],
+            fromColumn: 46)
         .then((value) => loadInformation());
     Get.back();
   }
