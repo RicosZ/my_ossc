@@ -12,7 +12,11 @@ import '../controllers/list_of_content_controller.dart';
 
 class FilePopUp {
   ListOfContentController controller = Get.find();
-  image({required String filePath, required String token,required String label}) => Get.dialog(Dialog(
+  image(
+          {required String filePath,
+          required String token,
+          required String label}) =>
+      Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Container(
           height: 600,
@@ -128,9 +132,37 @@ class FilePopUp {
                                         ? const Center(
                                             child: CircularProgressIndicator(),
                                           )
-                                        : pdfView(
-                                            filePath: controller.filePath.value,
-                                            token: controller.token.value)
+                                        : controller.filePath.value
+                                                    .split('.')
+                                                    .last ==
+                                                'pdf'
+                                            ? pdfView(
+                                                filePath:
+                                                    controller.filePath.value,
+                                                token: controller.token.value)
+                                            : SingleChildScrollView(
+                                              child: Container(
+                                                // height: 480,
+                                                // width: 520,
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius
+                                                            .circular(15)),
+                                                // child: Image.memory(
+                                                //   controller.pdfFileUrl.value,
+                                                //   height: 480,
+                                                // ),
+                                                child: Image.network(
+                                                  'https://graph.microsoft.com/v1.0/me/drive/root:${controller.filePath.value}:/content',
+                                                  headers: {
+                                                    'Authorization':
+                                                        'Bearer ${controller.token.value}'
+                                                  },
+                                                ),
+                                              ),
+                                            )
                                     : Container(),
                               )),
                         ),
