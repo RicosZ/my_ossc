@@ -76,13 +76,29 @@ class HomeView extends GetView<HomeController> {
                           )),
                     ))),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                    onPressed: () async {
-                      if (controller.key.currentState!.saveAndValidate()) {
-                        await controller.login();
-                      }
-                    },
-                    child: const Text('เข้าสู่ระบบ')),
+                Obx(() => SizedBox(
+                  width: 160,
+                  child: ElevatedButton(
+                      onPressed: controller.isLoading.value
+                          ? () {}
+                          : () async {
+                              if (controller.key.currentState!
+                                  .saveAndValidate()) {
+                                await controller.login();
+                              }
+                            },
+                      child: controller.isLoading.value
+                          ? const Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 32, vertical: 8),
+                                child: CircularProgressIndicator(),
+                              ),
+                            )
+                          : Text('เข้าสู่ระบบ',
+                              style: NotoSansThai.h3
+                                  .copyWith(color: Colors.white))),
+                )),
                 const Spacer()
               ],
             ),

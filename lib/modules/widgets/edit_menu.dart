@@ -261,7 +261,7 @@ class Menu {
                                 NotoSansThai.h3.copyWith(color: Palette.black)),
                       ),
                       SizedBox(
-                        width: 240,
+                        width: 260,
                         child: FormBuilderDropdown(
                             borderRadius: BorderRadius.circular(16),
                             onChanged: (value) {
@@ -289,7 +289,7 @@ class Menu {
                   const SizedBox(height: 16),
                   Container(),
                   // const SizedBox(height: 16),/
-                  controller.isAppointment.value == 'นัดตรวจ'
+                  controller.isAppointment.value != 'ไม่มีการตรวจ' && controller.isAppointment.value != ''
                       ? Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

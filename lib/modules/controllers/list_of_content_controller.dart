@@ -59,8 +59,8 @@ class ListOfContentController extends GetxController {
   ];
   final List<String> listAppointment = [
     'นัดตรวจ',
+    'อำเภอตรวจ(ส่ง KPBook แล้ว)',
     'ไม่มีการตรวจ',
-    'อำเภอตรวจ',
   ];
   final List<String> listDocStatus = [
     'อยู่ระหว่างการตรวจสอบ',
@@ -83,26 +83,36 @@ class ListOfContentController extends GetxController {
   ];
   final List<String> listDesc = [
     'ยื่นขอใบอนุญาตฯ',
+    'ยื่นขอใบอนุญาตฯ ออนไลน์',
     'ยื่นต่ออายุใบอนุญาตฯ',
+    'ยื่นต่ออายุใบอนุญาตฯ ออนไลน์',
     'ยื่นยกเลิกใบอนุญาตฯ',
+    'ยื่นยกเลิกใบอนุญาตฯ ออนไลน์',
     'ยื่นแก้ไข/เปลี่ยนแปลง/ ใบแทน ใบอนุญาตฯ',
+    'ยื่นแก้ไข/เปลี่ยนแปลง/ ใบแทน ใบอนุญาตฯ ออนไลน์',
+    'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ',
+    'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ ออนไลน์',
     'ยื่นขออนุญาตโฆษณาฯ',
     'รับเอกสาร/ใบอนุญาตฯ',
     'เปิดสิทธิ์',
-    'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ',
     'ติดต่อ สอบถาม',
     'อื่นๆ'
   ];
   final List<String> listFilterDesc = [
     'ทั้งหมด',
     'ยื่นขอใบอนุญาตฯ',
+    'ยื่นขอใบอนุญาตฯ ออนไลน์',
     'ยื่นต่ออายุใบอนุญาตฯ',
+    'ยื่นต่ออายุใบอนุญาตฯ ออนไลน์',
     'ยื่นยกเลิกใบอนุญาตฯ',
+    'ยื่นยกเลิกใบอนุญาตฯ ออนไลน์',
     'ยื่นแก้ไข/เปลี่ยนแปลง/ ใบแทน ใบอนุญาตฯ',
+    'ยื่นแก้ไข/เปลี่ยนแปลง/ ใบแทน ใบอนุญาตฯ ออนไลน์',
+    'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ',
+    'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ ออนไลน์',
     'ยื่นขออนุญาตโฆษณาฯ',
     'รับเอกสาร/ใบอนุญาตฯ',
     'เปิดสิทธิ์',
-    'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ',
     'ติดต่อ สอบถาม',
     'อื่นๆ'
   ];
@@ -578,7 +588,7 @@ class ListOfContentController extends GetxController {
               isAppointment.value == 'ไม่มีการตรวจ' ? 'ไม่มี' : 'รอตรวจสถานที่',
               isAppointment.value == 'นัดตรวจ'
                   ? key.currentState?.fields['appDate']?.value.toString()
-                  : isAppointment.value,
+                  : '${isAppointment.value} ${TimeFormat().getDateTime(date: key.currentState?.fields['appDate']?.value.toString())}',
             ],
             fromColumn: 19)
         .then((value) => loadInformation());
@@ -779,8 +789,13 @@ class ListOfContentController extends GetxController {
 
   updateSuccessStatus(int index) async {
     await worksheet!.values
-        .insertRow(index + 1,
-            [osscFilterData[index-1].docStatus == 'คืนคำขอ' ? 'คืนคำขอ' : 'เสร็จสิ้น'],
+        .insertRow(
+            index + 1,
+            [
+              osscFilterData[index - 1].docStatus == 'คืนคำขอ'
+                  ? 'คืนคำขอ'
+                  : 'เสร็จสิ้น'
+            ],
             fromColumn: 46)
         .then((value) => loadInformation());
     Get.back();

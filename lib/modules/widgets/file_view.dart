@@ -141,28 +141,28 @@ class FilePopUp {
                                                     controller.filePath.value,
                                                 token: controller.token.value)
                                             : SingleChildScrollView(
-                                              child: Container(
-                                                // height: 480,
-                                                // width: 520,
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius
-                                                            .circular(15)),
-                                                // child: Image.memory(
-                                                //   controller.pdfFileUrl.value,
-                                                //   height: 480,
-                                                // ),
-                                                child: Image.network(
-                                                  'https://graph.microsoft.com/v1.0/me/drive/root:${controller.filePath.value}:/content',
-                                                  headers: {
-                                                    'Authorization':
-                                                        'Bearer ${controller.token.value}'
-                                                  },
+                                                child: Container(
+                                                  // height: 480,
+                                                  // width: 520,
+                                                  padding:
+                                                      const EdgeInsets.all(8),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15)),
+                                                  // child: Image.memory(
+                                                  //   controller.pdfFileUrl.value,
+                                                  //   height: 480,
+                                                  // ),
+                                                  child: Image.network(
+                                                    'https://graph.microsoft.com/v1.0/me/drive/root:${controller.filePath.value}:/content',
+                                                    headers: {
+                                                      'Authorization':
+                                                          'Bearer ${controller.token.value}'
+                                                    },
+                                                  ),
                                                 ),
-                                              ),
-                                            )
+                                              )
                                     : Container(),
                               )),
                         ),

@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gsheets/gsheets.dart';
+import 'package:my_ossc/constants/notosansthai.dart';
 import 'package:my_ossc/models/ossc_user_model.dart';
 
 import '../../api/api.dart';
@@ -11,7 +12,7 @@ import '../../constants/credentials.dart';
 import '../../routes/app_routes.dart';
 
 class HomeController extends GetxController {
-  var isLoading = true.obs;
+  var isLoading = false.obs;
   var osscUser = <OsscUserData>[].obs;
 
   final key = GlobalKey<FormBuilderState>();
@@ -68,7 +69,38 @@ class HomeController extends GetxController {
 
       isLoading(false);
     } catch (e) {
+      isLoading(false);
       //NOTE - Error
+      Get.dialog(Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+        child: Container(
+            height: 200,
+            width: 160,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Icon(
+                    Icons.error,
+                    size: 64,
+                    color: Colors.red,
+                  ),
+                ),
+                const Text('ชื่อผู้ใช้หรือรหัสผ่านผิด', style: NotoSansThai.h2),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: Text('ตกลง',
+                      style: NotoSansThai.h3.copyWith(color: Colors.white)),
+                )
+              ],
+            )),
+      ));
       print(e);
     }
   }
