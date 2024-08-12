@@ -64,10 +64,12 @@ class Api {
     return [];
   }
 
-  Future uploadFile(
-      {required Uint8List file,
-      required String fileName,
-      required String token}) async {
+  Future uploadFile({
+    required Uint8List file,
+    required String fileName,
+    required String token,
+    required String directory,
+  }) async {
     // print(file.readAsBytesSync());
     try {
       // getdata() async => {
@@ -79,7 +81,7 @@ class Api {
       //     };
       var fd = FormData.fromMap({
         "token": token,
-        'directory': '04_Premarketing/file_upload',
+        'directory': directory,
         "file": MultipartFile.fromBytes(file, filename: fileName),
         'fileName': fileName
       });
@@ -145,6 +147,29 @@ class Api {
         // print('token: ${body['access_token']}');
         log(GetStorage().read('refreshToken'));
         return body['access_token'];
+      }
+    } catch (e) {
+      inspect(e);
+    }
+  }
+
+  Future fetchFile({
+    required String refreshToken,
+    required String path2File,
+    required bool isFile
+  }) async {
+    try {
+      final response = await dio.post('https://my-ossc-be.onrender.com/fetch', data: {
+        'token': refreshToken,
+        'path2File': path2File,
+        'file': isFile
+      });
+      final statusCode = response.statusCode;
+      final body = response.data;
+      if (statusCode == 200) {
+        print('aaaaaaacc------------------ccccccccccc');
+        print(body);
+        return true;
       }
     } catch (e) {
       inspect(e);

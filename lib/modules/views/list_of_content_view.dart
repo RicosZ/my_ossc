@@ -9,12 +9,15 @@ import 'package:sticky_headers/sticky_headers/widget.dart';
 import '../../api/services/time_format.dart';
 import '../../constants/colors.dart';
 import '../../constants/notosansthai.dart';
+import '../../models/new_ossc_data_model.dart';
 import '../../models/ossc_data_model.dart';
 // import '../widgets/add_information.dart';
+import '../controllers/loc_controller.dart';
 import '../widgets/add_information_copy.dart';
+import '../widgets/export_information.dart';
 import '../widgets/file_view.dart';
 
-class ListOfContent extends GetView<ListOfContentController> {
+class ListOfContent extends GetView<LocController> {
   const ListOfContent({super.key});
 
   @override
@@ -59,21 +62,27 @@ class ListOfContent extends GetView<ListOfContentController> {
                                       children: [
                                         // for (var doc in controller.osscData)
                                         for (var i = 0;
-                                            i < controller.osscData.length;
+                                            i < controller.newOssc.length;
                                             i++)
                                           InkWell(
                                               onTap: () {
                                                 Menu().list(
-                                                    controller.osscData[i].no!,
-                                                    controller
-                                                        .osscData[i].company,
-                                                    context);
-                                                print(
-                                                    controller.osscData[i].no);
+                                                    i,
+                                                    controller.newOssc[i]
+                                                            .company ??
+                                                        '',
+                                                    controller.newOssc[i].act!,
+                                                    controller.newOssc[i].desc!,
+                                                    context,
+                                                    receiveNumber: controller
+                                                            .newOssc[i]
+                                                            .receiveNumber ??
+                                                        '');
+                                                print(i);
                                               },
                                               child: cell2(
-                                                  data: controller.osscData[i],
-                                                  index: i))
+                                                  data: controller.newOssc[i],
+                                                  index: i + 1))
                                       ],
                                     )),
                               )),
@@ -183,6 +192,7 @@ class ListOfContent extends GetView<ListOfContentController> {
             ),
             //ANCHOR - Search
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,7 +207,8 @@ class ListOfContent extends GetView<ListOfContentController> {
                       child: FormBuilderDropdown(
                           borderRadius: BorderRadius.circular(16),
                           onChanged: (value) async {
-                            await controller.setAct(dropdownDetail: value!);
+                            await controller.setAct(
+                                dropdownDetail: value!, added: false);
                             controller.searchInformation();
                           },
                           name: 'act',
@@ -232,7 +243,8 @@ class ListOfContent extends GetView<ListOfContentController> {
                       child: FormBuilderDropdown(
                           borderRadius: BorderRadius.circular(16),
                           onChanged: (value) async {
-                            await controller.setDesc(dropdownDetail: value!);
+                            await controller.setDesc(
+                                dropdownDetail: value!, added: false);
                             controller.searchInformation();
                           },
                           name: 'desc',
@@ -272,10 +284,10 @@ class ListOfContent extends GetView<ListOfContentController> {
                             print(controller.searchController.value.text);
                             controller.searchInformation();
                           },
-                          onChanged: (value) {
-                            print(value);
-                            controller.searchInformation();
-                          },
+                          // onChanged: (value) {
+                          //   print(value);
+                          //   controller.searchInformation();
+                          // },
                         )),
                   ],
                 ),
@@ -302,6 +314,18 @@ class ListOfContent extends GetView<ListOfContentController> {
                     ),
                   ),
                 ),
+                const Spacer(),
+                InkWell(
+                  onTap: () {
+                    // controller.exportDate(act: '', desc: '');
+                    Export().informationPopup(context);
+                  },
+                  child: const Card(
+                      child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text('ส่งออกข้อมูล'),
+                  )),
+                )
               ],
             )
           ],
@@ -445,7 +469,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[15]),
+              child: Text(data[14]),
             ),
             //ANCHOR  ทีมตรวจรับเอกสาร
             Container(
@@ -454,7 +478,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: const Text('ทีมตรวจรับเอกสาร'),
+              child: Text(data[15]),
             ),
             //ANCHOR  วันที่รับ
             Container(
@@ -463,7 +487,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: const Text('วันที่รับ'),
+              child: Text(data[16]),
             ),
             //ANCHOR  รอตรวจสถานที่
             Container(
@@ -472,7 +496,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[14]),
+              child: Text(data[17]),
             ),
             //ANCHOR  ตรวจสถานที่
             Container(
@@ -481,7 +505,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[16]),
+              child: Text(data[18]),
             ),
             //ANCHOR  ผลตรวจ
             Container(
@@ -490,7 +514,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[17]),
+              child: Text(data[19]),
             ),
             //ANCHOR  สถานะการตรวจ
             Container(
@@ -499,7 +523,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[18]),
+              child: Text(data[20]),
             ),
             //ANCHOR  ส่งผลตรวจ
             Container(
@@ -508,7 +532,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[19]),
+              child: Text(data[21]),
             ),
             //ANCHOR  เจ้าหน้าที่ส่งผลตรวจ
             Container(
@@ -517,7 +541,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[20]),
+              child: Text(data[22]),
             ),
             //ANCHOR  การรับเอกสาร
             Container(
@@ -526,7 +550,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text('การรับเอกสาร'),
+              child: Text(data[23]),
             ),
             //ANCHOR  วันที่รับผลตรวจ
             Container(
@@ -535,7 +559,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text('วันที่รับ'),
+              child: Text(data[24]),
             ),
             //ANCHOR  ชื่อผู้รับ
             Container(
@@ -544,7 +568,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text('ชื่อผู้รับ'),
+              child: Text(data[25]),
             ),
             //ANCHOR  ลายเซ็นผู้รับ
             Container(
@@ -553,7 +577,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text('ลายเซ็นผู้รับ'),
+              child: Text(data[26]),
             ),
             //ANCHOR  ใบอนุญาต
             Container(
@@ -562,7 +586,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[24]),
+              child: Text(data[27]),
             ),
             //ANCHOR  วันที่
             Container(
@@ -571,7 +595,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: const Text('วันที่'),
+              child: Text(data[28]),
             ),
             //ANCHOR  ค่าธรรมเนียมใบอนุญาต
             Container(
@@ -580,7 +604,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: const Text('ค่าธรรมเนียม'),
+              child: Text(data[29]),
             ),
             //ANCHOR  หลักฐานการชำระ
             Container(
@@ -589,7 +613,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: const Text('หลักฐานการชำระ'),
+              child: Text(data[30]),
             ),
             //ANCHOR  เลขสถานที่
             Container(
@@ -598,7 +622,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[25]),
+              child: Text(data[31]),
             ),
             //ANCHOR  เลขใบอนุญาต
             Container(
@@ -607,7 +631,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[26]),
+              child: Text(data[32]),
             ),
             //ANCHOR  เลขใบอนุญาตประกอบกิจ
             Container(
@@ -616,7 +640,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[27]),
+              child: Text(data[33]),
             ),
             //ANCHOR  เลขใบอนุญาตดำเนินการ
             Container(
@@ -625,7 +649,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[28]),
+              child: Text(data[34]),
             ),
             //ANCHOR  เลขใบอนุญาตโฆษณา
             Container(
@@ -634,7 +658,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[29]),
+              child: Text(data[35]),
             ),
             //ANCHOR  เลขใบอนุญาตผู้ดำเนินการสปา
             Container(
@@ -643,7 +667,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[30]),
+              child: Text(data[36]),
             ),
             //ANCHOR  รับใบอนุญาต
             Container(
@@ -652,7 +676,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[31]),
+              child: Text(data[37]),
             ),
             //ANCHOR  วันที่รับ
             Container(
@@ -661,7 +685,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[32]),
+              child: Text(data[38]),
             ),
             //ANCHOR  เลขพัสดุ
             Container(
@@ -670,7 +694,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[33]),
+              child: Text(data[39]),
             ),
             //ANCHOR  ลายเซ็น
             Container(
@@ -679,7 +703,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: const Text('ลายเซ็น'),
+              child: Text(data[40]),
             ),
             //ANCHOR  สถานนะ
             Container(
@@ -688,13 +712,13 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data[34]),
+              child: Text(data[41]),
             ),
           ],
         ),
       );
 //SECTION - cell
-  Widget cell2({required OsscData data, required int index}) => Container(
+  Widget cell2({required OsscDataNew data, required int index}) => Container(
         color: data.status.toString() == 'เสร็จสิ้น'
             ? Color.fromARGB(255, 152, 242, 198)
             : index % 2 == 0
@@ -710,7 +734,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               height: 50,
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.no.toString()),
+              child: Text(index.toString()),
             ),
             //ANCHOR - วัน/เดือน/ปี
             Container(
@@ -730,7 +754,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.receiveNumber.toString()),
+              child: Text(data.receiveNumber ?? ''),
             ),
             //ANCHOR - ชื่อผู้รับ
             Container(
@@ -741,7 +765,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
               child: Text(
-                data.customer.toString(),
+                data.customer ?? '',
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
               ),
@@ -754,7 +778,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.company.toString()),
+              child: Text(data.company ?? ''),
             ),
             //ANCHOR - อำเภอ
             Container(
@@ -764,7 +788,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.district.toString()),
+              child: Text(data.district ?? ''),
             ),
             //ANCHOR - เบอร์
             Container(
@@ -774,7 +798,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.tel.toString()),
+              child: Text(data.tel ?? ''),
             ),
             //ANCHOR  พ.ร.บ
             Container(
@@ -784,7 +808,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.act.toString()),
+              child: Text(data.act ?? ''),
             ),
             //ANCHOR - ประเภทสถานที่
             Container(
@@ -794,7 +818,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.type.toString()),
+              child: Text(data.type ?? ''),
             ),
             //ANCHOR  ธุรกรรม
             Container(
@@ -804,7 +828,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.desc.toString()),
+              child: Text(data.desc ?? ''),
             ),
             //ANCHOR  ค่าธรรมเนียม
             Container(
@@ -814,7 +838,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.cost.toString()),
+              child: Text(data.cost ?? ''),
             ),
             //ANCHOR  การชำระค่าธรรมเนียม
             Container(
@@ -824,13 +848,17 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: data.slipUrl == '-'
-                  ? Text(data.slipUrl.toString())
+              child: data.slipUrl == null || data.slipUrl == '-'
+                  ? const Text('')
                   : InkWell(
                       onTap: () async {
                         await controller.getRequireInformation(
-                            folder: '/04_Premarketing/file_upload',
-                            fileName: data.slipUrl.toString());
+                            isFile: false,
+                            folder: '/04_Premarketing',
+                            act: 'slip',
+                            fileName: data.slipUrl.toString(),
+                            dir: '',
+                            des: '');
                         // controller.getFileUrl(
                         //     folder: 'image', fileName: data.slipUrl.toString());
                         FilePopUp().image(
@@ -878,36 +906,43 @@ class ListOfContent extends GetView<ListOfContentController> {
                 decoration: BoxDecoration(
                     color: Palette.mainGreen,
                     borderRadius: BorderRadius.circular(8)),
-                child: InkWell(
-                  onTap: () async {
-                    FilePopUp().document(fileName: '${data.doc}');
-                    print('ดูเอกสารแนบ ${data.doc?.split(', ')[0]}');
-                  },
-                  child: Stack(children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Palette.mainGreen,
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                    Align(
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.search_outlined,
-                              size: 16,
-                              color: Palette.white,
-                            ),
-                            Text(
-                              'เอกสารแนบ',
-                              style: NotoSansThai.smallLabel
-                                  .copyWith(color: Palette.white),
-                            ),
-                          ],
-                        ))
-                  ]),
-                ),
+                child: data.doc == null || data.doc == '-'
+                    ? const Text('')
+                    : InkWell(
+                        onTap: () async {
+                          FilePopUp().document(
+                              fileName: '${data.doc}',
+                              act: data.act!,
+                              dir: '/เอกสารคำขอ',
+                              des:
+                                  '/${data.receiveNumber?.split('/')[1]}/${data.desc?.replaceAll('/', ' ')}/${data.receiveNumber?.replaceAll('/', '-')}');
+                          print('ดูเอกสารแนบ ${data.doc?.split(', ')[0]}');
+                        },
+                        child: Stack(children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Palette.mainGreen,
+                                borderRadius: BorderRadius.circular(8)),
+                          ),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.search_outlined,
+                                    size: 16,
+                                    color: Palette.white,
+                                  ),
+                                  Text(
+                                    'เอกสารแนบ',
+                                    style: NotoSansThai.smallLabel
+                                        .copyWith(color: Palette.white),
+                                  ),
+                                ],
+                              ))
+                        ]),
+                      ),
               ),
             ),
             //ANCHOR  เจ้าหน้าที่รับคำขอ
@@ -918,7 +953,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.requestStaff.toString()),
+              child: Text(data.requestStaff ?? ''),
             ),
             //ANCHOR  สถานะเอกสาร
             Container(
@@ -928,7 +963,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.docStatus.toString()),
+              child: Text(data.docStatus ?? ''),
             ),
             //ANCHOR  ทีมตรวจรับเอกสาร
             Container(
@@ -938,7 +973,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.inspectionTeam.toString()),
+              child: Text(data.inspectionTeam ?? ''),
             ),
             //ANCHOR  วันที่รับ
             Container(
@@ -948,8 +983,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child:
-                  Text(TimeFormat().getDate(date: data.recivedDate.toString())),
+              child: Text(TimeFormat().getDate(date: data.recivedDate ?? '')),
             ),
             //ANCHOR  รอตรวจสถานที่
             Container(
@@ -959,7 +993,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.waitingToCheck.toString()),
+              child: Text(data.waitingToCheck ?? ''),
             ),
 
             //ANCHOR  ตรวจสถานที่
@@ -970,8 +1004,8 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(TimeFormat()
-                  .getDateTime(date: data.checkLocation.toString())),
+              child: Text(
+                  TimeFormat().getDateTime(date: data.checkLocation ?? "")),
             ),
             //ANCHOR  ผลตรวจ
             Container(
@@ -985,36 +1019,43 @@ class ListOfContent extends GetView<ListOfContentController> {
                 decoration: BoxDecoration(
                     color: Palette.mainGreen,
                     borderRadius: BorderRadius.circular(8)),
-                child: InkWell(
-                  onTap: () {
-                    FilePopUp().document(fileName: '${data.results}');
-                    print('ดูเอกสารแยบ ${data.results}');
-                  },
-                  child: Stack(children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Palette.mainGreen,
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                    Align(
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.search_outlined,
-                              size: 16,
-                              color: Palette.white,
-                            ),
-                            Text(
-                              'เอกสารแนบ',
-                              style: NotoSansThai.smallLabel
-                                  .copyWith(color: Palette.white),
-                            ),
-                          ],
-                        ))
-                  ]),
-                ),
+                child: data.results == null || data.results == ''
+                    ? Text(data.results ?? "")
+                    : InkWell(
+                        onTap: () {
+                          FilePopUp().document(
+                              fileName: '${data.results}',
+                              act: data.act!,
+                              dir: '/เอกสารผลตรวจ',
+                              des:
+                                  '/${data.receiveNumber?.split('/')[1]}/${data.receiveNumber?.replaceAll('/', '-')}');
+                          print('ดูเอกสารแยบ ${data.results}');
+                        },
+                        child: Stack(children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Palette.mainGreen,
+                                borderRadius: BorderRadius.circular(8)),
+                          ),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.search_outlined,
+                                    size: 16,
+                                    color: Palette.white,
+                                  ),
+                                  Text(
+                                    'เอกสารแนบ',
+                                    style: NotoSansThai.smallLabel
+                                        .copyWith(color: Palette.white),
+                                  ),
+                                ],
+                              ))
+                        ]),
+                      ),
               ),
             ),
             //ANCHOR  สถานะการตรวจ,
@@ -1025,7 +1066,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.resultsStatus.toString()),
+              child: Text(data.resultsStatus ?? ''),
             ),
             //ANCHOR  ส่งผลตรวจ
             Container(
@@ -1035,8 +1076,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child:
-                  Text(TimeFormat().getDate(date: data.sendResults.toString())),
+              child: Text(TimeFormat().getDate(date: data.sendResults ?? "")),
             ),
             //ANCHOR  เจ้าหน้าที่ส่งผลตรวจ
             Container(
@@ -1046,7 +1086,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.officer2.toString()),
+              child: Text(data.officer2 ?? ''),
             ),
             //ANCHOR  การรับเอกสาร
             Container(
@@ -1056,7 +1096,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.recived.toString()),
+              child: Text(data.recived ?? ''),
             ),
             //ANCHOR  วันที่รับผลตรวจ
             Container(
@@ -1066,8 +1106,8 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(TimeFormat()
-                  .getDate(date: data.recivedResultDate.toString())),
+              child: Text(
+                  TimeFormat().getDate(date: data.recivedResultDate ?? "")),
             ),
             //ANCHOR  ชื่อผู้รับ
             Container(
@@ -1077,7 +1117,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.recivedName.toString()),
+              child: Text(data.recivedName ?? ''),
             ),
             //ANCHOR  ลายเซ็นผู้รับ
             Container(
@@ -1087,21 +1127,26 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: data.recivedSign == ''
-                  ? Text(data.recivedSign.toString())
+              child: data.recivedSign == null || data.recivedSign == ''
+                  ? Text(data.recivedSign ?? "")
                   : InkWell(
                       onTap: () async {
                         await controller.getRequireInformation(
-                            folder: '/04_Premarketing/file_upload',
-                            fileName: data.recivedSign.toString());
+                            isFile: false,
+                            folder: '/04_Premarketing',
+                            act: data.act!,
+                            fileName: data.recivedSign ?? "",
+                            dir: '/signature',
+                            des:
+                                '/${data.receiveNumber?.replaceAll('/', '-')}');
                         // controller.getFileUrl(
-                        //     folder: 'image', fileName: data.slipUrl.toString());
+                        //     folder: 'image', fileName: data.slipUrl??"");
                         FilePopUp().image(
                             label: 'ลายเซ็น',
                             filePath: controller.filePath.value,
                             token: controller.token.value);
                         // print(
-                        //     'ดูรูป ${await controller.getFileUrl(folder: 'image', fileName: data.slipUrl.toString())}');
+                        //     'ดูรูป ${await controller.getFileUrl(folder: 'image', fileName: data.slipUrl??"")}');
                       },
                       child: Stack(children: [
                         Container(
@@ -1141,36 +1186,43 @@ class ListOfContent extends GetView<ListOfContentController> {
                 decoration: BoxDecoration(
                     color: Palette.mainGreen,
                     borderRadius: BorderRadius.circular(8)),
-                child: InkWell(
-                  onTap: () {
-                    FilePopUp().document(fileName: '${data.license}');
-                    print('ดูเอกสารแยบ ${data.license}');
-                  },
-                  child: Stack(children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Palette.mainGreen,
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                    Align(
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.search_outlined,
-                              size: 16,
-                              color: Palette.white,
-                            ),
-                            Text(
-                              'เอกสารแนบ',
-                              style: NotoSansThai.smallLabel
-                                  .copyWith(color: Palette.white),
-                            ),
-                          ],
-                        ))
-                  ]),
-                ),
+                child: data.license == null || data.license == ''
+                    ? Text(data.license ?? "")
+                    : InkWell(
+                        onTap: () {
+                          FilePopUp().document(
+                              fileName: '${data.license}',
+                              act: data.act!,
+                              dir: '/ใบอนุญาต',
+                              des:
+                                  '/${data.receiveNumber?.split('/')[1]}/${data.receiveNumber?.replaceAll('/', '-')}');
+                          print('ดูเอกสารแยบ ${data.license}');
+                        },
+                        child: Stack(children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Palette.mainGreen,
+                                borderRadius: BorderRadius.circular(8)),
+                          ),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.search_outlined,
+                                    size: 16,
+                                    color: Palette.white,
+                                  ),
+                                  Text(
+                                    'เอกสารแนบ',
+                                    style: NotoSansThai.smallLabel
+                                        .copyWith(color: Palette.white),
+                                  ),
+                                ],
+                              ))
+                        ]),
+                      ),
               ),
             ),
             // //ANCHOR  วันที่
@@ -1181,8 +1233,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child:
-                  Text(TimeFormat().getDate(date: data.licenseDate.toString())),
+              child: Text(TimeFormat().getDate(date: data.licenseDate ?? "")),
             ),
             // //ANCHOR  ค่าธรรมเนียมใบอนุญาต
             Container(
@@ -1192,7 +1243,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.licenseFee.toString()),
+              child: Text(data.licenseFee ?? ""),
             ),
             //ANCHOR  หลักฐานการชำระ
             Container(
@@ -1202,21 +1253,27 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: data.licenseFeeSlip == '-' || data.licenseFeeSlip == ''
-                  ? Text(data.licenseFeeSlip.toString())
+              child: data.licenseFeeSlip == null ||
+                      data.licenseFeeSlip == '-' ||
+                      data.licenseFeeSlip == ''
+                  ? Text(data.licenseFeeSlip ?? "")
                   : InkWell(
                       onTap: () async {
                         await controller.getRequireInformation(
-                            folder: '/04_Premarketing/file_upload',
-                            fileName: data.licenseFeeSlip.toString());
+                            isFile: false,
+                            folder: '/04_Premarketing',
+                            act: 'slip',
+                            fileName: data.licenseFeeSlip ?? "",
+                            dir: '',
+                            des: '');
                         // controller.getFileUrl(
-                        //     folder: 'image', fileName: data.slipUrl.toString());
+                        //     folder: 'image', fileName: data.slipUrl??"");
                         FilePopUp().image(
                             label: 'หลักฐานการชำระ',
                             filePath: controller.filePath.value,
                             token: controller.token.value);
                         // print(
-                        //     'ดูรูป ${await controller.getFileUrl(folder: 'image', fileName: data.slipUrl.toString())}');
+                        //     'ดูรูป ${await controller.getFileUrl(folder: 'image', fileName: data.slipUrl??"")}');
                       },
                       child: Stack(children: [
                         Container(
@@ -1252,7 +1309,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.placeNumber.toString()),
+              child: Text(data.placeNumber ?? ""),
             ),
             //ANCHOR  เลขใบอนุญาต
             Container(
@@ -1262,7 +1319,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.licenseNumber.toString()),
+              child: Text(data.licenseNumber ?? ""),
             ),
             //ANCHOR  เลขใบอนุญาตประกอบกิจ
             Container(
@@ -1272,7 +1329,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.businessLicenseNumber.toString()),
+              child: Text(data.businessLicenseNumber ?? ""),
             ),
             //ANCHOR  เลขใบอนุญาตดำเนินการ
             Container(
@@ -1282,7 +1339,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.operationLicenseNumber.toString()),
+              child: Text(data.operationLicenseNumber ?? ""),
             ),
             //ANCHOR  เลขใบอนุญาตโฆษณา
             Container(
@@ -1292,7 +1349,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.advertisingLicenseNumber.toString()),
+              child: Text(data.advertisingLicenseNumber ?? ""),
             ),
             //ANCHOR  เลขใบอนุญาตผู้ดำเนินการสปา
             Container(
@@ -1302,7 +1359,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.spaOperatorLicenseNumber.toString()),
+              child: Text(data.spaOperatorLicenseNumber ?? ""),
             ),
             //ANCHOR  รับใบอนุญาต
             Container(
@@ -1312,7 +1369,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.sign.toString()),
+              child: Text(data.sign ?? ""),
             ),
             //ANCHOR  วันที่รับ
             Container(
@@ -1322,8 +1379,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child:
-                  Text(TimeFormat().getDate(date: data.receiveDate.toString())),
+              child: Text(TimeFormat().getDate(date: data.receiveDate ?? "")),
             ),
             //ANCHOR  เลขพัสดุ
             Container(
@@ -1333,7 +1389,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.parcelNumber.toString()),
+              child: Text(data.parcelNumber ?? ""),
             ),
             //ANCHOR  ลายเซ็น
             Container(
@@ -1343,21 +1399,26 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: data.signature == ''
-                  ? Text(data.signature.toString())
+              child: data.signature == null || data.signature == ''
+                  ? Text(data.signature ?? "")
                   : InkWell(
                       onTap: () async {
                         await controller.getRequireInformation(
-                            folder: '/04_Premarketing/file_upload',
-                            fileName: data.signature.toString());
+                            isFile: false,
+                            folder: '/04_Premarketing',
+                            act: data.act!,
+                            fileName: data.signature ?? "",
+                            dir: '/signature',
+                            des:
+                                '/${data.receiveNumber?.replaceAll('/', '-')}');
                         // controller.getFileUrl(
-                        //     folder: 'image', fileName: data.slipUrl.toString());
+                        //     folder: 'image', fileName: data.slipUrl??"");
                         FilePopUp().image(
                             label: 'ลายเซ็น',
                             filePath: controller.filePath.value,
                             token: controller.token.value);
                         // print(
-                        //     'ดูรูป ${await controller.getFileUrl(folder: 'image', fileName: data.slipUrl.toString())}');
+                        //     'ดูรูป ${await controller.getFileUrl(folder: 'image', fileName: data.slipUrl??"")}');
                       },
                       child: Stack(children: [
                         Container(
@@ -1393,7 +1454,7 @@ class ListOfContent extends GetView<ListOfContentController> {
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Palette.black)),
-              child: Text(data.status.toString()),
+              child: Text(data.status ?? ""),
             ),
           ],
         ),

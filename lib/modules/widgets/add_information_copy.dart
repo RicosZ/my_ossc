@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:my_ossc/modules/controllers/loc_controller.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/notosansthai.dart';
-// import '../controllers/home_controller.dart';
-import '../controllers/list_of_content_controller.dart';
 
 class AddListOfContentPopup {
-  ListOfContentController controller = Get.find();
+  LocController controller = Get.find();
   add(BuildContext context) => Get.dialog(Dialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
           child: SingleChildScrollView(
@@ -87,8 +86,8 @@ class AddListOfContentPopup {
                                         FormBuilderTextField(
                                           name: "recivedNumber",
                                           textInputAction: TextInputAction.next,
-                                          initialValue:
-                                              'E${controller.osscFilterData.length + 1}/${DateTime.now().year + 543}',
+                                          // initialValue:
+                                          //     'E${controller.osscFilterData.length + 1}/${DateTime.now().year + 543}',
                                           // focusNode: focus,
                                           // obscureText: obscureText,
                                           // keyboardType: keyboardType,
@@ -179,7 +178,7 @@ class AddListOfContentPopup {
                                       borderRadius: BorderRadius.circular(16),
                                       onChanged: (value) {
                                         controller.setAct(
-                                            dropdownDetail: value!);
+                                            dropdownDetail: value!,added: true);
                                       },
                                       validator: (value) {
                                         if (value == null) {
@@ -230,7 +229,7 @@ class AddListOfContentPopup {
                                               BorderRadius.circular(16),
                                           onChanged: (value) {
                                             controller.setDesc(
-                                                dropdownDetail: value!);
+                                                dropdownDetail: value!,added: true);
                                           },
                                           validator: (value) {
                                             if (value == null) {
@@ -259,7 +258,7 @@ class AddListOfContentPopup {
                                     ),
                                   ],
                                 ),
-                                controller.desc.value == 'อื่นๆ'
+                                controller.filldesc.value == 'อื่นๆ'
                                     ? Padding(
                                         padding:
                                             const EdgeInsets.only(left: 62),

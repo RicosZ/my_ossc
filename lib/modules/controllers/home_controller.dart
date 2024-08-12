@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gsheets/gsheets.dart';
+import 'package:my_ossc/api/new_api.dart';
 import 'package:my_ossc/constants/notosansthai.dart';
 import 'package:my_ossc/models/ossc_user_model.dart';
 
@@ -23,6 +24,7 @@ class HomeController extends GetxController {
   RxBool obscure = true.obs;
   @override
   Future<void> onInit() async {
+    // await addInformation();
     sheet = await gsheets.spreadsheet(Credential.user);
     worksheet = sheet!.worksheetByTitle('sheet1');
     super.onInit();
@@ -110,6 +112,14 @@ class HomeController extends GetxController {
   // }
 
   addInformation() async {
+    try {
+      final res = NewApi().editInformation(data: {
+        'receiveNumber': 'E1/2567',
+        'requestStaff': 'aaaaaaaaaaaaaaaaaaaaaaaa'
+      });
+    } catch (e) {
+      print(e);
+    }
     // worksheet!.values.insertRow(data.length + 2, [
     //   TimeFormat()
     //       .getDatetime(date: '${key.currentState?.fields['date']?.value}'),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:my_ossc/modules/controllers/loc_controller.dart';
 import 'package:my_ossc/modules/widgets/edit_information.dart';
 import 'package:signature/signature.dart';
 
@@ -10,8 +11,10 @@ import '../../constants/notosansthai.dart';
 import '../controllers/list_of_content_controller.dart';
 
 class Menu {
-  ListOfContentController controller = Get.find();
-  list(int index, String company, BuildContext context) => Get.dialog(Dialog(
+  LocController controller = Get.find();
+  list(int index, String company, String act, String des, BuildContext context,
+          {required String receiveNumber}) =>
+      Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Container(
             height: 680,
@@ -31,10 +34,9 @@ class Menu {
                 const Spacer(),
                 InkWell(
                   onTap: () {
-                    controller.desc(controller.listDesc.contains(controller
-                            .osscFilterData[index - 1].desc
-                            .toString())
-                        ? controller.osscFilterData[index - 1].desc.toString()
+                    controller.filldesc(controller.listDesc
+                            .contains(controller.newOssc[index].desc.toString())
+                        ? controller.newOssc[index].desc.toString()
                         : 'อื่นๆ');
                     ListOfContentPopup().edit(context, index);
                   },
@@ -43,67 +45,65 @@ class Menu {
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
-                    updateDocStatus(index);
+                    updateDocStatus(receiveNumber);
                   },
                   child: customContainer('อัพเดทสถานะเอกสาร'),
                 ),
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
-                    receive(index);
+                    receive(receiveNumber);
                   },
                   child: customContainer('รับเอกสาร'),
                 ),
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
-                    appointment(index);
+                    appointment(receiveNumber, company);
                   },
                   child: customContainer('นัดตรวจสถานที่'),
                 ),
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
-                    appointResult(index);
+                    appointResult(receiveNumber, company, act, des);
                   },
                   child: customContainer('ส่งผลตรวจสถานที่'),
                 ),
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
-                    controller.sign(
-                        controller.osscFilterData[index - 1].sign.toString());
-                    receiveResultDoc(index);
+                    controller.sign(controller.newOssc[index].sign.toString());
+                    receiveResultDoc(receiveNumber, index, act);
                   },
                   child: customContainer('เซ็นรับผลตรวจสถานที่'),
                 ),
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
-                    consider(index);
+                    consider(receiveNumber, company, act, des);
                   },
                   child: customContainer('อัพโหลดใบอนุญาต'),
                 ),
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
-                    licenseFee(index);
+                    licenseFee(receiveNumber, company);
                   },
                   child: customContainer('ค่าธรรมเนียมใบอนุญาต'),
                 ),
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
-                    addLicense(index);
+                    addLicense(receiveNumber, company);
                   },
                   child: customContainer('เพิ่มข้อมูลการอนุญาต'),
                 ),
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
-                    controller.sign(
-                        controller.osscFilterData[index - 1].sign.toString());
-                    receiveDocuments(index);
+                    controller.sign(controller.newOssc[index].sign.toString());
+                    receiveDocuments(receiveNumber, index, act);
                   },
                   child: customContainer('รับเอกสาร/เพิ่มเลขพัสดุ'),
                 ),
@@ -112,7 +112,7 @@ class Menu {
             )),
       ));
   //ANCHOR -  อัพเดทสถานะเอกสาร
-  updateDocStatus(int index) => Get.dialog(Dialog(
+  updateDocStatus(String receiveNumber) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Obx(() => Container(
               padding: const EdgeInsets.all(16),
@@ -157,7 +157,7 @@ class Menu {
                         width: 120,
                         child: ElevatedButton(
                             onPressed: () {
-                              controller.updateDoStatus(index);
+                              controller.updateDoStatus(receiveNumber);
                             },
                             child: controller.loading.value
                                 ? const Center(
@@ -180,7 +180,7 @@ class Menu {
             )),
       ));
   //ANCHOR -  รับเอกสาร
-  receive(int index) => Get.dialog(Dialog(
+  receive(String receiveNumber) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Obx(() => Container(
               padding: const EdgeInsets.all(16),
@@ -212,7 +212,7 @@ class Menu {
                         width: 120,
                         child: ElevatedButton(
                             onPressed: () {
-                              controller.receive(index);
+                              controller.receive(receiveNumber);
                             },
                             child: controller.loading.value
                                 ? const Center(
@@ -235,7 +235,7 @@ class Menu {
             )),
       ));
   //ANCHOR -  นัดตรวจ
-  appointment(int index) => Get.dialog(Dialog(
+  appointment(String receiveNumber, String company) => Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Obx(() => Container(
             height: 300,
@@ -247,8 +247,7 @@ class Menu {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
-                      'นัดตรวจสถานที่ ${controller.osscFilterData[index - 1].company}',
+                  Text('นัดตรวจสถานที่ $company',
                       style: NotoSansThai.h1.copyWith(color: Palette.black)),
                   const SizedBox(height: 16),
                   Row(
@@ -289,7 +288,8 @@ class Menu {
                   const SizedBox(height: 16),
                   Container(),
                   // const SizedBox(height: 16),/
-                  controller.isAppointment.value != 'ไม่มีการตรวจ' && controller.isAppointment.value != ''
+                  controller.isAppointment.value != 'ไม่มีการตรวจ' &&
+                          controller.isAppointment.value != ''
                       ? Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -336,7 +336,7 @@ class Menu {
                               ? () {}
                               : () {
                                   controller.isAppointment.value != ''
-                                      ? controller.addAppointment(index)
+                                      ? controller.addAppointment(receiveNumber)
                                       : null;
                                 },
                           child: controller.loading.value
@@ -359,7 +359,8 @@ class Menu {
             ))),
       )).then((value) => controller.isAppointment.value = '');
   //ANCHOR -  ส่งผลตรวจสถานที่
-  appointResult(int index) => Get.dialog(Dialog(
+  appointResult(String receiveNumber, String company, String act, String des) =>
+      Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Obx(() => Container(
             height: 640,
@@ -369,8 +370,7 @@ class Menu {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                    'ผลการตรวจตรวจสถานที่ ${controller.osscFilterData[index - 1].company}',
+                Text('ผลการตรวจตรวจสถานที่ $company',
                     style: NotoSansThai.h1.copyWith(color: Palette.black)),
                 const SizedBox(height: 16),
                 Container(
@@ -484,7 +484,8 @@ class Menu {
                             ? () {}
                             : () {
                                 controller.listFileName.isNotEmpty
-                                    ? controller.sendResult(index)
+                                    ? controller.sendResult(
+                                        receiveNumber, act, des)
                                     : null;
                               },
                         child: controller.loading.value
@@ -510,7 +511,7 @@ class Menu {
           });
 
   //ANCHOR -  เซ็นรับผลตรวจสถานที่
-  receiveResultDoc(int index) => Get.dialog(
+  receiveResultDoc(String receiveNumber, int index, String act) => Get.dialog(
         Dialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
@@ -549,9 +550,8 @@ class Menu {
                             style: NotoSansThai.h2),
                         FormBuilderDropdown(
                             name: 'sign',
-                            initialValue: controller
-                                .osscFilterData[index - 1].sign
-                                .toString(),
+                            initialValue:
+                                controller.newOssc[index].sign.toString(),
                             decoration: customAppInputDecoration(
                                 hintText: 'การรับเอกสารผลตรวจสถานที่'),
                             onChanged: (value) async {
@@ -582,7 +582,7 @@ class Menu {
                             ),
                             ElevatedButton(
                                 onPressed: () {
-                                  sign(index);
+                                  sign(receiveNumber);
                                 },
                                 child: const Text('เซ็นรับ'))
                           ],
@@ -598,7 +598,8 @@ class Menu {
                                     : () {
                                         if (controller.key.currentState!
                                             .saveAndValidate()) {
-                                          controller.reciveResultDco(index);
+                                          controller.reciveResultDco(
+                                              receiveNumber, act);
                                         }
                                       },
                                 child: controller.loading.value
@@ -626,7 +627,8 @@ class Menu {
       });
 
   //ANCHOR -  อัพโหลดใบอนุญาต
-  consider(int index) => Get.dialog(Dialog(
+  consider(String receiveNumber, String company, String act, String des) =>
+      Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Obx(() => Container(
             height: 640,
@@ -636,8 +638,7 @@ class Menu {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                    'อัพโหลดใบอนุญาต ${controller.osscFilterData[index - 1].company}',
+                Text('อัพโหลดใบอนุญาต $company',
                     style: NotoSansThai.h1.copyWith(color: Palette.black)),
                 const SizedBox(height: 16),
                 Container(
@@ -714,7 +715,8 @@ class Menu {
                             ? () {}
                             : () {
                                 controller.listFileName.isNotEmpty
-                                    ? controller.acceptConsider(index)
+                                    ? controller.addLicense(
+                                        receiveNumber, act, des)
                                     : null;
                               },
                         child: controller.loading.value
@@ -739,7 +741,7 @@ class Menu {
             controller.fileNames.value = ''
           });
   // //ANCHOR -  ค่าธรรมเนียมใบอนุญาต
-  licenseFee(int index) => Get.dialog(
+  licenseFee(String receiveNumber, String company) => Get.dialog(
         Obx(() => Dialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(32)),
@@ -752,8 +754,7 @@ class Menu {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                        'ค่าธรรมเนียมใบอนุญาต ${controller.osscFilterData[index - 1].company}',
+                    Text('ค่าธรรมเนียมใบอนุญาต $company',
                         style: NotoSansThai.h1.copyWith(color: Palette.black)),
                     const SizedBox(height: 16),
                     //
@@ -831,7 +832,7 @@ class Menu {
                                 : () {
                                     if (controller.key.currentState!
                                         .saveAndValidate()) {
-                                      controller.addLicenseFee(index);
+                                      controller.addLicenseFee(receiveNumber);
                                     }
                                   },
                             child: controller.loading.value
@@ -858,7 +859,7 @@ class Menu {
             controller.imgName(''),
           });
   //ANCHOR -  เพิ่มเลขใบอนุญาต
-  addLicense(int index) => Get.dialog(
+  addLicense(String receiveNumber, String company) => Get.dialog(
         Dialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
@@ -873,8 +874,7 @@ class Menu {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text(
-                          'เพิ่มข้อมูลการอนุญาต ${controller.osscFilterData[index - 1].company}',
+                      Text('เพิ่มข้อมูลการอนุญาต $company',
                           style:
                               NotoSansThai.h1.copyWith(color: Palette.black)),
                       const SizedBox(height: 16),
@@ -987,7 +987,8 @@ class Menu {
                                   : () {
                                       if (controller.key.currentState!
                                           .saveAndValidate()) {
-                                        controller.addLicenseNumber(index);
+                                        controller
+                                            .addLicenseNumber(receiveNumber);
                                       }
                                     },
                               child: controller.loading.value
@@ -1012,7 +1013,7 @@ class Menu {
         ),
       );
   //ANCHOR -  รับเอกสาร
-  receiveDocuments(int index) => Get.dialog(
+  receiveDocuments(String receiveNumber, int index, String act) => Get.dialog(
         Dialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
@@ -1050,9 +1051,7 @@ class Menu {
                         const Text('การรับใบอนุญาต', style: NotoSansThai.h2),
                         FormBuilderDropdown(
                             name: 'sign',
-                            initialValue: controller
-                                .osscFilterData[index - 1].sign
-                                .toString(),
+                            initialValue: controller.newOssc[index].sign ?? '',
                             decoration: customAppInputDecoration(
                                 hintText: 'การรับใบอนุญาต'),
                             onChanged: (value) async {
@@ -1095,7 +1094,7 @@ class Menu {
                                           controller.sign.value == 'รับแทน'
                                       ? ElevatedButton(
                                           onPressed: () {
-                                            sign(index);
+                                            sign(receiveNumber);
                                           },
                                           child: const Text('เซ็นรับ'))
                                       : Container()
@@ -1113,7 +1112,8 @@ class Menu {
                                     : () {
                                         if (controller.key.currentState!
                                             .saveAndValidate()) {
-                                          controller.receiveDocuments(index);
+                                          controller.receiveDocuments(
+                                              receiveNumber, index, act);
                                         }
                                       },
                                 child: controller.loading.value
@@ -1139,7 +1139,7 @@ class Menu {
         controller.sign('');
         controller.signature.clear();
       });
-  sign(int index) => Get.dialog(
+  sign(String receiveNumber) => Get.dialog(
         Dialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),

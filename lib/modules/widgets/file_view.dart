@@ -3,15 +3,18 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:my_ossc/modules/controllers/loc_controller.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/notosansthai.dart';
 import '../controllers/list_of_content_controller.dart';
 
 class FilePopUp {
-  ListOfContentController controller = Get.find();
+  LocController controller = Get.find();
   image(
           {required String filePath,
           required String token,
@@ -65,7 +68,12 @@ class FilePopUp {
         controller.pdfFileUrl.value = Uint8List(0);
       });
 
-  document({required String fileName}) async => Get.dialog(Dialog(
+  document(
+          {required String fileName,
+          required String act,
+          required String dir,
+          required String des}) async =>
+      Get.dialog(Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         child: Container(
           height: 800,
@@ -73,6 +81,20 @@ class FilePopUp {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              // Align(
+              //   alignment: Alignment.topRight,
+              //   child: ElevatedButton(
+              //       onPressed: () async {
+              //         controller.ready2Download.value
+              //             ? controller.removeTempFile(fileName)
+              //             : null;
+              //         Get.back();
+              //       },
+              //       child: Text(
+              //         'ปิด',
+              //         style: NotoSansThai.normal.copyWith(color: Palette.white),
+              //       )),
+              // ),
               Text(
                 'เอกสารคำขอ',
                 style: NotoSansThai.h1.copyWith(color: Palette.black),
@@ -95,7 +117,11 @@ class FilePopUp {
                                     controller.pdfloading(true);
                                     // controller.pdfFileUrl.value =
                                     await controller.getRequireInformation(
-                                        folder: '/04_Premarketing/file_upload',
+                                        isFile: true,
+                                        folder: '/04_Premarketing',
+                                        act: act,
+                                        dir: dir,
+                                        des: des,
                                         fileName: file);
                                   },
                                   child: Container(
@@ -171,22 +197,28 @@ class FilePopUp {
                   ],
                 ),
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    Get.back();
-                  },
+              Obx(() => ElevatedButton(
+                  onPressed: controller.ready2Download.value
+                      ? () {
+                          launchUrlString(
+                            'https://my-ossc-be.onrender.com/download/$fileName',
+                          );
+                          // Get.back();
+                        }
+                      : null,
                   child: Text(
-                    'ปิด',
+                    'ดาวน์โหลด',
                     style: NotoSansThai.normal.copyWith(color: Palette.white),
-                  ))
+                  )))
             ],
           ),
         ),
       )).then((value) {
-        // controller.removeMockFile(fileName);
+        controller.removeTempFile(fileName);
         controller.pdfFileUrl.value = Uint8List(0);
         controller.open(false);
         controller.pdfloading(true);
+        controller.ready2Download(false);
       });
   // pdfView({required String fileUrl}) => SfPdfViewer.network(
   //       fileUrl, key: controller.pdfViewerKey,
@@ -195,6 +227,9 @@ class FilePopUp {
   pdfView({required String filePath, required String token}) =>
       SfPdfViewer.network(
         controller: controller.pdfViewerController,
+        onDocumentLoaded: (details) {
+          controller.ready2Download(true);
+        },
         onDocumentLoadFailed: (details) {
           inspect(details);
         },

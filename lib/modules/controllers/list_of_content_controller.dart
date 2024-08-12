@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:get/state_manager.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:signature/signature.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -12,6 +13,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:gsheets/gsheets.dart';
 import 'package:universal_io/io.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../api/api.dart';
 import '../../api/services/time_format.dart';
@@ -92,6 +95,8 @@ class ListOfContentController extends GetxController {
     'ยื่นแก้ไข/เปลี่ยนแปลง/ ใบแทน ใบอนุญาตฯ ออนไลน์',
     'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ',
     'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ ออนไลน์',
+    'แจ้งเลิกผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ',
+    'แจ้งเลิกผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ ออนไลน์',
     'ยื่นขออนุญาตโฆษณาฯ',
     'รับเอกสาร/ใบอนุญาตฯ',
     'เปิดสิทธิ์',
@@ -110,6 +115,8 @@ class ListOfContentController extends GetxController {
     'ยื่นแก้ไข/เปลี่ยนแปลง/ ใบแทน ใบอนุญาตฯ ออนไลน์',
     'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ',
     'เปลี่ยนผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ ออนไลน์',
+    'แจ้งเลิกผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ',
+    'แจ้งเลิกผู้ดำเนินการ/ผู้มีหน้าที่ปฏิบัติการ ออนไลน์',
     'ยื่นขออนุญาตโฆษณาฯ',
     'รับเอกสาร/ใบอนุญาตฯ',
     'เปิดสิทธิ์',
@@ -147,17 +154,23 @@ class ListOfContentController extends GetxController {
     "การชำระค่าธรรมเนียม",
     "เอกสารคำขอ",
     "เจ้าหน้าที่รับคำขอ",
+    'สถานะเอกสาร',
+    'ทีมตรวจรับเอกสาร',
+    'วันที่รับ',
     "สถานะการตรวจสถานที่",
-    "สถานะเอกสาร",
     "ตรวจสถานที่",
     "ผลตรวจ",
     "สถานะการตรวจ",
     "ส่งผลตรวจ",
     "เจ้าหน้าที่ส่งผลตรวจ",
-    "เสนอพิจารณา",
-    "เจ้าหน้าที่เสนอพิจารณา",
-    "อนุมัติ",
+    "การรับเอกสาร",
+    "วันที่รับ",
+    "ชื่อผู้รับ",
+    "ลายเซ็นผู้รับ",
     "ใบอนุญาต/เอกสาร",
+    "วันที่",
+    "ค่าธรรมเนียม",
+    "หลักฐานการชำระ",
     "เลขสถานที่",
     "เลขใบอนุญาต",
     "เลขใบอนุญาตประกอบกิจ",
@@ -167,6 +180,7 @@ class ListOfContentController extends GetxController {
     "รับใบอนุญาต/รับเอกสาร",
     "วันที่รับ/วันที่จัดส่ง",
     "ชื่อผู้รับ/เลขพัสดุ",
+    "ลายเซ็นต์",
     "สถานนะ"
   ];
 
@@ -240,14 +254,16 @@ class ListOfContentController extends GetxController {
   }
 
   var act = ''.obs;
+  var fillact = ''.obs;
   var result = ''.obs;
-  setAct({required String dropdownDetail}) {
-    act.value = dropdownDetail;
+  setAct({required String dropdownDetail, required bool added}) {
+    added ? fillact.value = dropdownDetail : act.value = dropdownDetail;
   }
 
   var desc = ''.obs;
-  setDesc({required String dropdownDetail}) {
-    desc.value = dropdownDetail;
+  var filldesc = ''.obs;
+  setDesc({required String dropdownDetail, required bool added}) {
+    added ? filldesc.value = dropdownDetail : desc.value = dropdownDetail;
   }
 
   var resultStatus = ''.obs;
@@ -303,11 +319,12 @@ class ListOfContentController extends GetxController {
       key.currentState?.fields['company']?.value,
       selectDistrict.value,
       key.currentState?.fields['phone']?.value.toString(),
-      act.value,
+      fillact.value,
+
       key.currentState?.fields['loaclType']?.value,
-      desc.value == 'อื่นๆ'
+      filldesc.value == 'อื่นๆ'
           ? key.currentState?.fields['customDesc']?.value
-          : desc.value,
+          : filldesc.value,
       key.currentState?.fields['cost']?.value,
       // imgName.value,
       // '=IMAGE("${imgUrl.value}")',
@@ -385,13 +402,15 @@ class ListOfContentController extends GetxController {
                   ? osscFilterData[index - 1].district
                   : selectDistrict.value,
               key.currentState?.fields['phone']?.value.toString(),
-              act.value == '' ? osscFilterData[index - 1].act : act.value,
+              fillact.value == ''
+                  ? osscFilterData[index - 1].act
+                  : fillact.value,
               key.currentState?.fields['loaclType']?.value,
-              desc.value == ''
+              filldesc.value == ''
                   ? osscFilterData[index - 1].desc
-                  : desc.value == 'อื่นๆ'
+                  : filldesc.value == 'อื่นๆ'
                       ? key.currentState?.fields['customDesc']?.value
-                      : desc.value,
+                      : filldesc.value,
               key.currentState?.fields['cost']?.value,
               // imgName.value,
               // '=IMAGE("${imgUrl.value}")',
@@ -483,10 +502,12 @@ class ListOfContentController extends GetxController {
 
   RxString token = ''.obs;
   RxString filePath = ''.obs;
+  RxBool ready2Download = false.obs;
 
   getRequireInformation(
       {required String folder, required String fileName}) async {
     pdfloading(true);
+    ready2Download(false);
     filePath('$folder/$fileName');
     try {
       await Api()
@@ -500,6 +521,8 @@ class ListOfContentController extends GetxController {
             [GetStorage().read('refreshToken')],
             fromColumn: 6);
         token(value);
+
+        // await Api().fetchFile(refreshToken: value, path2File: filePath.value);
         update();
         // log(token.value);
       });
@@ -516,26 +539,26 @@ class ListOfContentController extends GetxController {
     osscData.assignAll(osscFilterData.where((data) {
       if ((desc.value == 'ทั้งหมด' || desc.value == '') &&
           (act.value == 'ทั้งหมด' || act.value == '')) {
-        return data.receiveNumber.contains(searchController.value.text) ||
+        return data.receiveNumber!.contains(searchController.value.text) ||
             data.customer.contains(searchController.value.text) ||
             data.company.contains(searchController.value.text);
       }
       if (desc.value != 'ทั้งหมด' &&
           (act.value == 'ทั้งหมด' || act.value == '')) {
         return data.desc == desc.value &&
-            (data.receiveNumber.contains(searchController.value.text) ||
+            (data.receiveNumber!.contains(searchController.value.text) ||
                 data.customer.contains(searchController.value.text) ||
                 data.company.contains(searchController.value.text));
       }
       if (act.value != 'ทั้งหมด' &&
           (desc.value == 'ทั้งหมด' || desc.value == '')) {
         return data.act == act.value &&
-            (data.receiveNumber.contains(searchController.value.text) ||
+            (data.receiveNumber!.contains(searchController.value.text) ||
                 data.customer.contains(searchController.value.text) ||
                 data.company.contains(searchController.value.text));
       }
       return (data.desc == desc.value && data.act == act.value) &&
-          (data.receiveNumber.contains(searchController.value.text) ||
+          (data.receiveNumber!.contains(searchController.value.text) ||
               data.customer.contains(searchController.value.text) ||
               data.company.contains(searchController.value.text));
     }));
@@ -813,7 +836,7 @@ class ListOfContentController extends GetxController {
       update();
       log(token.value);
       final res = await Api()
-          .uploadFile(file: rawPath, fileName: fileName, token: value);
+          .uploadFile(file: rawPath, fileName: fileName, token: value, directory: '');
       print(res);
     });
   }

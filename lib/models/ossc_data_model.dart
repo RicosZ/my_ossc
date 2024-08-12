@@ -36,7 +36,7 @@ class Ossc {
 class OsscData {
   int? no;
   DateTime? date;
-  String receiveNumber;
+  String? receiveNumber;
   dynamic customer;
   dynamic company;
   dynamic district;
@@ -57,9 +57,9 @@ class OsscData {
   dynamic sendResults;
   dynamic resultsStatus;
   dynamic officer2;
-  dynamic consider;
-  dynamic officer3;
-  dynamic approvalDate;
+  // dynamic consider;
+  // dynamic officer3;
+  // dynamic approvalDate;
   dynamic recived;
   dynamic recivedResultDate;
   dynamic recivedName;
@@ -83,7 +83,7 @@ class OsscData {
   OsscData({
     this.no,
     this.date,
-    required this.receiveNumber,
+    this.receiveNumber,
     this.customer,
     this.company,
     this.district,
@@ -104,9 +104,9 @@ class OsscData {
     this.sendResults,
     this.resultsStatus,
     this.officer2,
-    this.consider,
-    this.officer3,
-    this.approvalDate,
+    // this.consider,
+    // this.officer3,
+    // this.approvalDate,
     this.recived,
     this.recivedResultDate,
     this.recivedName,
@@ -145,18 +145,18 @@ class OsscData {
         slipUrl: json["slipUrl"],
         doc: json["เอกสารคำขอ"],
         requestStaff: json["เจ้าหน้าที่รับคำขอ"],
+        docStatus: json["สถานะเอกสาร"],
         inspectionTeam: json["ทีมตรวจรับเอกสาร"],
         recivedDate: json["วันที่รับ"],
         waitingToCheck: json["รอตรวจสถานที่/ อยู่ระหว่างดำเนินการ"],
-        docStatus: json["สถานะเอกสาร"],
         checkLocation: json["ตรวจสถานที่"],
         results: json["ผลตรวจ"],
         resultsStatus: json["สถานะการตรวจ"],
         sendResults: json["ส่งผลตรวจ"],
         officer2: json["เจ้าหน้าที่ส่งผลตรวจ"],
-        consider: json["เสนอพิจารณา"],
-        officer3: json["เจ้าหน้าที่เสนอพิจารณา"],
-        approvalDate: json["อนุมัติ"],
+        // consider: json["เสนอพิจารณา"],//
+        // officer3: json["เจ้าหน้าที่เสนอพิจารณา"],//
+        // approvalDate: json["อนุมัติ"],//
         recived: json["การรับเอกสาร"],
         recivedResultDate: json["วันที่รับผลตรวจ"],
         recivedName: json["ชื่อผู้รับ"],
@@ -202,9 +202,9 @@ class OsscData {
         "สถานะการตรวจ": resultsStatus,
         "ส่งผลตรวจ": sendResults,
         "เจ้าหน้าที่ส่งผลตรวจ": officer2,
-        "เสนอพิจารณา": consider,
-        "เจ้าหน้าที่เสนอพิจารณา": officer3,
-        "อนุมัติ": approvalDate,
+        // "เสนอพิจารณา": consider,
+        // "เจ้าหน้าที่เสนอพิจารณา": officer3,
+        // "อนุมัติ": approvalDate,
         "การรับเอกสาร": recived,
         "วันที่รับผลตรวจ": recivedResultDate,
         "ใบอนุญาต/เอกสาร": recivedName,
