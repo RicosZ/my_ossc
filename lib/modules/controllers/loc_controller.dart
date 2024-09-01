@@ -20,7 +20,6 @@ import '../../api/services/time_format.dart';
 import '../../constants/credentials.dart';
 import '../../models/district_model.dart';
 import '../../models/new_ossc_data_model.dart';
-import '../../models/ossc_data_model.dart';
 
 // const _clientId = "1005734918784-qj24e6gjq99omrv7kf33um3k3plid0om.apps.googleusercontent.com";
 // const _scopes = ['https://www.googleapis.com/auth/drive.file'];
@@ -68,8 +67,8 @@ class LocController extends GetxController {
   final List<String> listDocStatus = [
     'อยู่ระหว่างการตรวจสอบ',
     'ตรวจสอบเอกสารเสร็จสิ้น',
-    'ส่งต่องานพรบ.พิจารณา'
-        'คืนคำขอ'
+    'ส่งต่องานพรบ.พิจารณา',
+    'คืนคำขอ'
   ];
   final List<String> listFilterAct = [
     'ทั้งหมด',
@@ -284,7 +283,9 @@ class LocController extends GetxController {
             date: key.currentState?.fields['date']?.value.toString(),
             customer: key.currentState?.fields['name']?.value,
             company: key.currentState?.fields['company']?.value,
-            district: selectDistrict.value,
+            district: selectDistrict.value == 'อื่นๆ'
+                ? key.currentState?.fields['customDistrict']?.value
+                : selectDistrict.value,
             tel: key.currentState?.fields['phone']?.value.toString(),
             act: fillact.value,
             type: key.currentState?.fields['loaclType']?.value,
@@ -358,7 +359,9 @@ class LocController extends GetxController {
       'company': key.currentState?.fields['company']?.value,
       'district': selectDistrict.value == ''
           ? newOssc[index].district
-          : selectDistrict.value,
+          : selectDistrict.value == 'อื่นๆ'
+              ? key.currentState?.fields['customDistrict']?.value
+              : selectDistrict.value,
       'tel': key.currentState?.fields['phone']?.value.toString(),
       'act': fillact.value == '' ? newOssc[index].act : fillact.value,
       'type': key.currentState?.fields['loaclType']?.value,
@@ -789,7 +792,7 @@ class LocController extends GetxController {
     dis?.forEach((element) {
       districtList.add(element.nameTh ?? '');
     });
-    // districtList.add('อื่นๆ');
+    districtList.add('อื่นๆ');
   }
 
   var selectDistrict = ''.obs;

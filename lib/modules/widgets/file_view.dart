@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:my_ossc/modules/controllers/loc_controller.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -11,7 +10,6 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/notosansthai.dart';
-import '../controllers/list_of_content_controller.dart';
 
 class FilePopUp {
   LocController controller = Get.find();

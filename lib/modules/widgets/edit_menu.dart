@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:my_ossc/modules/controllers/loc_controller.dart';
@@ -8,7 +7,6 @@ import 'package:signature/signature.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/notosansthai.dart';
-import '../controllers/list_of_content_controller.dart';
 
 class Menu {
   LocController controller = Get.find();
@@ -37,6 +35,10 @@ class Menu {
                     controller.filldesc(controller.listDesc
                             .contains(controller.newOssc[index].desc.toString())
                         ? controller.newOssc[index].desc.toString()
+                        : 'อื่นๆ');
+                    controller.selectDistrict(controller.districtList.contains(
+                            controller.newOssc[index].district.toString())
+                        ? controller.newOssc[index].district.toString()
                         : 'อื่นๆ');
                     ListOfContentPopup().edit(context, index);
                   },

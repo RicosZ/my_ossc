@@ -5,8 +5,6 @@ import 'package:my_ossc/modules/controllers/loc_controller.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/notosansthai.dart';
-// import '../controllers/home_controller.dart';
-import '../controllers/list_of_content_controller.dart';
 
 class ListOfContentPopup {
   LocController controller = Get.find();
@@ -15,7 +13,7 @@ class ListOfContentPopup {
       child: SingleChildScrollView(
         child: Obx(
           () => Container(
-              height: 640,
+              height: 720,
               width: 1200,
               padding: const EdgeInsets.all(32),
               decoration:
@@ -130,39 +128,68 @@ class ListOfContentPopup {
                                   style: NotoSansThai.h3
                                       .copyWith(color: Palette.black)),
                             ),
-                            Container(
-                              width: 280,
-                              child: FormBuilderDropdown(
-                                  borderRadius: BorderRadius.circular(16),
-                                  onChanged: (value) {
-                                    controller.setDistrict(
-                                        dropdownDetail: value!);
-                                  },
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return '';
-                                    }
-                                    return null;
-                                  },
-                                  initialValue: controller
-                                      .newOssc[index].district
-                                      .toString(),
-                                  name: 'district',
-                                  decoration: customInputDecoration(
-                                      hintText: 'เลือกรายการ'),
-                                  isExpanded: true,
-                                  items: controller.districtList
-                                      .map(
-                                        (option) => DropdownMenuItem(
-                                          value: option,
-                                          child: Text(
-                                            option,
-                                            style: NotoSansThai.normal
-                                                .copyWith(color: Palette.black),
-                                          ),
-                                        ),
-                                      )
-                                      .toList()),
+                            Column(
+                              children: [
+                                Container(
+                                  width: 280,
+                                  child: FormBuilderDropdown(
+                                      borderRadius: BorderRadius.circular(16),
+                                      onChanged: (value) {
+                                        controller.setDistrict(
+                                            dropdownDetail: value!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return '';
+                                        }
+                                        return null;
+                                      },
+                                      initialValue: controller.districtList
+                                              .contains(controller
+                                                  .newOssc[index].district
+                                                  .toString())
+                                          ? controller.newOssc[index].district
+                                              .toString()
+                                          : 'อื่นๆ',
+                                      name: 'district',
+                                      decoration: customInputDecoration(
+                                          hintText: 'เลือกรายการ'),
+                                      isExpanded: true,
+                                      items: controller.districtList
+                                          .map(
+                                            (option) => DropdownMenuItem(
+                                              value: option,
+                                              child: Text(
+                                                option,
+                                                style: NotoSansThai.normal
+                                                    .copyWith(
+                                                        color: Palette.black),
+                                              ),
+                                            ),
+                                          )
+                                          .toList()),
+                                ),
+                                if (controller.selectDistrict.value == 'อื่นๆ')
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 0),
+                                    child: SizedBox(
+                                      width: 280,
+                                      child: customFormTextField(
+                                        init: controller.newOssc[index].district
+                                            .toString(),
+                                        key: 'customDistrict',
+                                        decoration:
+                                            customInputDecoration(hintText: ''),
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return 'กรุณากรอกข้อมูลให้ครบ';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                  )
+                              ],
                             ),
                           ],
                         ),

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:get/state_manager.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:signature/signature.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -13,8 +12,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:gsheets/gsheets.dart';
 import 'package:universal_io/io.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../api/api.dart';
 import '../../api/services/time_format.dart';

@@ -13,7 +13,7 @@ class AddListOfContentPopup {
           child: SingleChildScrollView(
             child: Obx(
               () => Container(
-                  height: 640,
+                  height: 720,
                   width: 1200,
                   padding: const EdgeInsets.all(32),
                   decoration:
@@ -122,37 +122,62 @@ class AddListOfContentPopup {
                                       style: NotoSansThai.h3
                                           .copyWith(color: Palette.black)),
                                 ),
-                                Container(
-                                  width: 280,
-                                  child: FormBuilderDropdown(
-                                      borderRadius: BorderRadius.circular(16),
-                                      onChanged: (value) {
-                                        controller.setDistrict(
-                                            dropdownDetail: value!);
-                                      },
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return '';
-                                        }
-                                        return null;
-                                      },
-                                      name: 'district',
-                                      decoration: customInputDecoration(
-                                          hintText: 'เลือกรายการ'),
-                                      isExpanded: true,
-                                      items: controller.districtList
-                                          .map(
-                                            (option) => DropdownMenuItem(
-                                              value: option,
-                                              child: Text(
-                                                option,
-                                                style: NotoSansThai.normal
-                                                    .copyWith(
-                                                        color: Palette.black),
-                                              ),
-                                            ),
-                                          )
-                                          .toList()),
+                                Column(
+                                  children: [
+                                    Container(
+                                      width: 280,
+                                      child: FormBuilderDropdown(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          onChanged: (value) {
+                                            controller.setDistrict(
+                                                dropdownDetail: value!);
+                                          },
+                                          validator: (value) {
+                                            if (value == null) {
+                                              return '';
+                                            }
+                                            return null;
+                                          },
+                                          name: 'district',
+                                          decoration: customInputDecoration(
+                                              hintText: 'เลือกรายการ'),
+                                          isExpanded: true,
+                                          items: controller.districtList
+                                              .map(
+                                                (option) => DropdownMenuItem(
+                                                  value: option,
+                                                  child: Text(
+                                                    option,
+                                                    style: NotoSansThai.normal
+                                                        .copyWith(
+                                                            color:
+                                                                Palette.black),
+                                                  ),
+                                                ),
+                                              )
+                                              .toList()),
+                                    ),
+                                    if (controller.selectDistrict.value ==
+                                        'อื่นๆ')
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 0),
+                                        child: SizedBox(
+                                          width: 280,
+                                          child: customFormTextField(
+                                            key: 'customDistrict',
+                                            decoration: customInputDecoration(
+                                                hintText: ''),
+                                            validator: (value) {
+                                              if (value == null) {
+                                                return 'กรุณากรอกข้อมูลให้ครบ';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                      )
+                                  ],
                                 ),
                               ],
                             ),
@@ -178,7 +203,8 @@ class AddListOfContentPopup {
                                       borderRadius: BorderRadius.circular(16),
                                       onChanged: (value) {
                                         controller.setAct(
-                                            dropdownDetail: value!,added: true);
+                                            dropdownDetail: value!,
+                                            added: true);
                                       },
                                       validator: (value) {
                                         if (value == null) {
@@ -229,7 +255,8 @@ class AddListOfContentPopup {
                                               BorderRadius.circular(16),
                                           onChanged: (value) {
                                             controller.setDesc(
-                                                dropdownDetail: value!,added: true);
+                                                dropdownDetail: value!,
+                                                added: true);
                                           },
                                           validator: (value) {
                                             if (value == null) {
