@@ -5,9 +5,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:my_ossc/models/ossc_user_model.dart';
-import 'package:universal_io/io.dart';
 import '../models/district_model.dart';
 import '../models/ossc_data_model.dart';
 // import '../models/data_model.dart';

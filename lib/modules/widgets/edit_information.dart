@@ -512,6 +512,7 @@ class ListOfContentPopup {
         controller.imgName(''),
         controller.fillact(''),
         controller.filldesc(''),
+        controller.selectDistrict(''),
         controller.fileNames('')
       });
 }

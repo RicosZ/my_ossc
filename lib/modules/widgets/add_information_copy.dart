@@ -489,7 +489,8 @@ class AddListOfContentPopup {
       .then((value) => {
             controller.imgName(''),
             controller.act(''),
-            controller.fileNames('')
+            controller.fileNames(''),
+            controller.selectDistrict(''),
           });
 }
 
