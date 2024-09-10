@@ -3,7 +3,7 @@ import '../models/new_ossc_data_model.dart';
 
 class NewApi {
   var dio = Dio();
-  String subUrl = 'https://my-ossc-be.onrender.com';
+  String subUrl = 'https://ossc-api.onrender.com';
 
   Future<OsscNew> getInformation({
     String? act,

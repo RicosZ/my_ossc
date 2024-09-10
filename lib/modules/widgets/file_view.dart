@@ -199,7 +199,7 @@ class FilePopUp {
                   onPressed: controller.ready2Download.value
                       ? () {
                           launchUrlString(
-                            'https://my-ossc-be.onrender.com/download/$fileName',
+                            'https://ossc-api.onrender.com/download/$fileName',
                           );
                           // Get.back();
                         }

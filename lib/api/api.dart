@@ -84,7 +84,7 @@ class Api {
         'fileName': fileName
       });
       final response = await dio.put(
-        'https://my-ossc-be.onrender.com/upload',
+        'https://ossc-api.onrender.com/upload',
         data: fd,
         options: Options(
           headers: {'Content-Type': 'multipart/form-data'},
@@ -132,7 +132,7 @@ class Api {
     print('request------------------------');
     try {
       final response = await dio.post(
-        'https://my-ossc-be.onrender.com/renew-accesstoken',
+        'https://ossc-api.onrender.com/renew-accesstoken',
         data: {'token': refreshToken},
       );
       final statusCode = response.statusCode;
@@ -157,7 +157,7 @@ class Api {
     required bool isFile
   }) async {
     try {
-      final response = await dio.post('https://my-ossc-be.onrender.com/fetch', data: {
+      final response = await dio.post('https://ossc-api.onrender.com/fetch', data: {
         'token': refreshToken,
         'path2File': path2File,
         'file': isFile
