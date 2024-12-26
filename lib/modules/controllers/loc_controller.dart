@@ -820,7 +820,7 @@ class LocController extends GetxController {
           .then((value) {
         if (value['success']) {
           launchUrlString(
-            'https://ossc-api.onrender.com/download/ossc-data.xlsx',
+            'https://my-ossc-be-bs58.onrender.com/download/ossc-data.xlsx',
           );
         }
       });
