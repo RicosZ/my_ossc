@@ -46,8 +46,8 @@ dependencies:
   sticky_headers: ^0.3.0+2
   amplify_storage_s3: ^1.4.0
   aws_common: ^0.6.0
-  amplify_flutter: ^1.4.1
-  amplify_auth_cognito: ^1.4.1
+  # amplify_flutter: ^1.4.1
+  # amplify_auth_cognito: ^1.4.1
   syncfusion_flutter_pdfviewer: ^24.1.43
   googleapis: ^11.4.0
   googleapis_auth: ^1.4.1
@@ -62,6 +62,9 @@ dependencies:
   url_launcher: ^6.3.0
   data_table_2: ^2.5.15
   flutter_localization: ^0.2.1
+  flutter_localizations:
+    sdk: flutter
+  dynamic_path_url_strategy: ^1.0.0
   # http_parser: ^4.0.2
   
 

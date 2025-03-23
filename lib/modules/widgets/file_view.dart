@@ -199,7 +199,7 @@ class FilePopUp {
                   onPressed: controller.ready2Download.value
                       ? () {
                           launchUrlString(
-                            'https://my-ossc-be-bs58.onrender.com/download/$fileName',
+                            'https://my-ossc-be.vercel.app/download/$fileName',
                           );
                           // Get.back();
                         }

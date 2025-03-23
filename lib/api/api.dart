@@ -84,7 +84,7 @@ class Api {
         'fileName': fileName
       });
       final response = await dio.put(
-        'https://my-ossc-be-bs58.onrender.com/upload',
+        'https://my-ossc-be.vercel.app/upload',
         data: fd,
         options: Options(
           headers: {'Content-Type': 'multipart/form-data'},
@@ -132,7 +132,7 @@ class Api {
     print('request------------------------');
     try {
       final response = await dio.post(
-        'https://my-ossc-be-bs58.onrender.com/renew-accesstoken',
+        'https://my-ossc-be.vercel.app/renew-accesstoken',
         data: {'token': refreshToken},
       );
       final statusCode = response.statusCode;
@@ -157,7 +157,7 @@ class Api {
     required bool isFile
   }) async {
     try {
-      final response = await dio.post('https://my-ossc-be-bs58.onrender.com/fetch', data: {
+      final response = await dio.post('https://my-ossc-be.vercel.app/fetch', data: {
         'token': refreshToken,
         'path2File': path2File,
         'file': isFile
